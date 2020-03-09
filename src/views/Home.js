@@ -1,11 +1,14 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import Input from "../components/UI/Input";
+
 export default function Home() {
-  const counter = useSelector(state => state.counter.counter);
+  const [texto, setTexto] = useState("");
   return (
-    <div>
-      <h2>Home</h2>
-      <p>Counter stops at {counter}</p>
+    <div className="home">
+      <h1>Home</h1>
+
+      <Input type="text" placeholder="Hola" value={texto} onChange={value => setTexto(value)} />
+
     </div>
   );
 }
