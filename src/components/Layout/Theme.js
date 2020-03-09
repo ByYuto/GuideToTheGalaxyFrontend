@@ -10,12 +10,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  box-sizing: border-box;
-}
+
 `
 
 export default {
+  isDark: false,
   baseColors: {
     darker: "#151531",
     dark: "#1F1F3D",
