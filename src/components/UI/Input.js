@@ -1,5 +1,5 @@
-import React, { useRef, useContext } from 'react';
-import styled, { css, ThemeContext } from 'styled-components';
+import React, { useRef } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Button from './Button';
 import { IoIosClose } from 'react-icons/io';
@@ -56,9 +56,7 @@ const StyledInputContainer = styled.div`
   }
 `
 
-const Input = ({ children, value, onChange, ...props }) => {
-  const theme = useContext(ThemeContext);
-  console.log(theme);
+const Input = ({ children, value, onChange, onClear, ...props }) => {
   const inputRef = useRef(null);
   const onInputChange = (e) => {
     onChange && onChange(e.target.value);
@@ -66,11 +64,25 @@ const Input = ({ children, value, onChange, ...props }) => {
   const onClearClick = (e) => {
     onChange && onChange("");
     inputRef.current.focus();
+    onClear && onClear();
   }
   return <StyledInputContainer>
     <input ref={inputRef} {...props} value={value} onChange={onInputChange} />
     <Button className="clear" icon transparent onClick={onClearClick}><IoIosClose /></Button>
   </StyledInputContainer>
 }
+
+Input.defaultProps = {
+  value: "",
+  onChange: null,
+  onClear: null
+};
+
+Input.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  onClear: PropTypes.func
+}
+
 export default Input;
 
