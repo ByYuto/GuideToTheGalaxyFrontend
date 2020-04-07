@@ -3,6 +3,8 @@ import Input from "../components/UI/Input";
 import { ThemeProvider } from "styled-components";
 import CommentsCounter from "../components/UI/CommentsCounter";
 import UpvoteCounter from "../components/UI/UpvoteCounter";
+import Menu from "../components/UI/Menu";
+import MenuOption from "../components/UI/MenuOption";
 import { FiSearch } from 'react-icons/fi';
 
 function ComponentsTest({ title }) {
@@ -32,6 +34,17 @@ function ComponentsTest({ title }) {
       <Input type="text" Icon={FiSearch} squaredLeft squaredRight placeholder="left and right" value={texto} onChange={value => setTexto(value)} />
       <Input type="text" Icon={FiSearch} squaredLeft placeholder="only left" value={texto} onChange={value => setTexto(value)} />
     </div>
+
+    <div style={{ padding: "10px" }}>
+      <h4>Menu</h4>
+      <Menu>
+        <MenuOption label={"Menu1"} />
+        <MenuOption label={"Menu2"} />
+        <MenuOption label={"Menu3"} />
+        <MenuOption label={"Menu4"} />
+      </Menu>
+    </div>
+
   </div>
 }
 
