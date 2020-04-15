@@ -1,10 +1,11 @@
+import React from 'react';
 import styled, { css } from 'styled-components';
+import MenuOption from './MenuOption';
 
-const Menu = styled.div`
+export const CustomMenu = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  left: ${props => props.Icon ? 32 : 10}px;
   border: 1px solid ${props => props.theme.isDark ? "transparent" : props.theme.baseColors.light};
   border-radius: 0px 0px 0px 0px;
   background: ${props => props.theme.isDark ? props.theme.baseColors.darker : "white"};
@@ -13,6 +14,16 @@ const Menu = styled.div`
   ${props => props.bottomRounded ? css`
     border-radius: 0px 0px 8px 8px;
   `: null}
-}`
+}`;
 
-export default Menu;
+const StyledMenu = styled.div``;
+
+const Menu = ({ className, options, onMenuClick }) => <StyledMenu className={className}>
+  <CustomMenu>
+    {options ? options.map((option, key) => <MenuOption option={option} key={key} onClick={onMenuClick} />) : null}
+  </CustomMenu>
+</StyledMenu>
+
+
+
+export default styled(Menu)``;

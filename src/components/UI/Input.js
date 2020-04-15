@@ -4,7 +4,16 @@ import PropTypes from 'prop-types';
 import Button from './Button';
 import { IoIosClose } from 'react-icons/io';
 import Menu from './Menu';
-import MenuOption from './MenuOption';
+
+/*
+const AutocompleteMenu = styled(Menu)`
+  position: absolute;
+  top: calc(100% - 1px);
+  left: ${props => props.Icon ? 32 : 10}px;
+  right: 0;
+  z-index: 100;
+`
+*/
 
 const StyledInputContainer = styled.div`
   display: inline-block;
@@ -12,7 +21,7 @@ const StyledInputContainer = styled.div`
 
   ${Menu} {
     position: absolute;
-    top: calc(100% - 1px);
+    top: 100%;
     left: ${props => props.Icon ? 32 : 10}px;
     right: 0;
     z-index: 100;
@@ -54,7 +63,6 @@ const StyledInput = styled.div`
 
   ${props => props.optionsOpened ? css`
     border-bottom-right-radius: 1000;
-    border-color: red;
   ` : null}
   ${props => props.focused && !props.disabled ? css`
     border: 1px solid ${props => props.theme.accentColors.primary.color};
@@ -84,7 +92,7 @@ const StyledInput = styled.div`
    
     
     &::placeholder {
-      color: ${props => props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.darkMiddle};
+      color: ${props => props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle};
     }    
   }
 
@@ -134,23 +142,21 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
   const [optionsOpened, setOptionsOpened] = useState(false);
 
   useEffect(() => {
-    console.log("Setting Timer")
     let timeout = setTimeout(() => {
-      console.log("Focused", focused);
       if (!focused) {
         setOptionsOpened(false);
       }
     }, autoCloseTime);
 
-    return () => { console.log("Cancelando timer"); clearTimeout(timeout) };
+    return () => clearTimeout(timeout);
   }, [focused]);
 
   const onFocus = (e) => {
-    console.log("Focus", e.target);
+    //console.log("Focus", e.target);
     setFocused(true);
   }
   const onBlur = (e) => {
-    console.log("Blur", e.target);
+    //console.log("Blur", e.target);
     setFocused(false);
     setFocusedCount(0);
   };
@@ -168,9 +174,9 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
     onClear && onClear();
     setOptionsOpened(false);
   }
-  const onOptionClick = (label) => {
-    console.log("hizo click en la opción", label);
-    onChange(label);
+  const onMenuClick = (option) => {
+    //console.log("hizo click en la opción", label);
+    onChange(option.label);
     setOptionsOpened(false);
   }
 
@@ -188,19 +194,14 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
       </div>
       <input ref={inputRef} {...props} value={value} disabled={disabled} onChange={onInputChange} />
       <div>
-        { /* <Button className="clear" icon transparent onClick={onClearClick} ><IoIosClose /></Button> */}
         <ClearButton icon transparent onClick={onClearClick} show={!!value.trim()}><IoIosClose /></ClearButton>
       </div>
     </StyledInput >
-    {autoCompleteOptions && optionsOpened ?
-      <Menu>
-        {autoCompleteOptions.map((option, key) =>
-          <MenuOption label={option.label} key={key} onClick={onOptionClick} />
-        )}
-      </Menu>
+    {autoCompleteOptions && (optionsOpened || true) ?
+      <Menu options={autoCompleteOptions} onMenuClick={onMenuClick} />
       : null
     }
-  </StyledInputContainer>
+  </StyledInputContainer >
 }
 
 Input.defaultProps = {
@@ -211,20 +212,7 @@ Input.defaultProps = {
   Icon: null,
   squaredRight: false,
   squaredLeft: false,
-  autoCompleteOptions: [
-    {
-      value: 1,
-      label: "option 1"
-    },
-    {
-      value: 1,
-      label: "option 2"
-    },
-    {
-      value: 2,
-      label: "option 3"
-    }
-  ]
+  autoCompleteOptions: undefined
 };
 
 Input.propTypes = {

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
-import Home from '../../views/Home';
-import CreateArticle from '../../views/CreateArticle';
-import Layout from '../Layout/Layout';
+import Home from '../views/Home';
+import CreateArticle from '../views/CreateArticle';
+import Layout from '../components/Layout/Layout';
+import ComponentsTestPage from '../views/ComponentsTestPage';
 
 const Router = () =>
   <BrowserRouter>
@@ -15,6 +16,9 @@ const Router = () =>
         </Route>
         <Route path="/create" exact>
           <CreateArticle />
+        </Route>
+        <Route path="/test-components" exact>
+          <ComponentsTestPage />
         </Route>
       </Switch>
     </Layout>

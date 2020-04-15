@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
-import Router from './components/Router/Router';
+import Router from './router/Router';
 import { ThemeProvider } from 'styled-components';
 import theme, { GlobalStyle } from './components/Layout/Theme';
 
