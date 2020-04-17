@@ -6,6 +6,7 @@ import UpvoteCounter from "../components/UI/UpvoteCounter";
 import Menu, { CustomMenu } from "../components/UI/Menu";
 import MenuOption from "../components/UI/MenuOption";
 import { FiSearch } from 'react-icons/fi';
+import TextArea from "../components/UI/TextArea";
 
 function ComponentsTest({ title }) {
 
@@ -34,6 +35,7 @@ function ComponentsTest({ title }) {
 
   const onMenuClick = (option) => alert("Click on Menu: " + option.label);
   const [texto, setTexto] = useState("");
+  const [textoTextarea, setTextoTextarea] = useState("");
   return <div>
     <h2>{title}</h2>
     <div style={{ padding: "10px" }}>
@@ -73,7 +75,14 @@ function ComponentsTest({ title }) {
         <MenuOption option={menuOptions[2]} onClick={onMenuClick} />
       </CustomMenu>
     </div>
-
+    {console.log(textoTextarea)}
+    <div style={{ padding: "10px" }}>
+      <h4>Textarea</h4>
+      <div style={{ display: "flex", flexDirection: "row", justifyContent: "stretch", flexGrow: 1 }}>
+        <TextArea placeholder="Without limit" value={textoTextarea} onChange={value => setTextoTextarea(value)} style={{ flex: 1 }}></TextArea>
+        <TextArea placeholder="With 300 limit" limit={300} value={textoTextarea} onChange={value => setTextoTextarea(value)} style={{ flex: 1 }}></TextArea>
+      </div>
+    </div>
 
   </div>
 }

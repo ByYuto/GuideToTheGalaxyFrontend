@@ -57,15 +57,15 @@ const StyledInput = styled.div`
   height: 40px;
   overflow: hidden;
 
-  border: 1px solid ${props => props.theme.isDark ? "transparent" : props.theme.baseColors.light};
+  border: 1px solid ${props => props.theme.isDark ? "transparent" : props.theme.baseColors.middleLight};
   color: ${props => props.theme.isDark ? props.theme.baseColors.light : props.theme.baseColors.dark};
-  border-radius: 8px;
+  border-radius: ${props => props.theme.borderRadius.small};
 
   ${props => props.optionsOpened ? css`
     border-bottom-right-radius: 1000;
   ` : null}
   ${props => props.focused && !props.disabled ? css`
-    border: 1px solid ${props => props.theme.accentColors.primary.color};
+    border-color: ${props => props.theme.accentColors.primary.color};
     box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
   ` : null}
 
@@ -79,18 +79,12 @@ const StyledInput = styled.div`
     ` : null}
 
   input {
-    all: unset;
-    
-    font-family: 'Open Sans';
-    
-    
+    all: unset;    
+    font-family: 'Open Sans';    
     font-size: 14px;
     line-height: 22px;
     padding: 9px 35px 9px ${props => props.Icon ? 48 : 26}px;
-    background: ${props => props.theme.isDark ? props.theme.baseColors.darker : "white"};
-
-   
-    
+    background: ${props => props.theme.isDark ? props.theme.baseColors.darker : "white"};    
     &::placeholder {
       color: ${props => props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle};
     }    
@@ -118,19 +112,7 @@ const StyledInput = styled.div`
       }
     }` : null}
 
-  ${props => {
-    return (props.show && !props.disabled) ? css`
-    .clear {
-      display: block;
-      input {
-        border: 1px solid ${props => props.theme.accentColors.primary.color};
-      }
-      &:hover{
-        color: ${props => props.theme.isDark ? props.theme.baseColors.light : props.theme.baseColors.dark};
-      }
-    }`
-      : null
-  }}
+  
 `
 
 const autoCloseTime = 50;
@@ -152,11 +134,9 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
   }, [focused]);
 
   const onFocus = (e) => {
-    //console.log("Focus", e.target);
     setFocused(true);
   }
   const onBlur = (e) => {
-    //console.log("Blur", e.target);
     setFocused(false);
     setFocusedCount(0);
   };
@@ -165,6 +145,8 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
     const value = e.target.value;
     if (value.length >= 3) {
       setOptionsOpened(true);
+    } else {
+      setOptionsOpened(false);
     }
     onChange && onChange(value);
   }
@@ -175,7 +157,6 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
     setOptionsOpened(false);
   }
   const onMenuClick = (option) => {
-    //console.log("hizo click en la opción", label);
     onChange(option.label);
     setOptionsOpened(false);
   }
@@ -189,15 +170,11 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
 
   return <StyledInputContainer onFocus={onFocus} onBlur={onBlur} focused={focused} onClick={onInputClick} optionsOpened={optionsOpened} Icon={Icon}>
     <StyledInput tabIndex={-1} disabled={disabled} Icon={Icon} squaredRight={squaredRight} squaredLeft={squaredLeft} focused={focused} optionsOpened={optionsOpened}>
-      <div>
-        {Icon ? <Icon className="icon" /> : null}
-      </div>
+      {Icon ? <Icon className="icon" /> : null}
       <input ref={inputRef} {...props} value={value} disabled={disabled} onChange={onInputChange} />
-      <div>
-        <ClearButton icon transparent onClick={onClearClick} show={!!value.trim()}><IoIosClose /></ClearButton>
-      </div>
+      {!disabled ? <ClearButton icon transparent onClick={onClearClick} show={!!value.trim()}><IoIosClose /></ClearButton> : null}
     </StyledInput >
-    {autoCompleteOptions && (optionsOpened || true) ?
+    {autoCompleteOptions && (optionsOpened || false) ?
       <Menu options={autoCompleteOptions} onMenuClick={onMenuClick} />
       : null
     }
