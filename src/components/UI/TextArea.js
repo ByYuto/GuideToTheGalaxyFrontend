@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const StyledTextAreaContainer = styled.div`
 all: unset;
-display: block;
+display: flex;
 box-sizing: border-box;
 position: relative;
 
@@ -20,9 +20,8 @@ position: relative;
 }
 `
 const StyledTextArea = styled.textarea`
-  all: unset;
+  all:unset;
   display: block;
-  width: 100%;
   font-family: 'Open Sans';
   font-size: 14px;
   line-height: 22px;
@@ -32,6 +31,9 @@ const StyledTextArea = styled.textarea`
   border: 1px solid ${props => props.theme.isDark ? "transparent" : props.theme.baseColors.middleLight};
   color: ${props => props.theme.isDark ? props.theme.baseColors.light : props.theme.baseColors.dark};
   border-radius: ${props => props.theme.borderRadius.small};
+  resize: none;
+  overflow-wrap: break-word;
+
   &::placeholder {
     color: ${props => props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle};
   }    
@@ -57,8 +59,8 @@ const TextArea = ({ children, value, onChange, disabled, className, limit, ...pr
   }
 
   const charsLeft = limit ? (limit - value.length) : "";
-  return <StyledTextAreaContainer focused={focused} charsLeft={charsLeft} {...props}>
-    <StyledTextArea onFocus={onFocus} onBlur={onBlur} onChange={_onChange} focused={focused} value={value} {...props} />
+  return <StyledTextAreaContainer focused={focused} charsLeft={charsLeft > 0 ? `-${charsLeft}` : ""} {...props}>
+    <StyledTextArea onFocus={onFocus} onBlur={onBlur} onChange={_onChange} focused={focused} value={value} {...props} maxLength={limit} />
   </StyledTextAreaContainer>
 }
 

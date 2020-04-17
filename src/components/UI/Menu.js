@@ -18,7 +18,7 @@ export const CustomMenu = styled.div`
 
 const StyledMenu = styled.div``;
 
-const Menu = ({ className, options, onMenuClick }) => <StyledMenu className={className}>
+const Menu = ({ options, onMenuClick, ...props }) => <StyledMenu {...props}>
   <CustomMenu>
     {options ? options.map((option, key) => <MenuOption option={option} key={key} onClick={onMenuClick} />) : null}
   </CustomMenu>
