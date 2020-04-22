@@ -8,6 +8,7 @@ import MenuOption from "../components/UI/MenuOption";
 import { FiSearch } from 'react-icons/fi';
 import TextArea from "../components/UI/TextArea";
 import Checkbox from "../components/UI/CheckBox";
+import RadioButton from "../components/UI/RadioButton";
 
 function ComponentsTest({ title }) {
 
@@ -38,7 +39,9 @@ function ComponentsTest({ title }) {
   const [texto, setTexto] = useState("");
   const [textoTextarea, setTextoTextarea] = useState("");
   const [checked, setChecked] = useState(false);
+  const [radio, setRadio] = useState(null);
 
+  const onChangeRadio = value => setRadio(value);
 
   return <div>
     <h2>{title}</h2>
@@ -93,21 +96,106 @@ function ComponentsTest({ title }) {
     </div>
 
     <div style={{ padding: "10px" }}>
-      <h4>Checkboxes</h4>
-      <label>
-        <Checkbox checked={true} />
-        <span style={{ marginLeft: 8 }}>Checked: </span>
-      </label>
-      <label>
-        <Checkbox checked={false} />
-        <span style={{ marginLeft: 8 }}>Checked: </span>
-      </label>
-      <label>
-        <span style={{ marginLeft: 8 }}>Checked: </span>
-        <Checkbox checked={checked} onChange={e => { console.log("Cambio el estado"); setChecked(e.target.checked) }} />
-      </label>
+      <h4>Check Box</h4>
+      <div style={{ display: "flex", flexDirection: "row", justifyContent: "stretch" }}>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Fixed States</h6>
+          <label>
+            <Checkbox checked={true} />
+            <span>Checked: </span>
+          </label>
+          <label>
+            <Checkbox checked={false} />
+            <span>Unchecked: </span>
+          </label>
+        </div>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Normal</h6>
+          <label>
+            <Checkbox checked={checked} onChange={checked => { setChecked(checked) }} />
+            <span>Checkme </span>
+          </label>
+        </div>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Read only</h6>
+          <label>
+            <span>Read only: </span>
+            <Checkbox checked={checked} readonly onChange={e => { setChecked(checked) }} />
+          </label>
+        </div>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Disabled</h6>
+          <label>
+            <span>Disabled: </span>
+            <Checkbox checked={checked} disabled onChange={e => { setChecked(checked) }} />
+          </label>
+        </div>
+      </div>
+    </div>
+    <div style={{ padding: "10px" }}>
+      <h4>Radio buttons</h4>
+      <div style={{ display: "flex", flexDirection: "row", justifyContent: "stretch" }}>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Fixed States</h6>
+          <label>
+            <RadioButton checked={true} />
+            <span>Checked</span>
+          </label>
+          <label>
+            <RadioButton checked={false} />
+            <span>Unchecked</span>
+          </label>
+        </div>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Radio groups</h6>
+          <label>
+            <RadioButton checked={radio === "Man"} value="Man" onChange={onChangeRadio} />
+            <span>Man</span>
+          </label>
+          <label>
+            <RadioButton checked={radio === "Woman"} value="Woman" onChange={onChangeRadio} />
+            <span>Woman</span>
+          </label>
+          <label>
+            <RadioButton checked={radio === "Other"} value="Other" onChange={onChangeRadio} />
+            <span>Other</span>
+          </label>
+
+        </div>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Read only</h6>
+          <label>
+            <RadioButton checked={radio === "Man"} value="Man" onChange={onChangeRadio} readonly />
+            <span>Man</span>
+          </label>
+          <label>
+            <RadioButton checked={radio === "Woman"} value="Woman" onChange={onChangeRadio} readonly />
+            <span>Woman</span>
+          </label>
+          <label>
+            <RadioButton checked={radio === "Other"} value="Other" onChange={onChangeRadio} readonly />
+            <span>Other</span>
+          </label>
+        </div>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Disabled</h6>
+          <label>
+            <RadioButton checked={radio === "Man"} value="Man" onChange={onChangeRadio} disabled />
+            <span>Man</span>
+          </label>
+          <label>
+            <RadioButton checked={radio === "Woman"} value="Woman" onChange={onChangeRadio} disabled />
+            <span>Woman</span>
+          </label>
+          <label>
+            <RadioButton checked={radio === "Other"} value="Other" onChange={onChangeRadio} disabled />
+            <span>Other</span>
+          </label>
+        </div>
+      </div>
     </div>
   </div>
+
 }
 
 export default function ComponentsTestPage() {
