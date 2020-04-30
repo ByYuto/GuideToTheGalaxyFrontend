@@ -32,15 +32,21 @@ const TopBar = () => {
   const onAddContentClick = () => {
     history.push("/create");
   };
+  const onTestComponentsClick = () => {
+    history.push("/test-components");
+  };
+
   return <StyledTopBar>
     <div className="left">
       <Link to="/">
         <img src={logo} className="logo" alt="logo" />
         <img src={dontPanic} alt="dont panic" />
       </Link>
+      <Button primary onClick={onTestComponentsClick}>Test Components</Button>
     </div>
     <div className="middle"></div>
     <div className="right">
+
       <Button primary>PRIMARY</Button>
       <Button primary rounded>PRIMARY ROUNDED</Button>
       <Button secondary>SECONDARY</Button>

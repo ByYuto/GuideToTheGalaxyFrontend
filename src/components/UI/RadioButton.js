@@ -42,7 +42,7 @@ const StyledRadioButton = styled.div`
   `: null}
 
   ${HiddenRadioButton}:focus + & {
-    //outline: ${props => props.theme.accentColors.primary.color}77 solid 1px;
+    box-shadow: 0px 0px 10px rgba(97, 124, 255, 0.3);
   }
 `
 

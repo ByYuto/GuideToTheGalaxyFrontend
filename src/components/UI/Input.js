@@ -156,7 +156,7 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
     onClear && onClear();
     setOptionsOpened(false);
   }
-  const onMenuClick = (option) => {
+  const onOptionClick = (option) => {
     onChange(option.label);
     setOptionsOpened(false);
   }
@@ -175,7 +175,7 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
       {!disabled ? <ClearButton icon transparent onClick={onClearClick} show={!!value.trim()}><IoIosClose /></ClearButton> : null}
     </StyledInput >
     {autoCompleteOptions && (optionsOpened || false) ?
-      <Menu options={autoCompleteOptions} onMenuClick={onMenuClick} />
+      <Menu options={autoCompleteOptions} onOptionClick={onOptionClick} />
       : null
     }
   </StyledInputContainer >

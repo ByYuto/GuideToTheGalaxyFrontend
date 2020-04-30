@@ -42,11 +42,12 @@ const StyledCheckbox = styled.div`
   ${props => props.checked ? css`
     background-color: ${props => props.disabled ? props.theme.baseColors.middleLight : props.theme.accentColors.primary.color};
     border-width: 0;
-`: null}
+  `: null}
 
   ${HiddenCheckbox}:focus + & {
-    //outline: ${props => props.theme.accentColors.primary.color}77 solid 1px;
+    box-shadow: 0px 0px 10px rgba(97, 124, 255, 0.3);
   }
+
 `
 
 
@@ -56,8 +57,8 @@ const Checkbox = ({ className, onChange, checked, disabled, readonly, ...props }
   }
   return <CheckboxContainer className={className} checked={checked}>
     <HiddenCheckbox checked={checked} onChange={_onChange} disabled={disabled} readonly={readonly} {...props} />
-    {checked ? <CheckMark /> : null}
     <StyledCheckbox checked={checked} disabled={disabled} />
+    {checked ? <CheckMark /> : null}
   </CheckboxContainer>
 }
 

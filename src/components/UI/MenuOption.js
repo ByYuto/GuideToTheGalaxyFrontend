@@ -11,24 +11,29 @@ const StyledMenuOption = styled.a`
     (props.theme.isDark ? props.theme.baseColors.middle : props.theme.baseColors.middleLight)
     : (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
   
-  &: after{
-  content: '';
-  display: block;
-  position: absolute;
-  border-bottom: 1px solid ${ props => props.theme.isDark ? props.theme.baseColors.dark : props.theme.baseColors.middleLight};
-  bottom: 1px;
-  left: 10px;
-  right: 10px;
-}
+  &:after{
+    content: '';
+    display: block;
+    position: absolute;
+    border-bottom: 1px solid ${ props => props.theme.isDark ? props.theme.baseColors.dark : props.theme.baseColors.middleLight};
+    bottom: 1px;
+    left: 10px;
+    right: 10px;
+  }
 
-  &: hover {
-  ${ props => !!!props.option.disabled ? css`color: ${props.theme.accentColors.primary.color}` : null};
-  background-color: ${ props => props.theme.isDark ? props.theme.baseColors.dark : props.theme.baseColors.light};
-}
+  &:last-child:after{
+    border-bottom: none;
+  }
+
+  &:hover {
+    ${ props => !!!props.option.disabled ? css`color: ${props.theme.accentColors.primary.color}` : null};
+    background-color: ${ props => props.theme.isDark ? props.theme.baseColors.dark : props.theme.baseColors.light};
+  }
 `;
 
+/*
 export const CustomMenuOption = props => {
-  const { onClick, name, children } = props;
+  const { onClick, name, children, className } = props;
   const disabled = !!props.disabled;
   const _onClick = (e) => {
     console.log("El evento es", e);
@@ -42,13 +47,14 @@ export const CustomMenuOption = props => {
     dynamicProps.tabIndex = 0;  //Allow focus
   }
 
-  return <StyledMenuOption option={{ disabled: disabled, name: name }} {...dynamicProps} onClick={_onClick}>
+  return <StyledMenuOption className={className} option={{ disabled: disabled, name: name }} {...dynamicProps} onClick={_onClick}>
     {children}
   </StyledMenuOption>
 }
+*/
 
 const MenuOption = (props) => {
-  const { option, onClick } = props;
+  const { option, onClick, className } = props;
   const disabled = !!option.disabled;
   const _onClick = (e) => {
     e.preventDefault();
@@ -61,7 +67,7 @@ const MenuOption = (props) => {
     dynamicProps.tabIndex = 0;  //Allow focus
   }
 
-  return <StyledMenuOption option={option} {...dynamicProps} onClick={_onClick}>
+  return <StyledMenuOption className={className} option={option} {...dynamicProps} onClick={_onClick}>
     {option ? option.label : ""}
   </StyledMenuOption>
 }

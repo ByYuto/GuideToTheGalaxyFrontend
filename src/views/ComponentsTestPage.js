@@ -9,41 +9,28 @@ import { FiSearch } from 'react-icons/fi';
 import TextArea from "../components/UI/TextArea";
 import Checkbox from "../components/UI/CheckBox";
 import RadioButton from "../components/UI/RadioButton";
+import Toggle from "../components/UI/Toggle";
+import Dropdown from "../components/UI/Dropdown";
 
 function ComponentsTest({ title }) {
 
-  const menuOptions = [
-    {
-      value: 1,
-      label: "option 1"
-    },
-    {
-      value: 1,
-      label: "option 2",
-      disabled: true
-    },
-    {
-      value: 2,
-      label: "option 3"
-    },
-    {
-      value: 3,
-      label: "option 4"
-    }, {
-      value: 4,
-      label: "option 5"
-    },
-  ];
+  const menuOptions = Array(15).fill().map((val, index) => ({
+    value: index,
+    label: "option " + index,
+    ...(index === 2 ? { disabled: true } : undefined)
+  }));
 
-  const onMenuClick = (option) => alert("Click on Menu: " + option.label);
+  const onOptionClick = (option) => alert("Click on Menu: " + JSON.stringify(option));
   const [texto, setTexto] = useState("");
   const [textoTextarea, setTextoTextarea] = useState("");
   const [checked, setChecked] = useState(false);
   const [radio, setRadio] = useState(null);
+  const [dropdown, setDropdown] = useState(null);
 
   const onChangeRadio = value => setRadio(value);
-
+  const onChangeDropdown = value => { console.log("Seleccionado", value); setDropdown(value) };
   return <div>
+
     <h2>{title}</h2>
     <div style={{ padding: "10px" }}>
       <h4>Inputs</h4>
@@ -74,14 +61,14 @@ function ComponentsTest({ title }) {
       <div style={{ display: "flex", flexDirection: "row", justifyContent: "stretch" }}>
         <div style={{ flex: 1, margin: "5px" }}>
           <h6>Normal</h6>
-          <Menu options={menuOptions} onMenuClick={onMenuClick} />
+          <Menu options={menuOptions} onOptionClick={onOptionClick} />
         </div>
         <div style={{ flex: 1, margin: "5px" }}>
           <h6>Custom Menu</h6>
           <CustomMenu >
-            <MenuOption option={menuOptions[0]} onClick={onMenuClick} />
-            <MenuOption option={menuOptions[1]} onClick={onMenuClick} />
-            <MenuOption option={menuOptions[2]} onClick={onMenuClick} />
+            <MenuOption option={menuOptions[0]} onClick={onOptionClick} />
+            <MenuOption option={menuOptions[1]} onClick={onOptionClick} />
+            <MenuOption option={menuOptions[2]} onClick={onOptionClick} />
           </CustomMenu>
         </div>
       </div>
@@ -194,8 +181,55 @@ function ComponentsTest({ title }) {
         </div>
       </div>
     </div>
-  </div>
 
+    <div style={{ padding: "10px" }}>
+      <h4>Toggle</h4>
+      <div style={{ display: "flex", flexDirection: "row", justifyContent: "stretch" }}>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Fixed States</h6>
+          <label>
+            <Toggle checked={true} />
+            <span>Checked: </span>
+          </label>
+          <label>
+            <Toggle checked={false} />
+            <span>Unchecked: </span>
+          </label>
+        </div>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Normal</h6>
+          <label>
+            <Toggle checked={checked} onChange={checked => { setChecked(checked) }} />
+            <span>Checkme </span>
+          </label>
+        </div>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Read only</h6>
+          <label>
+            <span>Read only: </span>
+            <Toggle checked={checked} readonly onChange={e => { setChecked(checked) }} />
+          </label>
+        </div>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Disabled</h6>
+          <label>
+            <span>Disabled: </span>
+            <Toggle checked={checked} disabled onChange={e => { setChecked(checked) }} />
+          </label>
+        </div>
+      </div>
+    </div>
+    <div style={{ padding: "10px" }}>
+      <h4>Dropdown</h4>
+      <div style={{ display: "flex", flexDirection: "row", justifyContent: "stretch" }}>
+        <div style={{ flex: 1, margin: "5px" }}>
+          <h6>Normal</h6>
+          <Dropdown options={menuOptions} value={dropdown} onChange={onChangeDropdown} />
+        </div>
+      </div>
+    </div>
+
+  </div>
 }
 
 export default function ComponentsTestPage() {

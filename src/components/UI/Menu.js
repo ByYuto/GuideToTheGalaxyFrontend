@@ -2,7 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import MenuOption from './MenuOption';
 
-export const CustomMenu = styled.div`
+export const StyledMenu = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
@@ -10,20 +10,16 @@ export const CustomMenu = styled.div`
   border-radius: 0px 0px 0px 0px;
   background: ${props => props.theme.isDark ? props.theme.baseColors.darker : "white"};
   color: ${props => props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle};
-
+  max-height: 300px;
+  overflow: auto;
   ${props => props.bottomRounded ? css`
     border-radius: 0px 0px 8px 8px;
   `: null}
 }`;
 
-const StyledMenu = styled.div``;
-
-const Menu = ({ options, onMenuClick, ...props }) => <StyledMenu {...props}>
-  <CustomMenu>
-    {options ? options.map((option, key) => <MenuOption option={option} key={key} onClick={onMenuClick} />) : null}
-  </CustomMenu>
+export const CustomMenu = StyledMenu;
+const Menu = ({ options, onOptionClick, ...props }) => <StyledMenu {...props}>
+  {options ? options.map((option, key) => <MenuOption option={option} key={key} onClick={onOptionClick} />) : null}
 </StyledMenu>
-
-
 
 export default styled(Menu)``;
