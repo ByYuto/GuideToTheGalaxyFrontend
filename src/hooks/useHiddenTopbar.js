@@ -1,0 +1,17 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { changeAppTopbarDisplay } from "../redux/reducers/app";
+
+const useHideTopbar = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(changeAppTopbarDisplay(false));
+
+    return () => {
+      dispatch(changeAppTopbarDisplay(true));
+    }
+  }, []);
+}
+
+export default useHideTopbar;

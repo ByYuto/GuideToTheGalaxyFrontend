@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import Home from '../views/Home';
-import CreateArticle from '../views/CreateArticle';
+import CreateArticle from '../views/CreateArticle/CreateArticle';
 import Layout from '../components/Layout/Layout';
 import ComponentsTestPage from '../views/ComponentsTestPage';
 

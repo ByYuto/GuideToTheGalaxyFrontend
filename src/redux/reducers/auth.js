@@ -1,10 +1,10 @@
 const initialState = {
-    user: null
+  user: null
 }
 //Reducer
 export default (state = initialState, { type, payload }) => {
-    switch (type) {
-        default:
-            return state;
-    }
+  switch (type) {
+    default:
+      return state;
+  }
 }

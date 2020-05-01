@@ -1,13 +1,18 @@
 import React from 'react';
 import TopBar from '../TopBar';
 import Footer from '../Footer';
+import { useSelector } from 'react-redux';
 
-const Layout = ({ children }) =>
-  <div className="layout">
-    <TopBar />
+const topBarVisibleSelector = state => state.app?.topBar?.visible;
+
+const Layout = ({ children }) => {
+  const isTopBarVisible = useSelector(topBarVisibleSelector);
+  return <React.Fragment>
+    {isTopBarVisible ? <TopBar /> : null}
     {children}
-    <Footer />
-  </div>
+    {isTopBarVisible ? <Footer /> : null}
+  </React.Fragment>
 
+}
 
 export default Layout;

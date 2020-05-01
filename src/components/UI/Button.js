@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 const Button = styled.button`
   all: unset;
+  box-sizing: border-box;
   background: ${props => props.theme.accentColors.secondary.color};
   color: white;
   font-size: 12px;
