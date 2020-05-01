@@ -8,14 +8,14 @@ const StyledHeader = styled.div`
   align-items: center;
   padding-top: 1px;
 
-  h3 {
+  & > h3 {
     margin: 0;
     margin-top: 48px;
     margin-bottom: 32px;
     color: ${props => props.theme.accentColors.primary.color};
   }
 
-  ${Caption} {
+  & > ${Caption} {
     color: ${props => props.theme.baseColors.middleLight};
     margin-bottom: 32px;
   }
