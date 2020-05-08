@@ -13,12 +13,13 @@ const StyledFooter = styled.div`
   ${Button} {
     min-width: 128px;
     background-color: ${props => props.theme.baseColors.middle};
+    margin: 0 12px;
   }
 `
 
 const CreateArticleFooter = ({ onExitClick, onNextClick }) => <StyledFooter>
-  <Button primary rounded onClick={onExitClick}>EXIT</Button>
-  <Button primary rounded onClick={onNextClick}>NEXT</Button>
+  <Button primary rounded onClick={onExitClick} disabled={true}>EXIT</Button>
+  <Button primary rounded onClick={onNextClick} disabled={false}>NEXT</Button>
 </StyledFooter>
 
 export default CreateArticleFooter;

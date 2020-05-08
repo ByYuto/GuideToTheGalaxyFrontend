@@ -83,6 +83,10 @@ const Button = styled.button`
   ${props => props.icon && css`
     padding: 0;
   `}
+
+  ${props => props.disabled ? css`
+    background-color: red;
+  ` : null}
 `
 
 Button.defaultProps = {

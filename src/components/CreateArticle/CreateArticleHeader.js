@@ -13,20 +13,26 @@ const StyledHeader = styled.div`
     margin-top: 48px;
     margin-bottom: 32px;
     color: ${props => props.theme.accentColors.primary.color};
+    text-align: center;
   }
 
   & > ${Caption} {
     color: ${props => props.theme.baseColors.middleLight};
     margin-bottom: 32px;
+    text-align: center;
+  }
+
+  & > div {
+    display: flex;
+    width: 100%;
+    justify-content: center;
   }
 `
 
 const CreateArticleHeader = ({ children }) => <StyledHeader>
   <h3>Create an article</h3>
   <Caption bold >CATEGORY AND SUBCATEGORY</Caption>
-  <div>
-    {children}
-  </div>
+  {children}
 </StyledHeader>
 
 export default CreateArticleHeader;
