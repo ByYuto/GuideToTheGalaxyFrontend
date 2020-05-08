@@ -1,9 +1,11 @@
-import { createGlobalStyle } from "styled-components"
+import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
 
 html, body, #root {
   height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 * {
   box-sizing: border-box;
@@ -73,36 +75,36 @@ h6 {
   letter-spacing: 0.01em;
   text-transform: uppercase;
 }
-`
+`;
 
 export default {
   isDark: false,
   baseColors: {
-    black: "#000000",
-    darker: "#151531",
-    dark: "#1F1F3D",
-    darkMiddle: "#3B3B64",
-    middle: "#9695B7",
-    middleLight: "#BDBFDF",
-    light: "#F6F8FF",
-    white: "#FFFFFF"
+    black: '#000000',
+    darker: '#151531',
+    dark: '#1F1F3D',
+    darkMiddle: '#3B3B64',
+    middle: '#9695B7',
+    middleLight: '#BDBFDF',
+    light: '#F6F8FF',
+    white: '#FFFFFF',
   },
   accentColors: {
     primary: {
-      color: "#6670F0",
-      hover: "#5767F9",
-      disabled: "#BDBFDF",
-      text: "white",
+      color: '#6670F0',
+      hover: '#5767F9',
+      disabled: '#BDBFDF',
+      text: 'white',
     },
     secondary: {
-      color: "#E3BBEA",
-      hover: "#CF92E5",
-      text: "#1F1F3D",
-      disabled: "#BDBFDF"
+      color: '#E3BBEA',
+      hover: '#CF92E5',
+      text: '#1F1F3D',
+      disabled: '#BDBFDF',
     },
   },
   borderRadius: {
-    small: "8px",
-    normal: "16px",
-  }
-}
+    small: '8px',
+    normal: '16px',
+  },
+};

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const CreateArticleTooltip = styled.div`
@@ -14,9 +13,11 @@ const CreateArticleTooltip = styled.div`
     position: absolute;
     content: "";
     display: block;
-    border: 12px solid transparent;
-    border-color: transparent ${props => props.theme.accentColors.primary.color} transparent transparent;
-    right: 100%;
+    border: 12px solid ${props => props.theme.accentColors.primary.color};
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    right: 98%;
   }
 `;
 
