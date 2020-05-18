@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import { FiChevronLeft } from 'react-icons/fi';
 import { FiChevronRight } from 'react-icons/fi';
@@ -8,6 +8,7 @@ import { GoPlus } from 'react-icons/go';
 
 const StyledContentType = styled.div`
   display: flex;
+  flex-direction: row;
   background: ${(props) => (props.active ? props.theme.accentColors.primary.color : props.theme.baseColors.darkMiddle)};
   border-radius: 8px;
   border: 1px solid transparent;
@@ -37,15 +38,17 @@ const StyledContentType = styled.div`
     margin: 0;
     display: block;
     color: ${(props) => (props.active ? props.theme.baseColors.white : props.theme.baseColors.light)};
+    text-transform: uppercase;
   }
 `;
 
 const ArrowButton = styled.button`
   all: unset;
   font-size: 1.5em;
+  cursor: pointer;
 `;
 
-const ContentTypesList = styled(ScrollContainer)`
+const ContentTypesList = styled.div`
   overflow: auto;
   display: flex;
   flex-direction: row;
@@ -73,7 +76,7 @@ const AddContentTypeButton = styled(Button)`
   color: ${(props) => props.theme.baseColors.darker};
 `;
 
-const ContentType = ({ className, title, description, value, active, onClick, readOnly }) => {
+const ContentType = ({ className, title, value, active, onClick, readOnly }) => {
   const _onClick = () => {
     !readOnly && onClick && onClick(value);
   };
@@ -84,22 +87,84 @@ const ContentType = ({ className, title, description, value, active, onClick, re
   );
 };
 
+const CustomContentType = ({ className, title, value, active, onClick, readOnly, onChange, editableRef }) => {
+  const _onClick = () => {
+    !readOnly && onClick && onClick(value);
+  };
+  const _onBlur = (e) => {
+    onChange && onChange(e.target.innerHTML);
+  };
+  const _onKeyDown = (e) => {
+    if (
+      (e.keyCode >= 65 && e.keyCode <= 90) ||
+      (e.keyCode >= 97 && e.keyCode <= 122) ||
+      e.keyCode === 32 || //SPACE
+      e.keyCode === 8 || //BACKPSPACE
+      e.keyCode === 46 //SUPR/DELETE
+    ) {
+      //Valid
+      return;
+    } else {
+      e.preventDefault();
+    }
+  };
+
+  return (
+    <StyledContentType className={className} active={active} readOnly={readOnly} onClick={_onClick}>
+      {/*<input value={value} onChange={_onChange} onClick={_onClick} />*/}
+      <h6
+        contentEditable={true}
+        onBlur={_onBlur}
+        suppressContentEditableWarning={true}
+        onKeyDown={_onKeyDown}
+        ref={editableRef}
+      >
+        {value}
+      </h6>
+    </StyledContentType>
+  );
+};
+
 const convertToText = (contentType) => {
   return contentType.replace('_', ' ').toUpperCase();
 };
 
 const ContentTypeSelector = ({ contentTypes, value, onChange, readOnly }) => {
+  const containerRef = useRef(null);
+  const editableRef = useRef(null);
+  const [newContentType, setNewContentType] = useState();
   const onContentTypeClick = (contentType) => {
     !readOnly && onChange && onChange(contentType);
   };
 
+  const onRightArrowClick = () => (containerRef.current.scrollLeft += 50);
+  const onLeftArrowClick = () => (containerRef.current.scrollLeft += 50);
+
+  const onAddNewContentTypeClick = (e) => {
+    const contentType = 'New Content Type';
+    setNewContentType(contentType);
+    onChange(contentType);
+    setTimeout(() => {
+      containerRef.current.scrollLeft += 99999;
+      editableRef.current && editableRef.current.focus();
+      window.getSelection().selectAllChildren(editableRef.current);
+    }, 10);
+  };
+
+  const onCustomContentChange = (newContentType) => {
+    setNewContentType(newContentType);
+    onChange(newContentType);
+    setTimeout(() => (containerRef.current.scrollLeft += 99999), 100);
+  };
+
+  console.log('El nuevo contentType es', newContentType);
   return (
     <StyledContentTypeSelector>
-      <ArrowButton>
+      <ArrowButton onClick={onLeftArrowClick}>
         <FiChevronLeft />
       </ArrowButton>
 
-      <ContentTypesList horizontal={readOnly === false}>
+      <ContentTypesList horizontal={readOnly === false} ref={containerRef}>
         {contentTypes.map((contentType, i) => (
           <ContentType
             key={contentType}
@@ -110,12 +175,26 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, readOnly }) => {
             readOnly={readOnly}
           />
         ))}
-        <AddContentTypeButton secondary circle onClick={null} icon>
-          <GoPlus />
-        </AddContentTypeButton>
+        {!newContentType ? (
+          !readOnly ? (
+            <AddContentTypeButton secondary circle onClick={onAddNewContentTypeClick} icon>
+              <GoPlus />
+            </AddContentTypeButton>
+          ) : null
+        ) : (
+          <CustomContentType
+            title={convertToText(newContentType)}
+            value={newContentType}
+            active={newContentType === value}
+            onClick={onCustomContentChange}
+            readOnly={readOnly}
+            onChange={onCustomContentChange}
+            editableRef={editableRef}
+          />
+        )}
       </ContentTypesList>
 
-      <ArrowButton>
+      <ArrowButton onClick={onRightArrowClick}>
         <FiChevronRight />
       </ArrowButton>
     </StyledContentTypeSelector>

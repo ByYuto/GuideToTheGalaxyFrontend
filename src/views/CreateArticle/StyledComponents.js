@@ -19,7 +19,7 @@ export const StyledCategorySelectorTooltip = styled(CreateArticleTooltip)`
     text-align: center;
 
     &:before {
-      border-bottom-color: ${props => props.theme.accentColors.primary.color};
+      border-bottom-color: ${(props) => props.theme.accentColors.primary.color};
       border-right-color: transparent;
       border-top-color: transparent;
       border-left-color: transparent;
@@ -34,7 +34,6 @@ export const StyledCategorySelectorContainer = styled.div`
   justify-content: center;
   display: flex;
   flex-direction: column;
-
 `;
 
 export const StyledContentTypeSelectorContainer = styled.div`
@@ -56,9 +55,9 @@ export const StyledView = styled(View)`
   & > * {
     flex: 0;
   }
-  
+
   ${MaxWidthContainer} {
     flex-grow: 1;
-    background: ${props => props.theme.baseColors.dark};
+    background: ${(props) => props.theme.baseColors.dark};
   }
 `;

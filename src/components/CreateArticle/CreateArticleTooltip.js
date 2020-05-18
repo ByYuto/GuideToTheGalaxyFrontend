@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const CreateArticleTooltip = styled.div`
   position: absolute;
-  background-color: ${props => props.theme.accentColors.primary.color};
+  background-color: ${(props) => props.theme.accentColors.primary.color};
   padding: 16px;
   border-radius: 10px;
   max-width: 580px;
@@ -11,15 +11,13 @@ const CreateArticleTooltip = styled.div`
 
   &:before {
     position: absolute;
-    content: "";
+    content: '';
     display: block;
-    border: 12px solid ${props => props.theme.accentColors.primary.color};
-    border-top-color: transparent;
-    border-bottom-color: transparent;
-    border-left-color: transparent;
+    border-style: solid;
+    border-color: transparent ${(props) => props.theme.accentColors.primary.color} transparent transparent;
+    border-width: 12px 12px 12px 0;
     right: 98%;
   }
 `;
-
 
 export default CreateArticleTooltip;

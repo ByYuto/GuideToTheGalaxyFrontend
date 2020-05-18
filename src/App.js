@@ -4,6 +4,8 @@ import { store } from './redux/store';
 import Router from './router/Router';
 import { ThemeProvider } from 'styled-components';
 import theme, { GlobalStyle } from './components/Layout/Theme';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -12,7 +14,8 @@ function App() {
       <ThemeProvider theme={theme}>
         <Router />
       </ThemeProvider>
-    </Provider >
+      <ToastContainer />
+    </Provider>
   );
 }
 
