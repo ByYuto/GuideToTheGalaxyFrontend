@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { FiChevronLeft } from 'react-icons/fi';
 import { FiChevronRight } from 'react-icons/fi';
-import ScrollContainer from 'react-indiana-drag-scroll';
+//import ScrollContainer from 'react-indiana-drag-scroll';
 import Button from '../UI/Button';
 import { GoPlus } from 'react-icons/go';
 
@@ -37,8 +37,17 @@ const StyledContentType = styled.div`
     padding: 0;
     margin: 0;
     display: block;
+    flex-grow: 1;
     color: ${(props) => (props.active ? props.theme.baseColors.white : props.theme.baseColors.light)};
     text-transform: uppercase;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  button {
+    margin-left: 10px;
   }
 `;
 
@@ -87,12 +96,22 @@ const ContentType = ({ className, title, value, active, onClick, readOnly }) => 
   );
 };
 
-const CustomContentType = ({ className, title, value, active, onClick, readOnly, onChange, editableRef }) => {
+const CustomContentType = ({
+  className,
+  title,
+  value,
+  active,
+  onClick,
+  readOnly,
+  onChange,
+  editableRef,
+  onClearContentType,
+}) => {
   const _onClick = () => {
     !readOnly && onClick && onClick(value);
   };
   const _onBlur = (e) => {
-    onChange && onChange(e.target.innerHTML);
+    onChange && onChange(e.target.textContent || e.target.innerText || null);
   };
   const _onKeyDown = (e) => {
     if (
@@ -100,7 +119,9 @@ const CustomContentType = ({ className, title, value, active, onClick, readOnly,
       (e.keyCode >= 97 && e.keyCode <= 122) ||
       e.keyCode === 32 || //SPACE
       e.keyCode === 8 || //BACKPSPACE
-      e.keyCode === 46 //SUPR/DELETE
+      e.keyCode === 46 || //SUPR/DELETE
+      e.keyCode === 37 || //LEFT ARROW
+      e.keyCode === 39 // RIGHT ARROW
     ) {
       //Valid
       return;
@@ -109,18 +130,31 @@ const CustomContentType = ({ className, title, value, active, onClick, readOnly,
     }
   };
 
+  const onPaste = (e) => {
+    e.preventDefault();
+    let text = (e.originalEvent || e).clipboardData.getData('text/plain');
+    text = text.replace(/(<([^>]+)>)/gi, '');
+    document.execCommand('insertHTML', false, text);
+    //setTimeout(() => {
+    //  document.execCommand('insertHTML', false, text);
+    //}, 1000);
+  };
+
   return (
     <StyledContentType className={className} active={active} readOnly={readOnly} onClick={_onClick}>
-      {/*<input value={value} onChange={_onChange} onClick={_onClick} />*/}
       <h6
-        contentEditable={true}
+        contentEditable={!readOnly}
         onBlur={_onBlur}
         suppressContentEditableWarning={true}
         onKeyDown={_onKeyDown}
         ref={editableRef}
+        onPaste={onPaste}
       >
         {value}
       </h6>
+      <Button onClick={onClearContentType} transparent secondary icon>
+        X
+      </Button>
     </StyledContentType>
   );
 };
@@ -137,6 +171,10 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, readOnly }) => {
     !readOnly && onChange && onChange(contentType);
   };
 
+  useEffect(() => {
+    setNewContentType(null); //If contentTypes is changed, reset newContentType
+  }, [JSON.stringify(contentTypes)]);
+
   const onRightArrowClick = () => (containerRef.current.scrollLeft += 50);
   const onLeftArrowClick = () => (containerRef.current.scrollLeft += 50);
 
@@ -151,13 +189,20 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, readOnly }) => {
     }, 10);
   };
 
+  const onClearContentType = () => {
+    setTimeout(() => {
+      setNewContentType(null);
+      onChange(null);
+    }, 1);
+  };
+
   const onCustomContentChange = (newContentType) => {
     setNewContentType(newContentType);
     onChange(newContentType);
     setTimeout(() => (containerRef.current.scrollLeft += 99999), 100);
   };
 
-  console.log('El nuevo contentType es', newContentType);
+  //console.log('El nuevo contentType es', newContentType);
   return (
     <StyledContentTypeSelector>
       <ArrowButton onClick={onLeftArrowClick}>
@@ -190,6 +235,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, readOnly }) => {
             readOnly={readOnly}
             onChange={onCustomContentChange}
             editableRef={editableRef}
+            onClearContentType={onClearContentType}
           />
         )}
       </ContentTypesList>

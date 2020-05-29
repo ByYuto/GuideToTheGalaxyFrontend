@@ -16,7 +16,8 @@ import {
   StyledContentTypeSelectorContainer,
   StyledContent,
 } from './StyledComponents';
-import { toast } from 'react-toastify';
+//import { toast } from 'react-toastify';
+
 const categories = [
   {
     id: 'equipment',
@@ -94,7 +95,7 @@ const CreateArticle = () => {
 
   const onNextClick = () => {
     dispatch(setNewArticleStep(step + 1));
-    toast('Ahora estamos en la segunda pantalla!');
+    //toast('Ahora estamos en la segunda pantalla!');
   };
 
   return (
