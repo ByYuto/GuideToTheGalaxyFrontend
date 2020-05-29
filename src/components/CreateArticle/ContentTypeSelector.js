@@ -114,14 +114,16 @@ const CustomContentType = ({
     onChange && onChange(e.target.textContent || e.target.innerText || null);
   };
   const _onKeyDown = (e) => {
+    console.log('KeyDown', e.keyCode, e.which, e.charCode, e.key);
     if (
-      (e.keyCode >= 65 && e.keyCode <= 90) ||
-      (e.keyCode >= 97 && e.keyCode <= 122) ||
+      (e.keyCode >= 65 && e.keyCode <= 90) || //Uppercase letters
+      (e.keyCode >= 97 && e.keyCode <= 122) || //Lowercase letters
       e.keyCode === 32 || //SPACE
       e.keyCode === 8 || //BACKPSPACE
       e.keyCode === 46 || //SUPR/DELETE
       e.keyCode === 37 || //LEFT ARROW
-      e.keyCode === 39 // RIGHT ARROW
+      e.keyCode === 39 || // RIGHT ARROW
+      e.key === '&' //Ampersand
     ) {
       //Valid
       return;
@@ -130,14 +132,11 @@ const CustomContentType = ({
     }
   };
 
-  const onPaste = (e) => {
+  const _onPaste = (e) => {
     e.preventDefault();
     let text = (e.originalEvent || e).clipboardData.getData('text/plain');
     text = text.replace(/(<([^>]+)>)/gi, '');
     document.execCommand('insertHTML', false, text);
-    //setTimeout(() => {
-    //  document.execCommand('insertHTML', false, text);
-    //}, 1000);
   };
 
   return (
@@ -148,7 +147,7 @@ const CustomContentType = ({
         suppressContentEditableWarning={true}
         onKeyDown={_onKeyDown}
         ref={editableRef}
-        onPaste={onPaste}
+        onPaste={_onPaste}
       >
         {value}
       </h6>
