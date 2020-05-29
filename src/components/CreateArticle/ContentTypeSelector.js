@@ -85,20 +85,19 @@ const AddContentTypeButton = styled(Button)`
   color: ${(props) => props.theme.baseColors.darker};
 `;
 
-const ContentType = ({ className, title, value, active, onClick, readOnly }) => {
+const ContentType = ({ className, value, active, onClick, readOnly }) => {
   const _onClick = () => {
     !readOnly && onClick && onClick(value);
   };
   return (
     <StyledContentType className={className} onClick={_onClick} active={active} readOnly={readOnly}>
-      <h6>{title}</h6>
+      <h6>{value}</h6>
     </StyledContentType>
   );
 };
 
 const CustomContentType = ({
   className,
-  title,
   value,
   active,
   onClick,
@@ -106,15 +105,18 @@ const CustomContentType = ({
   onChange,
   editableRef,
   onClearContentType,
+  onBlur,
 }) => {
   const _onClick = () => {
     !readOnly && onClick && onClick(value);
   };
   const _onBlur = (e) => {
-    onChange && onChange(e.target.textContent || e.target.innerText || null);
+    const value = (e.target.textContent || e.target.innerText).toUpperCase() || null;
+    onChange && onChange(value);
+    onBlur && onBlur(value);
   };
   const _onKeyDown = (e) => {
-    console.log('KeyDown', e.keyCode, e.which, e.charCode, e.key);
+    //console.log('KeyDown', e.keyCode, e.which, e.charCode, e.key);
     if (
       (e.keyCode >= 65 && e.keyCode <= 90) || //Uppercase letters
       (e.keyCode >= 97 && e.keyCode <= 122) || //Lowercase letters
@@ -123,10 +125,18 @@ const CustomContentType = ({
       e.keyCode === 46 || //SUPR/DELETE
       e.keyCode === 37 || //LEFT ARROW
       e.keyCode === 39 || // RIGHT ARROW
+      e.keyCode === 35 || // END
+      e.keyCode === 36 || // HOME
       e.key === '&' //Ampersand
     ) {
       //Valid
       return;
+    } else if (e.keyCode === 13) {
+      //const value = (e.target.textContent || e.target.innerText).toUpperCase() || null;
+      //onChange && onChange(value);
+      //onBlur && onBlur(value);
+      editableRef.current.blur();
+      e.preventDefault();
     } else {
       e.preventDefault();
     }
@@ -135,8 +145,10 @@ const CustomContentType = ({
   const _onPaste = (e) => {
     e.preventDefault();
     let text = (e.originalEvent || e).clipboardData.getData('text/plain');
-    text = text.replace(/(<([^>]+)>)/gi, '');
-    document.execCommand('insertHTML', false, text);
+    text = text.replace(/(<([^>]+)>)/gi, ''); //Remove HTML tags
+    text = text.replace(/[^0-9a-z\s&]/gi, ''); //Remove all characters except numbers, letters, spaces and &
+    text = text.replace(/\s\s+/g, ' '); //Convert multiple spaces into one
+    document.execCommand('insertHTML', false, text.toUpperCase());
   };
 
   return (
@@ -158,11 +170,13 @@ const CustomContentType = ({
   );
 };
 
+/*
 const convertToText = (contentType) => {
   return contentType.replace('_', ' ').toUpperCase();
 };
+*/
 
-const ContentTypeSelector = ({ contentTypes, value, onChange, readOnly }) => {
+const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlur, readOnly }) => {
   const containerRef = useRef(null);
   const editableRef = useRef(null);
   const [newContentType, setNewContentType] = useState();
@@ -192,6 +206,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, readOnly }) => {
     setTimeout(() => {
       setNewContentType(null);
       onChange(null);
+      onCustomContentBlur(null);
     }, 1);
   };
 
@@ -212,7 +227,6 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, readOnly }) => {
         {contentTypes.map((contentType, i) => (
           <ContentType
             key={contentType}
-            title={convertToText(contentType)}
             value={contentType}
             active={contentType === value}
             onClick={onContentTypeClick}
@@ -227,7 +241,6 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, readOnly }) => {
           ) : null
         ) : (
           <CustomContentType
-            title={convertToText(newContentType)}
             value={newContentType}
             active={newContentType === value}
             onClick={onCustomContentChange}
@@ -235,6 +248,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, readOnly }) => {
             onChange={onCustomContentChange}
             editableRef={editableRef}
             onClearContentType={onClearContentType}
+            onBlur={onCustomContentBlur}
           />
         )}
       </ContentTypesList>

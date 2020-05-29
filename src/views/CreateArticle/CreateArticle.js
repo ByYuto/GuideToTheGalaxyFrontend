@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CreateArticleHeader from '../../components/CreateArticle/CreateArticleHeader';
 import { ThemeProvider } from 'styled-components';
 import CategorySelector from '../../components/CreateArticle/CategorySelector';
@@ -16,7 +16,7 @@ import {
   StyledContentTypeSelectorContainer,
   StyledContent,
 } from './StyledComponents';
-//import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const categories = [
   {
@@ -49,18 +49,18 @@ const categories = [
 
 const contentTypes = {
   equipment: [
-    'microphone',
-    'loop_pedal',
-    'amps',
-    'cashless',
-    'guitar',
-    'case',
-    'other_subcategory1',
-    'other_subcategory2',
-    'other_subcategory3',
-    'other_subcategory4',
+    'MICROPHONE',
+    'LOOP PEDALS',
+    'AMPS',
+    'CASHLESS',
+    'GUITAR',
+    'CASE',
+    'OTHER SUBCATEGORY',
+    'OTHER SUBCATEGORY2',
+    'OTHER SUBCATEGORY3',
+    'OTHER SUBCATEGORY4',
   ],
-  legal: ['abogados', 'pleitos', 'demandas'],
+  legal: ['ABOGADOS', 'PLEITOS', 'DEMANDAS'],
   museum: [],
   supporting_orgs: [],
   general: [],
@@ -78,6 +78,7 @@ const CreateArticle = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { newArticle, step } = useSelector((state) => state.newArticle);
+  const [customContent, setCustomContent] = useState(null);
   const nextDisabled = useSelector(nextDisabledSelector);
   console.log({ step, newArticle });
   useHiddenTopbar(); //hideTopbar
@@ -96,6 +97,20 @@ const CreateArticle = () => {
   const onNextClick = () => {
     dispatch(setNewArticleStep(step + 1));
     //toast('Ahora estamos en la segunda pantalla!');
+  };
+
+  const onCustomContentBlur = (value) => {
+    if (customContent === value) {
+      return;
+    }
+
+    if (!customContent) {
+      toast('Content type added: ' + value);
+    } else if (value) {
+      toast('Content type edited: ' + value);
+    }
+    console.log('Custom Content set to', value);
+    setCustomContent(value);
   };
 
   return (
@@ -123,6 +138,7 @@ const CreateArticle = () => {
                     value={newArticle.contentTypeId}
                     onChange={onContentTypeChange}
                     readOnly={step !== 1}
+                    onCustomContentBlur={onCustomContentBlur}
                   />
                   {step === 1 ? (
                     <StyledCategorySelectorTooltip>
