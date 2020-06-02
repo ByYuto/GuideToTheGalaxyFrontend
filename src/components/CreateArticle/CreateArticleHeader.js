@@ -7,17 +7,18 @@ const StyledHeader = styled.div`
   flex-direction: column;
   align-items: center;
   padding-top: 1px;
+  padding-bottom: 10px;
 
   & > h3 {
     margin: 0;
     margin-top: 48px;
     margin-bottom: 32px;
-    color: ${props => props.theme.accentColors.primary.color};
+    color: ${(props) => props.theme.accentColors.primary.color};
     text-align: center;
   }
 
   & > ${Caption} {
-    color: ${props => props.theme.baseColors.middleLight};
+    color: ${(props) => props.theme.baseColors.middleLight};
     margin-bottom: 32px;
     text-align: center;
   }
@@ -27,12 +28,14 @@ const StyledHeader = styled.div`
     width: 100%;
     justify-content: center;
   }
-`
+`;
 
-const CreateArticleHeader = ({ children }) => <StyledHeader>
-  <h3>Create an article</h3>
-  <Caption bold >CATEGORY AND SUBCATEGORY</Caption>
-  {children}
-</StyledHeader>
+const CreateArticleHeader = ({ children }) => (
+  <StyledHeader>
+    <h3>Create an article</h3>
+    <Caption bold>CATEGORY AND SUBCATEGORY</Caption>
+    {children}
+  </StyledHeader>
+);
 
 export default CreateArticleHeader;

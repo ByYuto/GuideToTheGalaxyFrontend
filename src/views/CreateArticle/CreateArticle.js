@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CreateArticleHeader from '../../components/CreateArticle/CreateArticleHeader';
 import { ThemeProvider } from 'styled-components';
 import CategorySelector from '../../components/CreateArticle/CategorySelector';
@@ -17,6 +17,10 @@ import {
   StyledContent,
 } from './StyledComponents';
 import { toast } from 'react-toastify';
+import Caption from '../../components/UI/Caption';
+import Input from '../../components/UI/Input';
+import ArticleData from '../../components/CreateArticle/ArticleData';
+import { getCategories } from '../../redux/reducers/appState';
 
 const categories = [
   {
@@ -83,6 +87,9 @@ const CreateArticle = () => {
   console.log({ step, newArticle });
   useHiddenTopbar(); //hideTopbar
 
+  useEffect(() => {
+    dispatch(getCategories());
+  });
   const onCategoryChange = (category) => {
     dispatch(updateNewArticle({ categoryId: category, contentTypeId: null }));
   };
@@ -109,8 +116,13 @@ const CreateArticle = () => {
     } else if (value) {
       toast('Content type edited: ' + value);
     }
-    console.log('Custom Content set to', value);
+    //console.log('Custom Content set to', value);
     setCustomContent(value);
+  };
+
+  const onChangeArticle = (article) => {
+    console.log('Dispatching new article with', article);
+    dispatch(updateNewArticle(article));
   };
 
   return (
@@ -150,7 +162,11 @@ const CreateArticle = () => {
               ) : null}
             </StyledContentTypeSelectorContainer>
           </CreateArticleHeader>
-          <StyledContent>content goes here</StyledContent>
+          {step >= 2 ? (
+            <StyledContent>
+              <ArticleData article={newArticle} onChange={onChangeArticle} />
+            </StyledContent>
+          ) : null}
         </MaxWidthContainer>
         <CreateArticleFooter
           exitDisabled={false}

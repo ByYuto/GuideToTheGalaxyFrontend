@@ -116,7 +116,7 @@ const CustomContentType = ({
     onBlur && onBlur(value);
   };
   const _onKeyDown = (e) => {
-    //console.log('KeyDown', e.keyCode, e.which, e.charCode, e.key);
+    console.log('KeyDown', e.keyCode, e.which, e.charCode, e.key);
     if (
       (e.keyCode >= 65 && e.keyCode <= 90) || //Uppercase letters
       (e.keyCode >= 97 && e.keyCode <= 122) || //Lowercase letters
@@ -137,6 +137,9 @@ const CustomContentType = ({
       //onBlur && onBlur(value);
       editableRef.current.blur();
       e.preventDefault();
+    } else if (e.keyCode === 27) {
+      onChange && onChange(null);
+      onBlur && onBlur(null);
     } else {
       e.preventDefault();
     }
@@ -163,9 +166,11 @@ const CustomContentType = ({
       >
         {value}
       </h6>
-      <Button onClick={onClearContentType} transparent secondary icon>
-        X
-      </Button>
+      {!readOnly ? (
+        <Button onClick={onClearContentType} transparent secondary icon>
+          X
+        </Button>
+      ) : null}
     </StyledContentType>
   );
 };
@@ -223,7 +228,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
         <FiChevronLeft />
       </ArrowButton>
 
-      <ContentTypesList horizontal={readOnly === false} ref={containerRef}>
+      <ContentTypesList readonly={readOnly} ref={containerRef}>
         {contentTypes.map((contentType, i) => (
           <ContentType
             key={contentType}

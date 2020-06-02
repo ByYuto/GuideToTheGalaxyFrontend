@@ -16,18 +16,19 @@ const AutocompleteMenu = styled(Menu)`
 */
 
 const StyledInputContainer = styled.div`
-  display: inline-block;
+  display: ${(props) => (props.block ? 'flex' : 'inline-block')};
   position: relative;
+  flex: 1;
+  justify-content: center;
 
   ${Menu} {
     position: absolute;
     top: 100%;
-    left: ${props => props.Icon ? 32 : 10}px;
+    left: ${(props) => (props.Icon ? 32 : 10)}px;
     right: 0;
     z-index: 100;
   }
-}`
-
+}`;
 
 const ClearButton = styled(Button)`
   display: none;
@@ -35,17 +36,20 @@ const ClearButton = styled(Button)`
   right: 0;
   top: 5px;
   font-size: 30px;
-  color: ${props => props.theme.baseColors.middle};
+  color: ${(props) => props.theme.baseColors.middle};
 
-  ${props => (props.show && !props.disabled) ? css`
-    display: block;
-    input {
-      border: 1px solid ${props => props.theme.accentColors.primary.color};
-    }
-    &:hover{
-      color: ${props => props.theme.isDark ? props.theme.baseColors.light : props.theme.baseColors.dark};
-    }
-  ` : null}
+  ${(props) =>
+    props.show && !props.disabled
+      ? css`
+          display: block;
+          input {
+            border: 1px solid ${(props) => props.theme.accentColors.primary.color};
+          }
+          &:hover {
+            color: ${(props) => (props.theme.isDark ? props.theme.baseColors.light : props.theme.baseColors.dark)};
+          }
+        `
+      : null}
 `;
 
 const StyledInput = styled.div`
@@ -56,37 +60,51 @@ const StyledInput = styled.div`
   position: relative;
   height: 40px;
   overflow: hidden;
+  flex: 1;
 
-  border: 1px solid ${props => props.theme.isDark ? "transparent" : props.theme.baseColors.middleLight};
-  color: ${props => props.theme.isDark ? props.theme.baseColors.light : props.theme.baseColors.dark};
-  border-radius: ${props => props.theme.borderRadius.small};
+  border: 1px solid ${(props) => (props.theme.isDark ? 'transparent' : props.theme.baseColors.middleLight)};
+  color: ${(props) => (props.theme.isDark ? props.theme.baseColors.light : props.theme.baseColors.dark)};
+  border-radius: ${(props) => props.theme.borderRadius.small};
 
-  ${props => props.optionsOpened ? css`
-    border-bottom-right-radius: 1000;
-  ` : null}
-  ${props => props.focused && !props.disabled ? css`
-    border-color: ${props => props.theme.accentColors.primary.color};
-    box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
-  ` : null}
+  ${(props) =>
+    props.optionsOpened
+      ? css`
+          border-bottom-right-radius: 1000;
+        `
+      : null}
+  ${(props) =>
+    props.focused && !props.disabled
+      ? css`
+          border-color: ${(props) => props.theme.accentColors.primary.color};
+          box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
+        `
+      : null}
 
-  ${ props => props.squaredRight ? css`
-       border-top-right-radius: 0px;
-       border-bottom-right-radius: 0px;
-    ` : null}
-    ${ props => props.squaredLeft ? css`
-       border-top-left-radius: 0px;
-       border-bottom-left-radius: 0px;
-    ` : null}
+  ${(props) =>
+    props.squaredRight
+      ? css`
+          border-top-right-radius: 0px;
+          border-bottom-right-radius: 0px;
+        `
+      : null}
+    ${(props) =>
+      props.squaredLeft
+        ? css`
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
+          `
+        : null}
 
   input {
     all: unset;    
     font-family: 'Open Sans';    
     font-size: 14px;
     line-height: 22px;
-    padding: 9px 35px 9px ${props => props.Icon ? 48 : 26}px;
-    background: ${props => props.theme.isDark ? props.theme.baseColors.darker : "white"};    
+    width: 100%;
+    padding: 9px 35px 9px ${(props) => (props.Icon ? 48 : 26)}px;
+    background: ${(props) => (props.theme.isDark ? props.theme.baseColors.darker : 'white')};    
     &::placeholder {
-      color: ${props => props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle};
+      color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
     }    
   }
 
@@ -98,25 +116,48 @@ const StyledInput = styled.div`
     bottom: 0;
     font-size: 18px;    
     padding: 13px 0 0 16px;
-    color: ${props => props.theme.isDark ?
-    (props.disabled ? props.theme.baseColors.darkMiddle : props.theme.accentColors.primary.color)
-    : (props.disabled ? props.theme.baseColors.light : props.theme.baseColors.middleLight)};
+    color: ${(props) =>
+      props.theme.isDark
+        ? props.disabled
+          ? props.theme.baseColors.darkMiddle
+          : props.theme.accentColors.primary.color
+        : props.disabled
+        ? props.theme.baseColors.light
+        : props.theme.baseColors.middleLight};
   }
   
-  ${props => props.disabled ? css`
-    input { 
-      color: ${props => props.theme.isDark ? props.theme.baseColors.darkMiddle : props.theme.baseColors.middleLight};
+  ${(props) =>
+    props.disabled
+      ? css`
+          input {
+            color: ${(props) =>
+              props.theme.isDark ? props.theme.baseColors.darkMiddle : props.theme.baseColors.middleLight};
 
-      &::placeholder {
-        color: ${props => props.theme.isDark ? props.theme.baseColors.darkMiddle : props.theme.baseColors.middleLight};
-      }
-    }` : null}
+            &::placeholder {
+              color: ${(props) =>
+                props.theme.isDark ? props.theme.baseColors.darkMiddle : props.theme.baseColors.middleLight};
+            }
+          }
+        `
+      : null}
 
   
-`
+`;
 
 const autoCloseTime = 50;
-const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRight, squaredLeft, autoCompleteOptions, ...props }) => {
+const Input = ({
+  children,
+  value,
+  onChange,
+  onClear,
+  disabled,
+  Icon,
+  squaredRight,
+  squaredLeft,
+  autoCompleteOptions,
+  block,
+  ...props
+}) => {
   const inputRef = useRef(null);
 
   const [focusedCount, setFocusedCount] = useState(0);
@@ -135,7 +176,7 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
 
   const onFocus = (e) => {
     setFocused(true);
-  }
+  };
   const onBlur = (e) => {
     setFocused(false);
     setFocusedCount(0);
@@ -149,47 +190,68 @@ const Input = ({ children, value, onChange, onClear, disabled, Icon, squaredRigh
       setOptionsOpened(false);
     }
     onChange && onChange(value);
-  }
+  };
   const onClearClick = (e) => {
-    onChange && onChange("");
+    onChange && onChange('');
     inputRef.current.focus();
     onClear && onClear();
     setOptionsOpened(false);
-  }
+  };
   const onOptionClick = (option) => {
     onChange(option.label);
     setOptionsOpened(false);
-  }
+  };
 
   const onInputClick = () => {
     if (focusedCount > 1) {
       setOptionsOpened(true);
     }
     setFocusedCount(focusedCount + 1);
-  }
+  };
 
-  return <StyledInputContainer onFocus={onFocus} onBlur={onBlur} focused={focused} onClick={onInputClick} optionsOpened={optionsOpened} Icon={Icon}>
-    <StyledInput tabIndex={-1} disabled={disabled} Icon={Icon} squaredRight={squaredRight} squaredLeft={squaredLeft} focused={focused} optionsOpened={optionsOpened}>
-      {Icon ? <Icon className="icon" /> : null}
-      <input ref={inputRef} {...props} value={value} disabled={disabled} onChange={onInputChange} />
-      {!disabled ? <ClearButton icon transparent onClick={onClearClick} show={!!value.trim()}><IoIosClose /></ClearButton> : null}
-    </StyledInput >
-    {autoCompleteOptions && (optionsOpened || false) ?
-      <Menu options={autoCompleteOptions} onOptionClick={onOptionClick} />
-      : null
-    }
-  </StyledInputContainer >
-}
+  return (
+    <StyledInputContainer
+      onFocus={onFocus}
+      onBlur={onBlur}
+      focused={focused}
+      onClick={onInputClick}
+      optionsOpened={optionsOpened}
+      Icon={Icon}
+      block={block}
+    >
+      <StyledInput
+        tabIndex={-1}
+        disabled={disabled}
+        Icon={Icon}
+        squaredRight={squaredRight}
+        squaredLeft={squaredLeft}
+        focused={focused}
+        optionsOpened={optionsOpened}
+      >
+        {Icon ? <Icon className="icon" /> : null}
+        <input ref={inputRef} {...props} value={value} disabled={disabled} onChange={onInputChange} />
+        {!disabled ? (
+          <ClearButton icon transparent onClick={onClearClick} show={!!(value ? value.trim() : false)}>
+            <IoIosClose />
+          </ClearButton>
+        ) : null}
+      </StyledInput>
+      {autoCompleteOptions && (optionsOpened || false) ? (
+        <Menu options={autoCompleteOptions} onOptionClick={onOptionClick} />
+      ) : null}
+    </StyledInputContainer>
+  );
+};
 
 Input.defaultProps = {
-  value: "",
+  value: '',
   onChange: null,
   onClear: null,
   disabled: false,
   Icon: null,
   squaredRight: false,
   squaredLeft: false,
-  autoCompleteOptions: undefined
+  autoCompleteOptions: undefined,
 };
 
 Input.propTypes = {
@@ -200,7 +262,6 @@ Input.propTypes = {
   Icon: PropTypes.elementType,
   squaredRight: PropTypes.bool,
   squaredLeft: PropTypes.bool,
-}
+};
 
 export default Input;
-

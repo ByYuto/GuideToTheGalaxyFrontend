@@ -75,6 +75,16 @@ h6 {
   letter-spacing: 0.01em;
   text-transform: uppercase;
 }
+
+.Toastify__toast--default {
+  background: #3B3B64;
+  color: white;
+}
+
+.Toastify__progress-bar {
+  background: #151531;
+}
+
 `;
 
 export default {

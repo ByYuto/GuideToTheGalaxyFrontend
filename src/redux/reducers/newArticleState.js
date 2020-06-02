@@ -1,12 +1,12 @@
 const initialState = {
-  step: 1,
+  step: 2,
   newArticle: {
-    categoryId: null,
-    contentTypeId: null,
-    location: null,
-    title: null,
-    link: null,
-    photo: null,
+    categoryId: 'equipment',
+    contentTypeId: 'AMPS',
+    location: '',
+    title: '',
+    link: '',
+    photo: '',
   },
 };
 

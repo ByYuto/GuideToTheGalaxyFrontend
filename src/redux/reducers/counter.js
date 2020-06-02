@@ -1,9 +1,9 @@
 const initialState = {
-  counter: 0
-}
+  counter: 0,
+};
 
 //Action Types
-const INCREMENT = "COUNTER/INCREMENT";
+const INCREMENT = 'COUNTER/INCREMENT';
 
 //Action Creators
 export const incrementCounter = () => ({ type: INCREMENT });
@@ -14,9 +14,9 @@ export default (state = initialState, { type, payload }) => {
     case INCREMENT:
       return {
         ...state,
-        counter: state.counter + 1
-      }
+        counter: state.counter + 1,
+      };
     default:
       return state;
   }
-}
+};
