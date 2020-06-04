@@ -25,7 +25,7 @@ export const getCategoriesError = () => ({ type: APP_GET_CATEGORIES_ERROR });
 export const getCategories = () => async (dispatch) => {
   dispatch(getCategoriesRequest());
   const categories = await API.getCategories();
-  dispatch(getCategoriesSuccess(categories));
+  dispatch(getCategoriesSuccess(categories.data));
 };
 
 //Reducer

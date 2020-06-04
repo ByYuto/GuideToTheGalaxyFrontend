@@ -194,7 +194,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
   }, [JSON.stringify(contentTypes)]);
 
   const onRightArrowClick = () => (containerRef.current.scrollLeft += 50);
-  const onLeftArrowClick = () => (containerRef.current.scrollLeft += 50);
+  const onLeftArrowClick = () => (containerRef.current.scrollLeft -= 50);
 
   const onAddNewContentTypeClick = (e) => {
     const contentType = 'New Content Type';
@@ -229,11 +229,11 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
       </ArrowButton>
 
       <ContentTypesList readonly={readOnly} ref={containerRef}>
-        {contentTypes.map((contentType, i) => (
+        {contentTypes.map((contentType) => (
           <ContentType
-            key={contentType}
-            value={contentType}
-            active={contentType === value}
+            key={contentType.name}
+            value={contentType.name}
+            active={contentType.name === value}
             onClick={onContentTypeClick}
             readOnly={readOnly}
           />

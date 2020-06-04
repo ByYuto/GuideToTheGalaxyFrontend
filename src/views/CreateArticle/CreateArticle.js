@@ -22,6 +22,7 @@ import Input from '../../components/UI/Input';
 import ArticleData from '../../components/CreateArticle/ArticleData';
 import { getCategories } from '../../redux/reducers/appState';
 
+/*
 const categories = [
   {
     id: 'equipment',
@@ -50,7 +51,9 @@ const categories = [
     description: 'Have something that doesn’t fit elsewhere? Want to start a debate? Post it here.',
   },
 ];
+*/
 
+/*
 const contentTypes = {
   equipment: [
     'MICROPHONE',
@@ -69,6 +72,7 @@ const contentTypes = {
   supporting_orgs: [],
   general: [],
 };
+*/
 
 const nextDisabledSelector = (state) => {
   const { newArticle, step } = state.newArticle;
@@ -78,18 +82,28 @@ const nextDisabledSelector = (state) => {
   }
 };
 
+const categoriesSelector = (state) => state.app.categories;
+const getContentTypes = (categories, selectedCategory) => {
+  return categories.find((category) => category.name === selectedCategory).contentTypes;
+};
 const CreateArticle = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const { newArticle, step } = useSelector((state) => state.newArticle);
   const [customContent, setCustomContent] = useState(null);
   const nextDisabled = useSelector(nextDisabledSelector);
+  const categories = useSelector(categoriesSelector);
+  const contentTypesAvailableForSelectedCategory = newArticle.categoryId
+    ? getContentTypes(categories, newArticle.categoryId)
+    : null;
   console.log({ step, newArticle });
+  console.log('Categories', categories);
   useHiddenTopbar(); //hideTopbar
 
   useEffect(() => {
     dispatch(getCategories());
-  });
+  }, []);
+
   const onCategoryChange = (category) => {
     dispatch(updateNewArticle({ categoryId: category, contentTypeId: null }));
   };
@@ -129,44 +143,55 @@ const CreateArticle = () => {
     <ThemeProvider theme={{ isDark: true }}>
       <StyledView>
         <MaxWidthContainer>
-          <CreateArticleHeader>
-            <StyledCategorySelectorContainer>
-              <CategorySelector
-                categories={categories}
-                value={newArticle.categoryId}
-                onChange={onCategoryChange}
-                showDescriptions={newArticle.categoryId === null}
-                readOnly={step !== 1}
-              />
-              {!newArticle.categoryId ? (
-                <StyledCategorySelectorTooltip>Select a category for your post!</StyledCategorySelectorTooltip>
-              ) : null}
-            </StyledCategorySelectorContainer>
-            <StyledContentTypeSelectorContainer>
-              {newArticle.categoryId ? (
-                <React.Fragment>
-                  <ContentTypeSelector
-                    contentTypes={contentTypes[newArticle.categoryId]}
-                    value={newArticle.contentTypeId}
-                    onChange={onContentTypeChange}
+          {categories ? (
+            <React.Fragment>
+              <CreateArticleHeader>
+                <StyledCategorySelectorContainer>
+                  <CategorySelector
+                    categories={categories}
+                    value={newArticle.categoryId}
+                    onChange={onCategoryChange}
+                    showDescriptions={newArticle.categoryId === null}
                     readOnly={step !== 1}
-                    onCustomContentBlur={onCustomContentBlur}
                   />
-                  {step === 1 ? (
-                    <StyledCategorySelectorTooltip>
-                      Select a Content Type for your post to help other users find it, and for them to quickly identify
-                      what kind of content it is.
-                    </StyledCategorySelectorTooltip>
+                  {!newArticle.categoryId ? (
+                    <StyledCategorySelectorTooltip>Select a category for your post!</StyledCategorySelectorTooltip>
                   ) : null}
-                </React.Fragment>
+                </StyledCategorySelectorContainer>
+                <StyledContentTypeSelectorContainer>
+                  {newArticle.categoryId ? (
+                    <React.Fragment>
+                      {console.log(
+                        'Antes de renderizar',
+                        newArticle.categoryId,
+                        contentTypesAvailableForSelectedCategory
+                      )}
+                      <ContentTypeSelector
+                        contentTypes={contentTypesAvailableForSelectedCategory}
+                        value={newArticle.contentTypeId}
+                        onChange={onContentTypeChange}
+                        readOnly={step !== 1}
+                        onCustomContentBlur={onCustomContentBlur}
+                      />
+                      {step === 1 ? (
+                        <StyledCategorySelectorTooltip>
+                          Select a Content Type for your post to help other users find it, and for them to quickly
+                          identify what kind of content it is.
+                        </StyledCategorySelectorTooltip>
+                      ) : null}
+                    </React.Fragment>
+                  ) : null}
+                </StyledContentTypeSelectorContainer>
+              </CreateArticleHeader>
+              {step >= 2 ? (
+                <StyledContent>
+                  <ArticleData article={newArticle} onChange={onChangeArticle} />
+                </StyledContent>
               ) : null}
-            </StyledContentTypeSelectorContainer>
-          </CreateArticleHeader>
-          {step >= 2 ? (
-            <StyledContent>
-              <ArticleData article={newArticle} onChange={onChangeArticle} />
-            </StyledContent>
-          ) : null}
+            </React.Fragment>
+          ) : (
+            <p>Loading...</p>
+          )}
         </MaxWidthContainer>
         <CreateArticleFooter
           exitDisabled={false}

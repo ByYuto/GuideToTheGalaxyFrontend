@@ -76,11 +76,11 @@ const CategorySelector = ({ categories, value, onChange, showDescriptions, readO
     <StyledCategorySelector>
       {categories.map((category) => (
         <Category
-          key={category.id}
-          title={category.title}
+          key={category.name}
+          title={category.name}
           description={category.description}
-          value={category.id}
-          active={category.id === value}
+          value={category.name}
+          active={category.name === value}
           onClick={onCategoryClick}
           showDescription={showDescriptions}
           readOnly={readOnly}
