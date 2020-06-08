@@ -14,11 +14,11 @@ const StyledDropdownContainer = styled.div`
 const StyledDropdownValue = styled.div`
   display: flex;
   position: relative;
-  border: 1px solid ${props => props.theme.isDark ? "transparent" : props.theme.baseColors.middleLight};
+  border: 1px solid ${(props) => (props.theme.isDark ? 'transparent' : props.theme.baseColors.middleLight)};
   box-sizing: border-box;
   border-radius: 8px;
   min-width: 50px;
-  height: 40px;  
+  height: 40px;
   flex-grow: 1;
   align-items: center;
   padding: 0 32px 0px 16px;
@@ -33,17 +33,15 @@ const StyledIconContainer = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 2em;
-  color: ${props => props.theme.isDark ? props.theme.baseColors.middle : props.theme.baseColors.middleLight};
+  color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middle : props.theme.baseColors.middleLight)};
   z-index: 99;
 `;
 
-const Value = styled.div`
-
-`
+const Value = styled.div``;
 
 const Placeholder = styled.div`
-  color: ${props => props.theme.baseColors.middleLight};
-`
+  color: ${(props) => props.theme.baseColors.middleLight};
+`;
 
 const DropdownMenu = styled(Menu)`
   position: absolute;
@@ -51,14 +49,14 @@ const DropdownMenu = styled(Menu)`
   left: 0;
   right: 0;
   z-index: 99;
-  border: 1px solid ${props => props.theme.isDark ? "transparent" : props.theme.baseColors.middleLight};
+  border: 1px solid ${(props) => (props.theme.isDark ? 'transparent' : props.theme.baseColors.middleLight)};
   border-radius: 8px;
   overflow: hidden;
 
   ${MenuOption} {
     //background: green;
   }
-`
+`;
 
 const Dropdown = ({ children, placeholder, value, onChange, disabled, className, options, ...props }) => {
   const [opened, setOpened] = useState(false);
@@ -66,40 +64,41 @@ const Dropdown = ({ children, placeholder, value, onChange, disabled, className,
     if (opened) {
       const clickHandler = () => {
         setTimeout(() => {
-          //console.log("Click en body");
-          setOpened(false)
+          setOpened(false);
         }, 0);
       };
-      document.body.addEventListener("click", clickHandler);
+      document.body.addEventListener('click', clickHandler);
       return () => {
-        document.body.removeEventListener("click", clickHandler);
-      }
+        document.body.removeEventListener('click', clickHandler);
+      };
     }
-  }, [opened])
+  }, [opened]);
   const onClick = () => {
     setOpened(!opened);
-  }
+  };
   const onOptionClick = (option) => {
-    //console.log("Click!");
     onChange && onChange(option);
-  }
+  };
 
-  return <StyledDropdownContainer tabindex={0} className={className} {...props} onClick={onClick}>
-    <StyledDropdownValue>
-      {value ? <Value>{value.label}</Value> : <Placeholder>{placeholder}</Placeholder>}
-    </StyledDropdownValue>
-    {opened ? <DropdownMenu options={options} active={value} onOptionClick={onOptionClick}></DropdownMenu> : null}
-    <StyledIconContainer><MdArrowDropDown /></StyledIconContainer>
-  </StyledDropdownContainer>
-}
+  return (
+    <StyledDropdownContainer tabindex={0} className={className} {...props} onClick={onClick}>
+      <StyledDropdownValue>
+        {value ? <Value>{value.label}</Value> : <Placeholder>{placeholder}</Placeholder>}
+      </StyledDropdownValue>
+      {opened ? <DropdownMenu options={options} active={value} onOptionClick={onOptionClick}></DropdownMenu> : null}
+      <StyledIconContainer>
+        <MdArrowDropDown />
+      </StyledIconContainer>
+    </StyledDropdownContainer>
+  );
+};
 
 Dropdown.defaultProps = {
   value: null,
   onChange: null,
   disabled: false,
   options: [],
-  placeholder: "Select a value"
-}
+  placeholder: 'Select a value',
+};
 
 export default styled(Dropdown)``;
-

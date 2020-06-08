@@ -52,6 +52,7 @@ export const MaxWidthContainer = styled.div`
 export const StyledView = styled(View)`
   height: 100%;
   justify-content: start;
+  overflow: auto;
   & > * {
     flex: 0;
   }

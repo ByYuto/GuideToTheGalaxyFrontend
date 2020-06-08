@@ -11,6 +11,7 @@ import Checkbox from '../components/UI/CheckBox';
 import RadioButton from '../components/UI/RadioButton';
 import Toggle from '../components/UI/Toggle';
 import Dropdown from '../components/UI/Dropdown';
+import { StyledView } from './CreateArticle/StyledComponents';
 
 function ComponentsTest({ title }) {
   const menuOptions = Array(15)
@@ -30,7 +31,6 @@ function ComponentsTest({ title }) {
 
   const onChangeRadio = (value) => setRadio(value);
   const onChangeDropdown = (value) => {
-    console.log('Seleccionado', value);
     setDropdown(value);
   };
   return (
@@ -319,7 +319,7 @@ function ComponentsTest({ title }) {
 
 export default function ComponentsTestPage() {
   return (
-    <div className="home">
+    <StyledView>
       <h1>Test Components</h1>
       <div style={{ backgroundColor: 'white', padding: '30px' }}>
         <ComponentsTest title={'Light Theme'} />
@@ -330,6 +330,6 @@ export default function ComponentsTestPage() {
           <ComponentsTest title={'Dark Theme'} />
         </ThemeProvider>
       </div>
-    </div>
+    </StyledView>
   );
 }

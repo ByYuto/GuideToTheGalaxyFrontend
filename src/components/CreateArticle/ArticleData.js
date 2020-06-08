@@ -28,18 +28,10 @@ const ArticleData = ({ article, onChange }) => {
   const categories = useSelector(categoriesSelector);
   const contentType = getContentType(categories, article.categoryId, article.contentTypeId);
 
-  console.log('El contentType es', contentType);
-
   return (
     <StyledArticleData>
       <Caption>KEY INFO</Caption>
-      <ArticleTemplate contentType={contentType} article={article} />
-      {/*
-      <hr></hr>
-      <Input placeholder="title" value={article.title} block onChange={(value) => _onChangeData('title', value)} />
-      <Input placeholder="caca" value={article.title} block onChange={(value) => _onChangeData('title', value)} />
-      <Input value={article.title} block onChange={(value) => _onChangeData('title', value)} />
-      */}
+      <ArticleTemplate contentType={contentType} article={article} onChange={onChange} />
     </StyledArticleData>
   );
 };

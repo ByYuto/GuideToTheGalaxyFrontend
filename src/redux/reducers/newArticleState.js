@@ -1,8 +1,8 @@
 const initialState = {
   step: 1,
   newArticle: {
-    categoryId: null, //'equipment',
-    contentTypeId: null, //'AMPS',
+    categoryId: 'MUSEUM',
+    contentTypeId: 'CELEBRITY',
     location: '',
     title: '',
     link: '',

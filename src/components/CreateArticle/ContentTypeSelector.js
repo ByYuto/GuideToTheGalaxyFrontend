@@ -5,6 +5,7 @@ import { FiChevronRight } from 'react-icons/fi';
 //import ScrollContainer from 'react-indiana-drag-scroll';
 import Button from '../UI/Button';
 import { GoPlus } from 'react-icons/go';
+import PropTypes from 'prop-types';
 
 const StyledContentType = styled.div`
   display: flex;
@@ -116,7 +117,6 @@ const CustomContentType = ({
     onBlur && onBlur(value);
   };
   const _onKeyDown = (e) => {
-    console.log('KeyDown', e.keyCode, e.which, e.charCode, e.key);
     if (
       (e.keyCode >= 65 && e.keyCode <= 90) || //Uppercase letters
       (e.keyCode >= 97 && e.keyCode <= 122) || //Lowercase letters
@@ -221,7 +221,6 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
     setTimeout(() => (containerRef.current.scrollLeft += 99999), 100);
   };
 
-  //console.log('El nuevo contentType es', newContentType);
   return (
     <StyledContentTypeSelector>
       <ArrowButton onClick={onLeftArrowClick}>
@@ -263,6 +262,10 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
       </ArrowButton>
     </StyledContentTypeSelector>
   );
+};
+
+ContentTypeSelector.propTypes = {
+  contentTypes: PropTypes.array.isRequired,
 };
 
 export default ContentTypeSelector;

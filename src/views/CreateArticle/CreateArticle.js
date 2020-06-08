@@ -21,6 +21,7 @@ import Caption from '../../components/UI/Caption';
 import Input from '../../components/UI/Input';
 import ArticleData from '../../components/CreateArticle/ArticleData';
 import { getCategories } from '../../redux/reducers/appState';
+import Stepper from '../../components/UI/Stepper';
 
 /*
 const categories = [
@@ -93,11 +94,9 @@ const CreateArticle = () => {
   const [customContent, setCustomContent] = useState(null);
   const nextDisabled = useSelector(nextDisabledSelector);
   const categories = useSelector(categoriesSelector);
-  const contentTypesAvailableForSelectedCategory = newArticle.categoryId
-    ? getContentTypes(categories, newArticle.categoryId)
-    : null;
+  const contentTypesAvailableForSelectedCategory =
+    categories && newArticle.categoryId ? getContentTypes(categories, newArticle.categoryId) : null;
   console.log({ step, newArticle });
-  console.log('Categories', categories);
   useHiddenTopbar(); //hideTopbar
 
   useEffect(() => {
@@ -130,7 +129,6 @@ const CreateArticle = () => {
     } else if (value) {
       toast('Content type edited: ' + value);
     }
-    //console.log('Custom Content set to', value);
     setCustomContent(value);
   };
 
@@ -166,13 +164,17 @@ const CreateArticle = () => {
                         newArticle.categoryId,
                         contentTypesAvailableForSelectedCategory
                       )}
-                      <ContentTypeSelector
-                        contentTypes={contentTypesAvailableForSelectedCategory}
-                        value={newArticle.contentTypeId}
-                        onChange={onContentTypeChange}
-                        readOnly={step !== 1}
-                        onCustomContentBlur={onCustomContentBlur}
-                      />
+                      {contentTypesAvailableForSelectedCategory ? (
+                        <ContentTypeSelector
+                          contentTypes={contentTypesAvailableForSelectedCategory}
+                          value={newArticle.contentTypeId}
+                          onChange={onContentTypeChange}
+                          readOnly={step !== 1}
+                          onCustomContentBlur={onCustomContentBlur}
+                        />
+                      ) : (
+                        <p>No content types defined for this category</p>
+                      )}
                       {step === 1 ? (
                         <StyledCategorySelectorTooltip>
                           Select a Content Type for your post to help other users find it, and for them to quickly
@@ -193,6 +195,7 @@ const CreateArticle = () => {
             <p>Loading...</p>
           )}
         </MaxWidthContainer>
+        <Stepper step={step} />
         <CreateArticleFooter
           exitDisabled={false}
           onExitClick={onExitClick}
