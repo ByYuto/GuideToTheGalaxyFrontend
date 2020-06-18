@@ -8,6 +8,7 @@ const CreateArticleTooltip = styled.div`
   max-width: 580px;
   min-width: 30px;
   min-height: 30px;
+  width: 500px;
 
   &:before {
     position: absolute;

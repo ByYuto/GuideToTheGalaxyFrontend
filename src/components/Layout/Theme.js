@@ -117,4 +117,9 @@ export default {
     small: '8px',
     normal: '16px',
   },
+  breakpoints: {
+    tablet: '43em',
+    small: '62em',
+    large: '82em',
+  },
 };

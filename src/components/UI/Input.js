@@ -156,6 +156,8 @@ const Input = ({
   squaredLeft,
   autoCompleteOptions,
   block,
+  onFocus,
+  onBlur,
   ...props
 }) => {
   const inputRef = useRef(null);
@@ -174,12 +176,14 @@ const Input = ({
     return () => clearTimeout(timeout);
   }, [focused]);
 
-  const onFocus = (e) => {
+  const _onFocus = (e) => {
     setFocused(true);
+    onFocus && onFocus(e);
   };
-  const onBlur = (e) => {
+  const _onBlur = (e) => {
     setFocused(false);
     setFocusedCount(0);
+    onBlur && onBlur(e);
   };
 
   const onInputChange = (e) => {
@@ -211,8 +215,8 @@ const Input = ({
 
   return (
     <StyledInputContainer
-      onFocus={onFocus}
-      onBlur={onBlur}
+      onFocus={_onFocus}
+      onBlur={_onBlur}
       focused={focused}
       onClick={onInputClick}
       optionsOpened={optionsOpened}

@@ -15,6 +15,7 @@ import {
   StyledCategorySelectorTooltip,
   StyledContentTypeSelectorContainer,
   StyledContent,
+  Fields,
 } from './StyledComponents';
 import { toast } from 'react-toastify';
 import Caption from '../../components/UI/Caption';
@@ -187,7 +188,7 @@ const CreateArticle = () => {
               </CreateArticleHeader>
               {step >= 2 ? (
                 <StyledContent>
-                  <ArticleData article={newArticle} onChange={onChangeArticle} />
+                  <ArticleData article={newArticle} onChange={onChangeArticle} showImage={step === 3} />
                 </StyledContent>
               ) : null}
             </React.Fragment>
