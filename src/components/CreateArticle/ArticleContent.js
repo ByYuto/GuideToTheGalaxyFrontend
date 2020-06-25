@@ -15,7 +15,7 @@ const StyledArticleFields = styled.div`
   padding: 0 10px;
 `;
 
-const StyledArticleData = styled.div`
+const StyledArticleContent = styled.div`
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -42,29 +42,15 @@ const getContentType = (categories, categoryId, contentTypeId) => {
   return category.contentTypes.find((contentType) => contentType.name === contentTypeId);
 };
 
-const ArticleData = ({ article, showImage, onChange }) => {
+const ArticleContent = ({ article, onChange }) => {
   const categories = useSelector(categoriesSelector);
   const contentType = getContentType(categories, article.categoryId, article.contentTypeId);
 
-  console.log({ showImage });
   return (
-    <StyledArticleData>
-      <StyledArticleFields>
-        <Caption>KEY INFO</Caption>
-        <ArticleTemplate contentType={contentType} article={article} onChange={onChange} />
-      </StyledArticleFields>
-      <StyledArticleImage>
-        {showImage ? (
-          <React.Fragment>
-            <Caption>FEATURE PHOTO</Caption>
-            {/*<p>Aqui va a ir el selector de imagen para selccionar la imagen del articulo</p>*/}
-            {/*<img src="https://via.placeholder.com/288x168" alt="placeholder" />*/}
-            <img src="https://dummyimage.com/288x168" alt="placeholder" />
-          </React.Fragment>
-        ) : null}
-      </StyledArticleImage>
-    </StyledArticleData>
+    <StyledArticleContent>
+      <Caption>MAIN CONTENT</Caption>
+    </StyledArticleContent>
   );
 };
 
-export default ArticleData;
+export default ArticleContent;

@@ -10,6 +10,7 @@ import { updateNewArticle, setNewArticleStep } from '../../redux/reducers/newArt
 import ContentTypeSelector from '../../components/CreateArticle/ContentTypeSelector';
 import {
   StyledView,
+  StyledViewContent,
   MaxWidthContainer,
   StyledCategorySelectorContainer,
   StyledCategorySelectorTooltip,
@@ -23,6 +24,7 @@ import Input from '../../components/UI/Input';
 import ArticleData from '../../components/CreateArticle/ArticleData';
 import { getCategories } from '../../redux/reducers/appState';
 import Stepper from '../../components/UI/Stepper';
+import ArticleContent from '../../components/CreateArticle/ArticleContent';
 
 /*
 const categories = [
@@ -125,10 +127,18 @@ const CreateArticle = () => {
       return;
     }
 
+    console.log('ESTE ES', { contentTypesAvailableForSelectedCategory, value });
+    if (
+      contentTypesAvailableForSelectedCategory &&
+      contentTypesAvailableForSelectedCategory.find((cat) => cat.name === value)
+    ) {
+      //Content type already exists
+      toast(`content type ${value} already added`);
+    }
     if (!customContent) {
-      toast('Content type added: ' + value);
+      toast(`Content type added: ${value}`);
     } else if (value) {
-      toast('Content type edited: ' + value);
+      toast(`Content type edited: ${value}`);
     }
     setCustomContent(value);
   };
@@ -186,17 +196,18 @@ const CreateArticle = () => {
                   ) : null}
                 </StyledContentTypeSelectorContainer>
               </CreateArticleHeader>
-              {step >= 2 ? (
-                <StyledContent>
-                  <ArticleData article={newArticle} onChange={onChangeArticle} showImage={step === 3} />
-                </StyledContent>
-              ) : null}
+              {step >= 2 ? <ArticleData article={newArticle} onChange={onChangeArticle} showImage={step >= 3} /> : null}
             </React.Fragment>
           ) : (
             <p>Loading...</p>
           )}
         </MaxWidthContainer>
-        <Stepper step={step} />
+        <ThemeProvider theme={{ isDark: step <= 3 }}>
+          <StyledViewContent>
+            {step >= 4 ? <ArticleContent article={newArticle} onChange={onChangeArticle} /> : null}
+            <Stepper step={step} />
+          </StyledViewContent>
+        </ThemeProvider>
         <CreateArticleFooter
           exitDisabled={false}
           onExitClick={onExitClick}

@@ -95,3 +95,5 @@ export const StyledView = styled(View)`
     background: ${(props) => props.theme.baseColors.dark};
   }
 `;
+
+export const StyledViewContent = styled(View)``;
