@@ -17,6 +17,16 @@ const initialState = {
     title: 'Hola mundo',
     link: '',
     URL: 'http://google.com',
+    content: [
+      {
+        type: 'text',
+        content: "<p>This is my first paragraph with a link to <a href='http://www.google.com'>Google</a></p>",
+      },
+      {
+        type: 'text',
+        content: '<p>This is another paragraph</p>',
+      },
+    ],
   },
 };
 
