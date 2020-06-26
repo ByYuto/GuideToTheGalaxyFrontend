@@ -8,6 +8,16 @@ const initialState = {
     link: '',
     photo: '',
   },
+  //Override some values to test
+  step: 4,
+  newArticle: {
+    categoryId: 'MUSEUM',
+    contentTypeId: 'CELEBRITY',
+    location: 'Manizales',
+    title: 'Hola mundo',
+    link: '',
+    URL: 'http://google.com',
+  },
 };
 
 //Action Types

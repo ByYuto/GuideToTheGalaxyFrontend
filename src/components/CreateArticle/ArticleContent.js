@@ -36,16 +36,15 @@ const StyledArticleContent = styled.div`
   }
 `;
 
+/*
 const categoriesSelector = (state) => state.app.categories;
 const getContentType = (categories, categoryId, contentTypeId) => {
   const category = categories.find((category) => category.name === categoryId);
   return category.contentTypes.find((contentType) => contentType.name === contentTypeId);
 };
+*/
 
 const ArticleContent = ({ article, onChange }) => {
-  const categories = useSelector(categoriesSelector);
-  const contentType = getContentType(categories, article.categoryId, article.contentTypeId);
-
   return (
     <StyledArticleContent>
       <Caption>MAIN CONTENT</Caption>
