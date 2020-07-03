@@ -24,7 +24,7 @@ const Stepper = ({ step, maxStep = 4 }) => {
       {Array(maxStep)
         .fill()
         .map((_, index) => (
-          <Step active={step === index + 1} />
+          <Step key={index} active={step === index + 1} />
         ))}
     </StyledStepper>
   );

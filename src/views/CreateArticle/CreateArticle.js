@@ -170,11 +170,6 @@ const CreateArticle = () => {
                 <StyledContentTypeSelectorContainer>
                   {newArticle.categoryId ? (
                     <React.Fragment>
-                      {console.log(
-                        'Antes de renderizar',
-                        newArticle.categoryId,
-                        contentTypesAvailableForSelectedCategory
-                      )}
                       {contentTypesAvailableForSelectedCategory ? (
                         <ContentTypeSelector
                           contentTypes={contentTypesAvailableForSelectedCategory}
@@ -204,7 +199,13 @@ const CreateArticle = () => {
         </MaxWidthContainer>
         <ThemeProvider theme={{ isDark: step <= 3 }}>
           <StyledViewContent>
-            {step >= 4 ? <ArticleContent article={newArticle} onChange={onChangeArticle} /> : null}
+            {step >= 4 && categories ? (
+              <ArticleContent
+                article={newArticle}
+                onChange={onChangeArticle}
+                onKeyDown={(a, b) => console.log('PASO POR AQUI', a, b)}
+              />
+            ) : null}
             <Stepper step={step} />
           </StyledViewContent>
         </ThemeProvider>
