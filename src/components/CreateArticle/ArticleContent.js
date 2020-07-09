@@ -1,10 +1,8 @@
 import React, { useState, useRef } from 'react';
 import Caption from '../UI/Caption';
-import Input from '../UI/Input';
 import styled, { css } from 'styled-components';
-import { useSelector } from 'react-redux';
-import ArticleTemplate from './ArticleTemplate';
 import { Editor } from '@tinymce/tinymce-react';
+import { BsTypeBold, BsTypeItalic, BsTypeUnderline } from 'react-icons/bs';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -53,6 +51,7 @@ const FormatContentContainer = styled.div`
   position: absolute;
   bottom: 100%;
   box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
+  font-size: 1.5em;
 `;
 
 const ArticleContentPartContainer = styled.div`
@@ -74,6 +73,20 @@ const ArticleContentPartContainer = styled.div`
       : null}
 `;
 
+const FormatButton = ({ command, label, tinyMCEEditorRef, icon }) => {
+  //TODO: Convert to a Styled Component
+  return (
+    <button
+      onClick={() => tinyMCEEditorRef.current.editor.editorCommands.execCommand(command)}
+      style={{
+        backgroundColor:
+          tinyMCEEditorRef.current.editor.editorCommands.queryCommandState(command) === true ? 'gray' : 'lightGray',
+      }}
+    >
+      {icon}
+    </button>
+  );
+};
 /*
 const categoriesSelector = (state) => state.app.categories;
 const getContentType = (categories, categoryId, contentTypeId) => {
@@ -81,13 +94,13 @@ const getContentType = (categories, categoryId, contentTypeId) => {
   return category.contentTypes.find((contentType) => contentType.name === contentTypeId);
 };
 */
-const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onKeyDown, onAddContentPart }) => {
+const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onAddContentPart }) => {
   const [focused, setFocused] = useState(false);
   const blurTimeoutId = useRef(null);
   const tinyMCEEditorRef = useRef(null);
   const [selectionChangeCount, setSelectionChangeCount] = useState(0);
   const handleEditorChange = (content, editor) => {
-    onChange && onChange(content);
+    onChange && onChange(contentIndex, content);
   };
   const _onFocus = (e) => {
     clearTimeout(blurTimeoutId.current);
@@ -98,21 +111,20 @@ const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onKe
       setFocused(false);
     }, 10);
   };
-  //tinyMCEEditorRef.current.editor.editorCommands.queryCommandState('Bold');
+  const _onKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      onAddContentPart(contentIndex + 1, 'text');
+      e.stopPropagation();
+    }
+  };
+
   return (
     <ArticleContentPartContainer onFocus={_onFocus} onBlur={_onBlur} tabIndex={0} focused={focused}>
-      {tinyMCEEditorRef.current && (
-        <FormatContentContainer style={{ marginLeft: '200px' }}>
-          <button
-            onClick={() => tinyMCEEditorRef.current.editor.editorCommands.execCommand('Bold')}
-            style={{
-              fontWeight:
-                tinyMCEEditorRef.current.editor.editorCommands.queryCommandState('Bold') === true ? 'bolder' : 'normal',
-            }}
-          >
-            B
-          </button>
-          <button>I</button>
+      {focused && tinyMCEEditorRef.current && (
+        <FormatContentContainer>
+          <FormatButton command="Bold" label="B" icon={<BsTypeBold />} tinyMCEEditorRef={tinyMCEEditorRef} />
+          <FormatButton command="Italic" label="I" icon={<BsTypeItalic />} tinyMCEEditorRef={tinyMCEEditorRef} />
+          <FormatButton command="Underline" label="U" icon={<BsTypeUnderline />} tinyMCEEditorRef={tinyMCEEditorRef} />
         </FormatContentContainer>
       )}
       <Editor
@@ -123,19 +135,18 @@ const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onKe
           menubar: false,
           branding: false,
           plugins: ['autolink link fullscreen insertdatetime media table paste'],
-          toolbar: 'bold italic link unlink',
-          //toolbar: '',
+          toolbar: false,
           link_context_toolbar: true,
           default_link_target: '_blank',
           link_assume_external_targets: true,
         }}
         value={contentPart.content}
         onEditorChange={handleEditorChange}
-        onKeyDown={onKeyDown}
-        onInit={(event, editor) => {
-          console.log('Editor on init', editor);
+        onKeyDown={_onKeyDown}
+        onSelectionChange={() => {
+          //Force an update
+          setSelectionChangeCount(selectionChangeCount + 1);
         }}
-        onSelectionChange={() => setSelectionChangeCount(selectionChangeCount + 1)}
       />
       {focused && (
         <AddContentContainer>
@@ -172,11 +183,24 @@ const AddContentComponent = ({ index, onAddContentPart }) => {
   );
 };
 
-const ArticleContent = ({ article, onChange, onKeyDown }) => {
-  console.log(article.content);
+const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
   const onAddContentPart = (index, type, data) => {
-    console.log('trying to add a ' + type + ' content at index ' + index);
+    //console.log('trying to add a ' + type + ' content at index ' + index);
+    const newArticle = { ...article };
+    newArticle.content.splice(index + 1, 0, {
+      content: 'hello world',
+      type,
+    });
+    onChangeArticle(newArticle);
   };
+
+  const onContentPartChange = (index, content) => {
+    //console.log('trying to add a ' + type + ' content at index ' + index);
+    const newArticle = JSON.parse(JSON.stringify(article));
+    newArticle.content[index].content = content;
+    onChangeArticle && onChangeArticle(newArticle);
+  };
+
   return (
     <StyledArticleContent>
       <MaxWidthContainer>
@@ -191,6 +215,7 @@ const ArticleContent = ({ article, onChange, onKeyDown }) => {
                 contentPart={contentPart}
                 onKeyDown={onKeyDown}
                 onAddContentPart={onAddContentPart}
+                onChange={onContentPartChange}
               />
             ))
           : null}

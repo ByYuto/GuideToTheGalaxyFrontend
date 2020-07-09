@@ -15,12 +15,8 @@ import {
   StyledCategorySelectorContainer,
   StyledCategorySelectorTooltip,
   StyledContentTypeSelectorContainer,
-  StyledContent,
-  Fields,
 } from './StyledComponents';
 import { toast } from 'react-toastify';
-import Caption from '../../components/UI/Caption';
-import Input from '../../components/UI/Input';
 import ArticleData from '../../components/CreateArticle/ArticleData';
 import { getCategories } from '../../redux/reducers/appState';
 import Stepper from '../../components/UI/Stepper';
@@ -99,12 +95,11 @@ const CreateArticle = () => {
   const categories = useSelector(categoriesSelector);
   const contentTypesAvailableForSelectedCategory =
     categories && newArticle.categoryId ? getContentTypes(categories, newArticle.categoryId) : null;
-  console.log({ step, newArticle });
   useHiddenTopbar(); //hideTopbar
 
   useEffect(() => {
     dispatch(getCategories());
-  }, []);
+  }, [dispatch]);
 
   const onCategoryChange = (category) => {
     dispatch(updateNewArticle({ categoryId: category, contentTypeId: null }));
@@ -144,7 +139,7 @@ const CreateArticle = () => {
   };
 
   const onChangeArticle = (article) => {
-    console.log('Dispatching new article with', article);
+    //console.log('Dispatching new article with', article);
     dispatch(updateNewArticle(article));
   };
 
@@ -202,8 +197,8 @@ const CreateArticle = () => {
             {step >= 4 && categories ? (
               <ArticleContent
                 article={newArticle}
-                onChange={onChangeArticle}
-                onKeyDown={(a, b) => console.log('PASO POR AQUI', a, b)}
+                onChangeArticle={onChangeArticle}
+                //onKeyDown={(a, b) => console.log('PASO POR AQUI', a, b)}
               />
             ) : null}
             <Stepper step={step} />

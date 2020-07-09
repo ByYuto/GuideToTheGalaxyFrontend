@@ -7,8 +7,17 @@ const initialState = {
     title: '',
     link: '',
     photo: '',
+    URL: '',
+    content: [
+      {
+        type: 'text',
+        content: '<p>This is my first paragraph</p>',
+      },
+    ],
   },
-  //Override some values to test
+
+  //Override some values Just for TESTING purpose
+  /*
   step: 4,
   newArticle: {
     categoryId: 'MUSEUM',
@@ -27,21 +36,21 @@ const initialState = {
         content: '<p>This is another paragraph</p>',
       },
     ],
-  },
+  },*/
 };
 
 //Action Types
-const NEW_ARTICLE_UPDATE = 'NEW_ARTICLE_UPDATE';
-const SET_NEW_ARTICLE_STEP = 'SET_NEW_ARTICLE_STEP';
+const UPDATE = 'NEW_ARTICLE/UPDATE';
+const SET_STEP = 'NEW_ARTICLE/SET_STEP';
 
 //Action Creators
-export const updateNewArticle = (newArticle) => ({ type: NEW_ARTICLE_UPDATE, payload: newArticle });
-export const setNewArticleStep = (step) => ({ type: SET_NEW_ARTICLE_STEP, payload: { step } });
+export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });
+export const setNewArticleStep = (step) => ({ type: SET_STEP, payload: { step } });
 
 //Reducer
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case NEW_ARTICLE_UPDATE:
+    case UPDATE:
       return {
         ...state,
         newArticle: {
@@ -49,7 +58,7 @@ export default (state = initialState, { type, payload }) => {
           ...payload,
         },
       };
-    case SET_NEW_ARTICLE_STEP:
+    case SET_STEP:
       return {
         ...state,
         step: payload.step,

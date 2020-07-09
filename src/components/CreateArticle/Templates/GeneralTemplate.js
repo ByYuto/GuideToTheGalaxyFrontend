@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import Input from '../../UI/Input';
 import styled from 'styled-components';
-import CreateArticleTooltip from '../CreateArticleTooltip';
 import { StyledFieldTooltip } from '../../../views/CreateArticle/StyledComponents';
 
 const FormRow = styled.div`
   position: relative;
   margin-top: 10px;
   margin-bottom: 10px;
+
+  input::-webkit-calendar-picker-indicator {
+    color: white;
+    filter: invert(1);
+  }
 `;
 
 const getPlaceHolderText = (field) => `${field.placeholder}${field.required ? '*' : ''}`;

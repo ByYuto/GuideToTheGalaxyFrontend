@@ -1,6 +1,5 @@
 import React from 'react';
 import Caption from '../UI/Caption';
-import Input from '../UI/Input';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import ArticleTemplate from './ArticleTemplate';
@@ -46,7 +45,6 @@ const ArticleData = ({ article, showImage, onChange }) => {
   const categories = useSelector(categoriesSelector);
   const contentType = getContentType(categories, article.categoryId, article.contentTypeId);
 
-  console.log({ showImage });
   return (
     <StyledArticleData>
       <StyledArticleFields>

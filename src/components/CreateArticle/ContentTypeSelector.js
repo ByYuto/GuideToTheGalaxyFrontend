@@ -191,6 +191,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
 
   useEffect(() => {
     setNewContentType(null); //If contentTypes is changed, reset newContentType
+    // eslint-disable-next-line
   }, [JSON.stringify(contentTypes)]);
 
   const onRightArrowClick = () => (containerRef.current.scrollLeft += 50);
