@@ -11,6 +11,7 @@ import { useHistory } from 'react-router-dom';
 import Modal from './UI/modal/Modal';
 import { useModal } from './UI/modal/useModal';
 import Login from './login/Login';
+import { useAuth } from '../components/login/useAuth';
 
 const Separator = styled.div`
   display: block;
@@ -31,6 +32,7 @@ const NotificationsButton = styled(Button)`
 `;
 
 const TopBar = () => {
+  const authenticated = useAuth();
   const history = useHistory();
   const onAddContentClick = () => {
     history.push('/create');
@@ -52,19 +54,24 @@ const TopBar = () => {
       </div>
       <div className="middle"></div>
       <div className="right">
-        <Button primary onClick={modal.handleClick}>
-          Log in
-        </Button>
-        <Modal
-          title="Sign in"
-          setVisibility={modal.handleClick}
-          visible={modal.visible}
-          elmHeight="auto"
-          elmWidth="496px"
-          footer={' '}
-        >
-          <Login handleCancel={modal.handleClick} />
-        </Modal>
+        {!authenticated && (
+          <>
+            <Button primary onClick={modal.handleClick}>
+              Log in
+            </Button>{' '}
+            <Modal
+              title="Sign in"
+              setVisibility={modal.handleClick}
+              visible={modal.visible}
+              elmHeight="auto"
+              elmWidth="496px"
+              footer={null}
+            >
+              <Login handleCancel={modal.handleClick} />
+            </Modal>
+          </>
+        )}
+
         <Button primary>PRIMARY</Button>
         <Button primary rounded>
           PRIMARY ROUNDED
@@ -74,12 +81,14 @@ const TopBar = () => {
           SECONDARY ROUNDED
         </Button>
         <Button circle>X</Button>
-        <Button secondary onClick={onAddContentClick} circle icon>
-          <GoPlus />
-        </Button>
-        <AddContentButton secondary circle onClick={onAddContentClick} icon>
-          <GoPlus />
-        </AddContentButton>
+        <>
+          <Button secondary onClick={authenticated ? onAddContentClick : modal.handleClick} circle icon>
+            <GoPlus />
+          </Button>
+          <AddContentButton secondary circle onClick={authenticated ? onAddContentClick : modal.handleClick} icon>
+            <GoPlus />
+          </AddContentButton>
+        </>
         <Separator />
         <NotificationsButton transparent secondary icon>
           <AiOutlineBell />

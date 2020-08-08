@@ -3,9 +3,17 @@ import Caption from '../UI/Caption';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import ArticleTemplate from './ArticleTemplate';
+import UploadInput from '../UI/forms/UploadInput';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  & .no-margin {
+    margin-bottom: 0;
+  }
 `;
 const StyledArticleFields = styled.div`
   display: flex;
@@ -19,7 +27,7 @@ const StyledArticleData = styled.div`
   flex-direction: row;
   align-items: stretch;
   padding-top: 34px;
-  border-top: 1px solid #151531;
+  /*border-top: 1px solid #151531;*/
 
   ${Caption} {
     text-align: center;
@@ -52,14 +60,12 @@ const ArticleData = ({ article, showImage, onChange }) => {
         <ArticleTemplate contentType={contentType} article={article} onChange={onChange} />
       </StyledArticleFields>
       <StyledArticleImage>
-        {showImage ? (
+        {contentType.image && (
           <React.Fragment>
-            <Caption>FEATURE PHOTO</Caption>
-            {/*<p>Aqui va a ir el selector de imagen para selccionar la imagen del articulo</p>*/}
-            {/*<img src="https://via.placeholder.com/288x168" alt="placeholder" />*/}
-            <img src="https://dummyimage.com/288x168" alt="placeholder" />
+            <Caption className="no-margin">FEATURE PHOTO</Caption>
+            <UploadInput contentType={contentType} onChange={onChange} />
           </React.Fragment>
-        ) : null}
+        )}
       </StyledArticleImage>
     </StyledArticleData>
   );

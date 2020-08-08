@@ -5,8 +5,8 @@ import { StyledFieldTooltip } from '../../../views/CreateArticle/StyledComponent
 
 const FormRow = styled.div`
   position: relative;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  /*margin-top: 10px;*/
+  margin-bottom: 24px;
 
   input::-webkit-calendar-picker-indicator {
     color: white;
@@ -37,7 +37,6 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
 
   return (
     <div>
-      <p>Template: General</p>
       {contentType.location ? InputRow('location', 'text') : null}
       {contentType.title ? InputRow('title', 'text') : null}
       {contentType.URL ? InputRow('URL', 'url') : null}

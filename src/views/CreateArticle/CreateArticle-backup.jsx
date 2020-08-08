@@ -105,6 +105,7 @@ const CreateArticle = () => {
 
   const onCategoryChange = (category) => {
     dispatch(updateNewArticle({ categoryId: category, contentTypeId: null }));
+    dispatch(setNewArticleStep(1));
   };
   const onContentTypeChange = (contentType) => {
     dispatch(updateNewArticle({ contentTypeId: contentType }));
@@ -190,15 +191,10 @@ const CreateArticle = () => {
                 </StyledContentTypeSelectorContainer>
               </MaxWidthContainer>
             </CreateArticleHeader>
-            {newArticle.contentTypeId ? (
-              <div style={{ position: step >= 2 && 'relative' }}>
-                <Layer />
-                <Divider className="create-article-divider" />
-                <MaxWidthContainer>
-                  <ArticleData article={newArticle} onChange={onChangeArticle} showImage={true} />
-                </MaxWidthContainer>
-              </div>
-            ) : null}
+            <div style={{ position: step >= 2 && 'relative' }}>
+              <Divider className="create-article-divider" />
+              <MaxWidthContainer></MaxWidthContainer>
+            </div>
           </React.Fragment>
         ) : (
           <p>Loading...</p>
@@ -206,13 +202,6 @@ const CreateArticle = () => {
         <div style={{ zIndex: 3 }}>
           <ThemeProvider theme={{ isDark: step <= 3 }}>
             <StyledViewContent>
-              {step >= 4 && categories ? (
-                <ArticleContent
-                  article={newArticle}
-                  onChangeArticle={onChangeArticle}
-                  //onKeyDown={(a, b) => console.log('PASO POR AQUI', a, b)}
-                />
-              ) : null}
               <Stepper step={step} />
             </StyledViewContent>
           </ThemeProvider>

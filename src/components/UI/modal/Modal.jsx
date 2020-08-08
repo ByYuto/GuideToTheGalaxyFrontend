@@ -6,18 +6,19 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
 export default function Modal({ children, title, footer, visible = false, setVisibility, elmWidth, elmHeight }) {
-  const displayFooter = footer ? (
-    footer
-  ) : (
-    <div className="modal-footer">
-      <Button span="24px" rounded secondary onClick={setVisibility}>
-        Cancel
-      </Button>
-      <Button span="24px" rounded>
-        Ok
-      </Button>
-    </div>
-  );
+  const displayFooter =
+    footer === undefined ? (
+      <div className="modal-footer">
+        <Button span="24px" rounded secondary onClick={setVisibility}>
+          Cancel
+        </Button>
+        <Button span="24px" rounded>
+          Ok
+        </Button>
+      </div>
+    ) : (
+      footer
+    );
 
   const content = visible ? (
     <ModalLayout elmHeight={elmHeight} elmWidth={elmWidth}>

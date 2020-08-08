@@ -5,7 +5,8 @@ export const LoginLayout = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  & .form-container {
+  & .form-container,
+  form {
     padding-top: 0 !important;
     width: 90%;
 

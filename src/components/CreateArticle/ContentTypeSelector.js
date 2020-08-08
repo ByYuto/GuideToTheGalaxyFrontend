@@ -56,6 +56,7 @@ const ArrowButton = styled.button`
   all: unset;
   font-size: 1.5em;
   cursor: pointer;
+  height: 42px;
 `;
 
 const ContentTypesList = styled.div`

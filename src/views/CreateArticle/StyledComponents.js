@@ -67,6 +67,7 @@ export const StyledCategorySelectorContainer = styled.div`
   justify-content: center;
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 export const StyledContentTypeSelectorContainer = styled.div`
@@ -74,6 +75,7 @@ export const StyledContentTypeSelectorContainer = styled.div`
   justify-content: center;
   display: flex;
   flex-direction: column;
+  width: 100%;
 `;
 
 export const MaxWidthContainer = styled.div`
@@ -83,9 +85,15 @@ export const MaxWidthContainer = styled.div`
 `;
 
 export const StyledView = styled(View)`
-  height: 100%;
-  justify-content: start;
+  min-height: 100vh;
+  justify-content: space-between;
   overflow: auto;
+  height: auto;
+
+  & .create-article-divider {
+    margin-bottom: 0;
+  }
+
   & > * {
     flex: 0;
   }
