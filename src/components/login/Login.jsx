@@ -46,6 +46,7 @@ export default function Login({ handleCancel }) {
     if (email.valid && password.valid) {
       setFormState({ ...form, valid: true, loading: true });
       dispatch(loginAction({ email: email.value, password: password.value }));
+      //setFormState({ ...form, valid: true, loading: false });
     }
   };
 

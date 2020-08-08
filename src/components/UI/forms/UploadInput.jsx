@@ -10,6 +10,20 @@ const UploadInputLayout = styled.div`
   align-items: center;
   height: 74%;
   cursor: pointer;
+  & .upload-tooltip {
+    left: 0;
+    top: 100%;
+
+    &:before {
+      right: 50%;
+      bottom: 95%;
+      width: 0;
+      height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 12px solid #6670f0;
+    }
+  }
   &:hover {
     button {
       color: #6670f0;
@@ -63,7 +77,9 @@ const UploadInputLayout = styled.div`
   }
 `;
 
-export default function UploadInput() {
+export default function UploadInput({ contentType }) {
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const tooltip = contentType['image']?.tooltip;
   const [srcImg, setImg] = useState(PlaceholderImg);
   const inputRef = useRef(null);
   const handleImgSelect = () => inputRef.current.click();
@@ -78,8 +94,8 @@ export default function UploadInput() {
   };
   return (
     <UploadInputLayout onClick={handleImgSelect}>
-      <img src={srcImg} />
-      <button>
+      <img src={srcImg} onFocus={() => setTooltipVisible(true)} onBlur={() => setTooltipVisible(false)} />
+      <button onFocus={() => setTooltipVisible(true)} onBlur={() => setTooltipVisible(false)}>
         <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clipPath="url(#clip0)">
             <path
@@ -104,7 +120,7 @@ export default function UploadInput() {
         Upload
       </button>
       <input type="file" onChange={handleFileChange} ref={inputRef} />
-      {/*tooltipVisible && tooltip && <StyledFieldTooltip>{tooltip}</StyledFieldTooltip>*/}
+      {tooltipVisible && tooltip && <StyledFieldTooltip className="upload-tooltip">{tooltip}</StyledFieldTooltip>}
     </UploadInputLayout>
   );
 }

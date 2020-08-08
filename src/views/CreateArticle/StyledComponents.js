@@ -39,6 +39,7 @@ export const StyledFieldTooltip = styled(CreateArticleTooltip)`
   left: calc(100% + 12px);
   top: 0;
   width: calc((100vw - 1016px - 5%) / 2);
+  z-index: 10;
 
   @media screen and (max-width: 1260px) {
     position: relative;
