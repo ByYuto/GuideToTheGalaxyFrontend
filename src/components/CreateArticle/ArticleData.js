@@ -60,7 +60,7 @@ const ArticleData = ({ article, showImage, onChange }) => {
         <ArticleTemplate contentType={contentType} article={article} onChange={onChange} />
       </StyledArticleFields>
       <StyledArticleImage>
-        {contentType.image && (
+        {showImage && (
           <React.Fragment>
             <Caption className="no-margin">FEATURE PHOTO</Caption>
             <UploadInput contentType={contentType} onChange={onChange} />

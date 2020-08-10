@@ -1,5 +1,9 @@
 const initialState = {
   step: 1,
+  validStep1: false,
+  validStep2: false,
+  validStep3: false,
+  validStep4: false,
   newArticle: {
     categoryId: '', //'MUSEUM',
     contentTypeId: '', //'CELEBRITY',
@@ -42,10 +46,13 @@ const initialState = {
 //Action Types
 const UPDATE = 'NEW_ARTICLE/UPDATE';
 const SET_STEP = 'NEW_ARTICLE/SET_STEP';
+const CATEGORY_SELECTION = 'CATEGORY_SELECTION';
 
 //Action Creators
 export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });
 export const setNewArticleStep = (step) => ({ type: SET_STEP, payload: { step } });
+
+export const categorySelected = (id) => ({ type: CATEGORY_SELECTION, payload: id });
 
 //Reducer
 export default (state = initialState, { type, payload }) => {
@@ -56,6 +63,14 @@ export default (state = initialState, { type, payload }) => {
         newArticle: {
           ...state.newArticle,
           ...payload,
+        },
+      };
+    case CATEGORY_SELECTION:
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          categoryId: payload,
         },
       };
     case SET_STEP:

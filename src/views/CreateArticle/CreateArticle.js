@@ -104,10 +104,10 @@ const CreateArticle = () => {
   }, [dispatch]);
 
   const onCategoryChange = (category) => {
-    dispatch(updateNewArticle({ categoryId: category, contentTypeId: null }));
+    dispatch(updateNewArticle({ categoryId: category, validStep1: false }));
   };
   const onContentTypeChange = (contentType) => {
-    dispatch(updateNewArticle({ contentTypeId: contentType }));
+    dispatch(updateNewArticle({ contentTypeId: contentType, validStep1: true }));
     dispatch(setNewArticleStep(2));
   };
 
@@ -146,6 +146,7 @@ const CreateArticle = () => {
     dispatch(updateNewArticle(article));
   };
 
+  const arePersistingContent = () => newArticle.title || newArticle.location || newArticle.link || newArticle.photo;
   return (
     <ThemeProvider theme={{ isDark: true }}>
       <StyledView>
@@ -190,9 +191,9 @@ const CreateArticle = () => {
                 </StyledContentTypeSelectorContainer>
               </MaxWidthContainer>
             </CreateArticleHeader>
-            {newArticle.contentTypeId ? (
-              <div style={{ position: step >= 2 && 'relative' }}>
-                <Layer />
+            {arePersistingContent() || newArticle.validStep1 ? (
+              <div style={{ position: 'relative' }}>
+                {!newArticle.validStep1 && <Layer className="layer-blocker" />}
                 <Divider className="create-article-divider" />
                 <MaxWidthContainer>
                   <ArticleData article={newArticle} onChange={onChangeArticle} showImage={true} />

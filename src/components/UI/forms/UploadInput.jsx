@@ -79,7 +79,7 @@ const UploadInputLayout = styled.div`
 
 export default function UploadInput({ contentType }) {
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  const tooltip = contentType['image']?.tooltip;
+  const tooltip = contentType ? contentType['image']?.tooltip : 'Select an Image';
   const [srcImg, setImg] = useState(PlaceholderImg);
   const inputRef = useRef(null);
   const handleImgSelect = () => inputRef.current.click();

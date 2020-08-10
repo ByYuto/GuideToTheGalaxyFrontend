@@ -230,7 +230,6 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
       </ArrowButton>
 
       <div
-        readonly={readOnly}
         ref={containerRef}
         className="content-type-list"
         style={{

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Input from '../../UI/Input';
 import styled from 'styled-components';
 import { StyledFieldTooltip } from '../../../views/CreateArticle/StyledComponents';
+import { useSelector } from 'react-redux';
 
 const FormRow = styled.div`
   position: relative;
@@ -20,14 +21,16 @@ const FormRow = styled.div`
 const getPlaceHolderText = (field) => `${field.placeholder}${field.required ? '*' : ''}`;
 
 const GeneralTemplate = ({ contentType, article, onChangeData }) => {
-  const InputRow = (field) => {
+  const { newArticle } = useSelector((state) => state.newArticle);
+  const InputRow = (field, placeholderText) => {
     const [tooltipVisible, setTooltipVisible] = useState(false);
-    const tooltip = contentType[field]?.tooltip;
+    const tooltip = contentType ? contentType[field]?.tooltip : `${field} tooltip`;
+    const textPlaceholder = contentType ? getPlaceHolderText(contentType[field]) : placeholderText;
     return (
       <FormRow>
         <Input
-          placeholder={getPlaceHolderText(contentType[field])}
-          value={article[field]}
+          placeholder={textPlaceholder}
+          value={newArticle[field]}
           block
           onChange={(value) => onChangeData(field, value)}
           onFocus={() => setTooltipVisible(true)}
@@ -38,22 +41,23 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
     );
   };
 
+  const textPlaceholder = contentType ? getPlaceHolderText(contentType.date) : 'Date passed*';
   return (
     <div>
-      {contentType.location ? InputRow('location', 'text') : null}
-      {contentType.title ? InputRow('title', 'text') : null}
-      {contentType.URL ? InputRow('URL', 'url') : null}
-      {contentType.date ? (
+      {InputRow('location', 'Location', 'text')}
+      {InputRow('title', 'Title', 'text')}
+      {InputRow('URL', 'Link to more info')}
+      {
         <FormRow>
-          <span>{getPlaceHolderText(contentType.date)}</span>
+          <span>{textPlaceholder}</span>
           <Input
-            placeholder={getPlaceHolderText(contentType.date)}
+            placeholder={textPlaceholder}
             value={article.date}
             onChange={(value) => onChangeData('date', value)}
             type="date"
           />
         </FormRow>
-      ) : null}
+      }
     </div>
   );
 };

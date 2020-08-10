@@ -1,8 +1,10 @@
 import { USER_LOGIN } from '../actions/authActions';
 
+const token = window.localStorage.getItem('_token');
+const auth = token !== null;
 const initialState = {
   user: null,
-  authorization: false,
+  authorization: auth,
   loading: false,
   error: false,
   errorMessage: '',

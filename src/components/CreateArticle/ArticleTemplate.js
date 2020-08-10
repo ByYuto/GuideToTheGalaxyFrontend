@@ -14,7 +14,7 @@ const ArticleTemplate = ({ contentType, article, onChange }) => {
   };
 
   let SelectedArticleTemplate = null;
-  const template = contentType.template;
+  const template = contentType ? contentType.template : 'GENERAL';
   if (template === 'GENERAL') {
     SelectedArticleTemplate = GeneralTemplate;
   } else if (template === 'NODATE') {
@@ -23,6 +23,8 @@ const ArticleTemplate = ({ contentType, article, onChange }) => {
     SelectedArticleTemplate = ProductTemplate;
   } else if (template === 'DISCONTINUED') {
     SelectedArticleTemplate = DiscontinuedTemplate;
+  } else {
+    SelectedArticleTemplate = GeneralTemplate;
   }
 
   return SelectedArticleTemplate ? (
