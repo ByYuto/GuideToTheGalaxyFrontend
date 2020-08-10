@@ -2,13 +2,16 @@ import { USER_LOGIN } from '../actions/authActions';
 
 const initialState = {
   user: null,
-  authenticated: false,
+  authorization: false,
+  loading: false,
+  error: false,
+  errorMessage: '',
 };
 //Reducer
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case USER_LOGIN:
-      return { ...state, user: payload.user, authenticated: payload.authenticated };
+      return { ...state, ...payload };
     default:
       return state;
   }

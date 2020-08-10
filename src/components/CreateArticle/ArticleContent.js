@@ -3,6 +3,9 @@ import Caption from '../UI/Caption';
 import styled, { css } from 'styled-components';
 import { Editor } from '@tinymce/tinymce-react';
 import { BsTypeBold, BsTypeItalic, BsTypeUnderline } from 'react-icons/bs';
+import LinkIcon from '../../assets/icons/Link.svg';
+import { StyledFieldTooltip } from '../../views/CreateArticle/StyledComponents';
+import { ImageMediaIcon, VideoMediaIcon, HaveFive, PlusIcon } from '../../assets/icons/svg-icons';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -52,6 +55,7 @@ const FormatContentContainer = styled.div`
   bottom: 100%;
   box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
   font-size: 1.5em;
+  border-radius: 5px;
 `;
 
 const ArticleContentPartContainer = styled.div`
@@ -60,6 +64,10 @@ const ArticleContentPartContainer = styled.div`
   box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
   border-radius: 8px;
   border: 1px solid transparent;
+
+  & .light-tooltip {
+    color: white;
+  }
   ${(props) =>
     props.focused
       ? css`
@@ -73,18 +81,30 @@ const ArticleContentPartContainer = styled.div`
       : null}
 `;
 
+const EditorButton = styled.button`
+  border: none;
+  background-color: transparent;
+  outline: 0;
+  box-shadow: none;
+  padding: 5px;
+  font-size: 24px;
+  cursor: pointer;
+  &:hover {
+    color: #6670f0;
+  }
+`;
+
 const FormatButton = ({ command, label, tinyMCEEditorRef, icon }) => {
   //TODO: Convert to a Styled Component
   return (
-    <button
+    <EditorButton
       onClick={() => tinyMCEEditorRef.current.editor.editorCommands.execCommand(command)}
       style={{
-        backgroundColor:
-          tinyMCEEditorRef.current.editor.editorCommands.queryCommandState(command) === true ? 'gray' : 'lightGray',
+        color: tinyMCEEditorRef.current.editor.editorCommands.queryCommandState(command) === true && '#6670F0',
       }}
     >
       {icon}
-    </button>
+    </EditorButton>
   );
 };
 /*
@@ -99,6 +119,8 @@ const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onAd
   const blurTimeoutId = useRef(null);
   const tinyMCEEditorRef = useRef(null);
   const [selectionChangeCount, setSelectionChangeCount] = useState(0);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const tooltip = 'Tooltip text for wywyg';
   const handleEditorChange = (content, editor) => {
     onChange && onChange(contentIndex, content);
   };
@@ -119,41 +141,50 @@ const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onAd
   };
 
   return (
-    <ArticleContentPartContainer onFocus={_onFocus} onBlur={_onBlur} tabIndex={0} focused={focused}>
-      {focused && tinyMCEEditorRef.current && (
-        <FormatContentContainer>
-          <FormatButton command="Bold" label="B" icon={<BsTypeBold />} tinyMCEEditorRef={tinyMCEEditorRef} />
-          <FormatButton command="Italic" label="I" icon={<BsTypeItalic />} tinyMCEEditorRef={tinyMCEEditorRef} />
-          <FormatButton command="Underline" label="U" icon={<BsTypeUnderline />} tinyMCEEditorRef={tinyMCEEditorRef} />
-        </FormatContentContainer>
-      )}
-      <Editor
-        ref={tinyMCEEditorRef}
-        apiKey="hgxskwg9eqfbgmwxdybae640x48524e9fu29wko5bsvywhs1"
-        inline={true}
-        init={{
-          menubar: false,
-          branding: false,
-          plugins: ['autolink link fullscreen insertdatetime media table paste'],
-          toolbar: false,
-          link_context_toolbar: true,
-          default_link_target: '_blank',
-          link_assume_external_targets: true,
-        }}
-        value={contentPart.content}
-        onEditorChange={handleEditorChange}
-        onKeyDown={_onKeyDown}
-        onSelectionChange={() => {
-          //Force an update
-          setSelectionChangeCount(selectionChangeCount + 1);
-        }}
-      />
+    <>
+      <ArticleContentPartContainer onFocus={_onFocus} onBlur={_onBlur} tabIndex={0} focused={focused}>
+        {focused && tinyMCEEditorRef.current && (
+          <FormatContentContainer>
+            <FormatButton command="Bold" label="B" icon={<BsTypeBold />} tinyMCEEditorRef={tinyMCEEditorRef} />
+            <FormatButton command="Italic" label="I" icon={<BsTypeItalic />} tinyMCEEditorRef={tinyMCEEditorRef} />
+            <FormatButton
+              command="Underline"
+              label="U"
+              icon={<BsTypeUnderline />}
+              tinyMCEEditorRef={tinyMCEEditorRef}
+            />
+            {/*<FormatButton label="Link" icon={<LinkIcon />} tinyMCEEditorRef={tinyMCEEditorRef} />*/}
+          </FormatContentContainer>
+        )}
+        <Editor
+          ref={tinyMCEEditorRef}
+          apiKey="hgxskwg9eqfbgmwxdybae640x48524e9fu29wko5bsvywhs1"
+          inline={true}
+          init={{
+            menubar: false,
+            branding: false,
+            plugins: ['autolink link fullscreen insertdatetime media table paste'],
+            toolbar: false,
+            link_context_toolbar: true,
+            default_link_target: '_blank',
+            link_assume_external_targets: true,
+          }}
+          value={contentPart.content}
+          onEditorChange={handleEditorChange}
+          onKeyDown={_onKeyDown}
+          onSelectionChange={() => {
+            //Force an update
+            setSelectionChangeCount(selectionChangeCount + 1);
+          }}
+        />
+        {focused && <StyledFieldTooltip className="light-tooltip">{tooltip}</StyledFieldTooltip>}
+      </ArticleContentPartContainer>
       {focused && (
-        <AddContentContainer>
+        <div style={{ position: 'relative', top: '100%', boxShadow: 'none', display: 'flex' }}>
           <AddContentComponent index={contentIndex} onAddContentPart={onAddContentPart}></AddContentComponent>
-        </AddContentContainer>
+        </div>
       )}
-    </ArticleContentPartContainer>
+    </>
   );
 };
 
@@ -174,14 +205,59 @@ const AddContentComponent = ({ index, onAddContentPart }) => {
   };
 
   return (
-    <div>
-      <button onClick={onAddParagraph}>Add Paragraph</button>
-      <button onClick={onAddMedia}>Add Media</button>
-      <button onClick={onAddPhoto}>Add Photo</button>
-      <button onClick={onAddLink}>Add Link</button>
-    </div>
+    <MediaToolbar>
+      <button onClick={onAddParagraph}>
+        <PlusIcon /> INSERT
+      </button>
+      <button onClick={onAddPhoto}>
+        <ImageMediaIcon />
+      </button>
+      <button onClick={onAddMedia}>
+        <VideoMediaIcon />
+      </button>
+
+      <button onClick={onAddLink}>
+        <HaveFive />
+      </button>
+    </MediaToolbar>
   );
 };
+
+export const MediaToolbar = styled.div`
+  box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
+  border-radius: 5px;
+  display: inline-block;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
+
+  & button {
+    border: none;
+    background-color: transparent;
+    outline: 0;
+    box-shadow: none;
+    padding: 5px;
+    cursor: pointer;
+    padding: 11px 11px;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 14px;
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      svg path,
+      svg rect {
+        fill: #6670f0;
+      }
+      color: #6670f0;
+    }
+  }
+`;
 
 const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
   const onAddContentPart = (index, type, data) => {

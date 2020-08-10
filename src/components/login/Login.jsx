@@ -9,7 +9,7 @@ import { ThemeProvider } from 'styled-components';
 import { FlexContainer } from '../UI/Helpers';
 import { Link } from 'react-router-dom';
 import { BsLock } from 'react-icons/bs';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isRequired, validate } from '../../utils/validations';
 import { isValidElement } from 'react';
 import { loginAction } from '../../redux/actions/authActions';
@@ -20,6 +20,7 @@ export default function Login({ handleCancel }) {
   const [email, setEmail] = useState({ value: '', valid: false, errorType: '' });
   const [password, setPassword] = useState({ value: '', valid: false, errorType: '' });
   const dispatch = useDispatch();
+  const { error, errorMessage, loading } = useSelector((store) => store.auth);
   const handleEmailChange = (value) => {
     const validation = validate(value, [isRequired]);
     if (validation.length > 0) {
@@ -89,7 +90,7 @@ export default function Login({ handleCancel }) {
               </p>
             </div>
 
-            {!form.loading ? (
+            {!loading ? (
               <FlexContainer span="0" padding="0" justify="center">
                 <Button span="24px" onClick={handleCancel} rounded secondary>
                   Cancel
@@ -106,6 +107,7 @@ export default function Login({ handleCancel }) {
                 </Loader>
               </FlexContainer>
             )}
+            {error && <span>{errorMessage}</span>}
           </form>
         </FlexContainer>
       </LoginLayout>

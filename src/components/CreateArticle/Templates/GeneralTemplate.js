@@ -7,7 +7,10 @@ const FormRow = styled.div`
   position: relative;
   /*margin-top: 10px;*/
   margin-bottom: 24px;
-
+  & span {
+    color: #9695b7;
+    margin-right: 10px;
+  }
   input::-webkit-calendar-picker-indicator {
     color: white;
     filter: invert(1);

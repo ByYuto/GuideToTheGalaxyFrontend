@@ -11,7 +11,8 @@ import { useHistory } from 'react-router-dom';
 import Modal from './UI/modal/Modal';
 import { useModal } from './UI/modal/useModal';
 import Login from './login/Login';
-import { useAuth } from '../components/login/useAuth';
+import WithAuth from './login/withAuth';
+import { useSelector } from 'react-redux';
 
 const Separator = styled.div`
   display: block;
@@ -32,7 +33,6 @@ const NotificationsButton = styled(Button)`
 `;
 
 const TopBar = () => {
-  const authenticated = useAuth();
   const history = useHistory();
   const onAddContentClick = () => {
     history.push('/create');
@@ -54,24 +54,26 @@ const TopBar = () => {
       </div>
       <div className="middle"></div>
       <div className="right">
-        {!authenticated && (
-          <>
-            <Button primary onClick={modal.handleClick}>
-              Log in
-            </Button>{' '}
-            <Modal
-              title="Sign in"
-              setVisibility={modal.handleClick}
-              visible={modal.visible}
-              elmHeight="auto"
-              elmWidth="496px"
-              footer={null}
-            >
-              <Login handleCancel={modal.handleClick} />
-            </Modal>
-          </>
-        )}
-
+        <WithAuth
+          component={null}
+          componentReplacement={
+            <>
+              <Button primary onClick={modal.handleClick}>
+                Log in
+              </Button>{' '}
+              <Modal
+                title="Sign in"
+                setVisibility={modal.handleClick}
+                visible={modal.visible}
+                elmHeight="auto"
+                elmWidth="496px"
+                footer={null}
+              >
+                <Login handleCancel={modal.handleClick} />
+              </Modal>
+            </>
+          }
+        />
         <Button primary>PRIMARY</Button>
         <Button primary rounded>
           PRIMARY ROUNDED
@@ -81,14 +83,28 @@ const TopBar = () => {
           SECONDARY ROUNDED
         </Button>
         <Button circle>X</Button>
-        <>
-          <Button secondary onClick={authenticated ? onAddContentClick : modal.handleClick} circle icon>
-            <GoPlus />
-          </Button>
-          <AddContentButton secondary circle onClick={authenticated ? onAddContentClick : modal.handleClick} icon>
-            <GoPlus />
-          </AddContentButton>
-        </>
+        <WithAuth
+          component={
+            <>
+              <Button secondary onClick={onAddContentClick} circle icon>
+                <GoPlus />
+              </Button>
+              <AddContentButton secondary circle onClick={onAddContentClick} icon>
+                <GoPlus />
+              </AddContentButton>
+            </>
+          }
+          componentReplacement={
+            <>
+              <Button secondary onClick={modal.handleClick} circle icon>
+                <GoPlus />
+              </Button>
+              <AddContentButton secondary circle onClick={modal.handleClick} icon>
+                <GoPlus />
+              </AddContentButton>
+            </>
+          }
+        />
         <Separator />
         <NotificationsButton transparent secondary icon>
           <AiOutlineBell />

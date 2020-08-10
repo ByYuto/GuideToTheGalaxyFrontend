@@ -229,7 +229,21 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
         <FiChevronLeft />
       </ArrowButton>
 
-      <ContentTypesList readonly={readOnly} ref={containerRef}>
+      <div
+        readonly={readOnly}
+        ref={containerRef}
+        className="content-type-list"
+        style={{
+          overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'row',
+          margin: '0',
+          padding: '0 0 10px 0',
+          flexWrap: 'nowrap',
+          flexGrow: '1',
+          alignItems: 'center',
+        }}
+      >
         {contentTypes.map((contentType) => (
           <ContentType
             key={contentType.name}
@@ -257,7 +271,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
             onBlur={onCustomContentBlur}
           />
         )}
-      </ContentTypesList>
+      </div>
 
       <ArrowButton onClick={onRightArrowClick}>
         <FiChevronRight />

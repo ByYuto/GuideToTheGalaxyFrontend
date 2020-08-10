@@ -204,9 +204,9 @@ const CreateArticle = () => {
           <p>Loading...</p>
         )}
         <div style={{ zIndex: 3 }}>
-          <ThemeProvider theme={{ isDark: step <= 3 }}>
+          <ThemeProvider theme={{ isDark: step <= 2 }}>
             <StyledViewContent>
-              {step >= 4 && categories ? (
+              {step >= 3 && categories ? (
                 <ArticleContent
                   article={newArticle}
                   onChangeArticle={onChangeArticle}
