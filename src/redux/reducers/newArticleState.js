@@ -12,6 +12,7 @@ const initialState = {
     link: '',
     photo: '',
     URL: '',
+    discontinued_law: false,
     content: [
       {
         type: 'text',
@@ -19,6 +20,7 @@ const initialState = {
       },
     ],
   },
+  draftForm: [],
 
   //Override some values Just for TESTING purpose
   /*
@@ -47,12 +49,15 @@ const initialState = {
 const UPDATE = 'NEW_ARTICLE/UPDATE';
 const SET_STEP = 'NEW_ARTICLE/SET_STEP';
 const CATEGORY_SELECTION = 'CATEGORY_SELECTION';
+const DRAFT_FORM = 'DRAFT_FORM';
 
 //Action Creators
 export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });
 export const setNewArticleStep = (step) => ({ type: SET_STEP, payload: { step } });
 
 export const categorySelected = (id) => ({ type: CATEGORY_SELECTION, payload: id });
+
+export const makeFormDraft = (form) => ({ type: DRAFT_FORM, payload: form });
 
 //Reducer
 export default (state = initialState, { type, payload }) => {
@@ -77,6 +82,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         step: payload.step,
+      };
+    case DRAFT_FORM:
+      return {
+        ...state,
+        draftForm: [payload],
       };
     default:
       return state;

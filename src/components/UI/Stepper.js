@@ -6,6 +6,7 @@ const StyledStepper = styled.div`
   flex-direction: row;
   justify-content: center;
   margin: 23px 0;
+  z-index: 20;
 `;
 
 const Step = styled.div`
@@ -14,6 +15,7 @@ const Step = styled.div`
   width: 8px;
   height: 8px;
   border-radius: 4px;
+  z-index: 20;
   background-color: ${(props) =>
     props.active ? props.theme.accentColors.primary.color : props.theme.baseColors.middleLight};
 `;

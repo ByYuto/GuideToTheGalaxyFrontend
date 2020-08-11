@@ -1,9 +1,10 @@
 import React from 'react';
 import Caption from '../UI/Caption';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
 import ArticleTemplate from './ArticleTemplate';
 import UploadInput from '../UI/forms/UploadInput';
+import { useSelector, useDispatch } from 'react-redux';
+import { makeFormDraft } from '../../redux/reducers/newArticleState';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -51,19 +52,29 @@ const getContentType = (categories, categoryId, contentTypeId) => {
 
 const ArticleData = ({ article, showImage, onChange }) => {
   const categories = useSelector(categoriesSelector);
-  const contentType = getContentType(categories, article.categoryId, article.contentTypeId);
-
+  const { draftForm } = useSelector((store) => store.newArticle);
+  const dispatch = useDispatch();
+  const content = getContentType(categories, article.categoryId, article.contentTypeId);
+  const contentType = content ? content : draftForm[0];
+  const formData = article ? article : draftForm[0].content;
+  const changeWithDraft = (articleContent) => {
+    const draftContent = { ...contentType, content: articleContent };
+    console.log(draftContent);
+    console.log(draftForm);
+    dispatch(makeFormDraft(draftContent));
+    onChange(articleContent);
+  };
   return (
     <StyledArticleData>
       <StyledArticleFields>
         <Caption>KEY INFO</Caption>
-        <ArticleTemplate contentType={contentType} article={article} onChange={onChange} />
+        <ArticleTemplate contentType={contentType} article={formData} onChange={changeWithDraft} />
       </StyledArticleFields>
       <StyledArticleImage>
-        {showImage && (
+        {contentType.image && (
           <React.Fragment>
             <Caption className="no-margin">FEATURE PHOTO</Caption>
-            <UploadInput contentType={contentType} onChange={onChange} />
+            <UploadInput contentType={contentType} onChange={changeWithDraft} />
           </React.Fragment>
         )}
       </StyledArticleImage>

@@ -1,13 +1,27 @@
 import React, { useState } from 'react';
-import Input from '../../UI/Input';
+import Input, { PickerLayout } from '../../UI/Input';
 import styled from 'styled-components';
 import { StyledFieldTooltip } from '../../../views/CreateArticle/StyledComponents';
 import { useSelector } from 'react-redux';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import Toggle from '../../UI/Toggle';
+
+const PickerDate = ({ value = new Date(), _onChange }) => {
+  return (
+    <PickerLayout>
+      <DatePicker selected={value} onChange={_onChange} dateFormat="MMMM d, yyyy" />
+    </PickerLayout>
+  );
+};
 
 const FormRow = styled.div`
   position: relative;
   /*margin-top: 10px;*/
   margin-bottom: 24px;
+  & .react-datepicker__header {
+    background-color: white;
+  }
   & span {
     color: #9695b7;
     margin-right: 10px;
@@ -42,22 +56,34 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
   };
 
   const textPlaceholder = contentType ? getPlaceHolderText(contentType.date) : 'Date passed*';
+  const dateValue = article && article.date ? new Date(article.date) : new Date();
   return (
     <div>
-      {InputRow('location', 'Location', 'text')}
+      {contentType.location && InputRow('location', 'Location', 'text')}
       {InputRow('title', 'Title', 'text')}
       {InputRow('URL', 'Link to more info')}
-      {
-        <FormRow>
-          <span>{textPlaceholder}</span>
-          <Input
-            placeholder={textPlaceholder}
-            value={article.date}
-            onChange={(value) => onChangeData('date', value)}
-            type="date"
-          />
-        </FormRow>
-      }
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {contentType.date && (
+          <FormRow>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span>{textPlaceholder}</span>
+              <PickerDate value={dateValue} _onChange={(value) => onChangeData('date', value)} />
+            </div>
+          </FormRow>
+        )}
+        {contentType.other && (
+          <>
+            <span style={{ marginLeft: '10px', marginBottom: '24px' }}>The Law is DISCONTINUED</span>
+            <div style={{ marginBottom: '24px' }}>
+              <Toggle
+                checked={article.discontinued_law}
+                onChange={(value) => onChangeData('discontinued_law', value)}
+                tooltipText={contentType.other.tooltip || 'Toggle tooltip'}
+              />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

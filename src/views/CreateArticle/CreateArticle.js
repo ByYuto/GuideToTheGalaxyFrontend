@@ -6,7 +6,7 @@ import useHiddenTopbar from '../../hooks/useHiddenTopbar';
 import CreateArticleFooter from '../../components/CreateArticle/CreateArticleFooter';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateNewArticle, setNewArticleStep } from '../../redux/reducers/newArticleState';
+import { updateNewArticle, setNewArticleStep, makeFormDraft } from '../../redux/reducers/newArticleState';
 import ContentTypeSelector from '../../components/CreateArticle/ContentTypeSelector';
 import {
   StyledView,
@@ -214,7 +214,14 @@ const CreateArticle = () => {
                   //onKeyDown={(a, b) => console.log('PASO POR AQUI', a, b)}
                 />
               ) : null}
-              <Stepper step={step} />
+              <div
+                style={{
+                  backgroundColor:
+                    arePersistingContent() && !newArticle.validStep1 ? 'rgba(21, 21, 49, 0.7)' : 'transparent',
+                }}
+              >
+                <Stepper step={step} />
+              </div>
             </StyledViewContent>
           </ThemeProvider>
 
