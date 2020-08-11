@@ -13,6 +13,7 @@ const initialState = {
     photo: '',
     URL: '',
     discontinued_law: false,
+    date: null,
     content: [
       {
         type: 'text',

@@ -6,6 +6,7 @@ import { FiChevronRight } from 'react-icons/fi';
 import Button from '../UI/Button';
 import { GoPlus } from 'react-icons/go';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 const StyledContentType = styled.div`
   display: flex;
@@ -109,6 +110,7 @@ const CustomContentType = ({
   onClearContentType,
   onBlur,
 }) => {
+  const [currentKey, setCurrentKey] = useState(null);
   const _onClick = () => {
     !readOnly && onClick && onClick(value);
   };
@@ -136,8 +138,7 @@ const CustomContentType = ({
       //const value = (e.target.textContent || e.target.innerText).toUpperCase() || null;
       //onChange && onChange(value);
       //onBlur && onBlur(value);
-      editableRef.current.blur();
-      e.preventDefault();
+      setCurrentKey(e.keyCode);
     } else if (e.keyCode === 27) {
       onChange && onChange(null);
       onBlur && onBlur(null);
@@ -154,6 +155,12 @@ const CustomContentType = ({
     text = text.replace(/\s\s+/g, ' '); //Convert multiple spaces into one
     document.execCommand('insertHTML', false, text.toUpperCase());
   };
+
+  useEffect(() => {
+    if (currentKey === 13) {
+      editableRef.current.blur();
+    }
+  }, [currentKey]);
 
   return (
     <StyledContentType className={className} active={active} readOnly={readOnly} onClick={_onClick}>
@@ -191,9 +198,16 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
   };
 
   useEffect(() => {
-    setNewContentType(null); //If contentTypes is changed, reset newContentType
-    // eslint-disable-next-line
-  }, [JSON.stringify(contentTypes)]);
+    if (newContentType && containerRef && editableRef && containerRef.current && editableRef.current) {
+      containerRef.current.scrollLeft += 99999;
+      editableRef.current.focus();
+      window.getSelection().selectAllChildren(editableRef.current);
+    }
+
+    if (newContentType === null && containerRef && editableRef && containerRef.current && editableRef.current) {
+      containerRef.current.scrollLeft += 99999;
+    }
+  }, [newContentType, editableRef, containerRef]);
 
   const onRightArrowClick = () => (containerRef.current.scrollLeft += 50);
   const onLeftArrowClick = () => (containerRef.current.scrollLeft -= 50);
@@ -202,25 +216,17 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
     const contentType = 'New Content Type';
     setNewContentType(contentType);
     onChange(contentType);
-    setTimeout(() => {
-      containerRef.current.scrollLeft += 99999;
-      editableRef.current && editableRef.current.focus();
-      window.getSelection().selectAllChildren(editableRef.current);
-    }, 10);
   };
 
   const onClearContentType = () => {
-    setTimeout(() => {
-      setNewContentType(null);
-      onChange(null);
-      onCustomContentBlur(null);
-    }, 1);
+    setNewContentType(null);
+    onChange(null);
+    onCustomContentBlur(null);
   };
 
   const onCustomContentChange = (newContentType) => {
     setNewContentType(newContentType);
     onChange(newContentType);
-    setTimeout(() => (containerRef.current.scrollLeft += 99999), 100);
   };
 
   return (
@@ -254,7 +260,13 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
         ))}
         {!newContentType ? (
           !readOnly ? (
-            <AddContentTypeButton secondary circle onClick={onAddNewContentTypeClick} icon>
+            <AddContentTypeButton
+              secondary
+              circle
+              onClick={onAddNewContentTypeClick}
+              className="custom-content-type"
+              icon
+            >
               <GoPlus />
             </AddContentTypeButton>
           ) : null

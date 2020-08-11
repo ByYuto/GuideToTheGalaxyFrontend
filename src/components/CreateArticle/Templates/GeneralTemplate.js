@@ -59,11 +59,11 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
   const dateValue = article && article.date ? new Date(article.date) : new Date();
   return (
     <div>
-      {contentType.location && InputRow('location', 'Location', 'text')}
+      {contentType?.location && InputRow('location', 'Location', 'text')}
       {InputRow('title', 'Title', 'text')}
       {InputRow('URL', 'Link to more info')}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        {contentType.date && (
+        {contentType?.date && (
           <FormRow>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <span>{textPlaceholder}</span>
@@ -71,7 +71,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
             </div>
           </FormRow>
         )}
-        {contentType.other && (
+        {contentType?.other && (
           <>
             <span style={{ marginLeft: '10px', marginBottom: '24px' }}>The Law is DISCONTINUED</span>
             <div style={{ marginBottom: '24px' }}>

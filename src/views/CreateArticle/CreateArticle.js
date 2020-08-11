@@ -125,7 +125,6 @@ const CreateArticle = () => {
       return;
     }
 
-    console.log('ESTE ES', { contentTypesAvailableForSelectedCategory, value });
     if (
       contentTypesAvailableForSelectedCategory &&
       contentTypesAvailableForSelectedCategory.find((cat) => cat.name === value)

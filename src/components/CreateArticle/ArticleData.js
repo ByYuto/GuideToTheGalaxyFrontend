@@ -46,8 +46,40 @@ const StyledArticleData = styled.div`
 
 const categoriesSelector = (state) => state.app.categories;
 const getContentType = (categories, categoryId, contentTypeId) => {
-  const category = categories.find((category) => category.name === categoryId);
-  return category.contentTypes.find((contentType) => contentType.name === contentTypeId);
+  if (contentTypeId === 'New Content Type') {
+    return {
+      name: 'New Content Type',
+      template: 'GENERAL',
+      title: {
+        placeholder: 'Article title',
+        required: true,
+        tooltip: 'Article title',
+      },
+      URL: {
+        placeholder: 'Put in a URL to help us verify this post',
+        required: true,
+        tooltip: 'Put in a URL to help us verify this post',
+      },
+      location: {
+        placeholder: 'Where did they used to busk?',
+        required: false,
+        tooltip: 'Place a location (optional)',
+      },
+      date: {
+        placeholder: 'Passed date',
+        required: false,
+        tooltip: 'A tooltip',
+      },
+      image: {
+        placeholder: 'Choose an Image',
+        required: false,
+        tooltip: 'A tooltip',
+      },
+    };
+  } else {
+    const category = categories.find((category) => category.name === categoryId);
+    return category.contentTypes.find((contentType) => contentType.name === contentTypeId);
+  }
 };
 
 const ArticleData = ({ article, showImage, onChange }) => {
@@ -59,8 +91,6 @@ const ArticleData = ({ article, showImage, onChange }) => {
   const formData = article ? article : draftForm[0].content;
   const changeWithDraft = (articleContent) => {
     const draftContent = { ...contentType, content: articleContent };
-    console.log(draftContent);
-    console.log(draftForm);
     dispatch(makeFormDraft(draftContent));
     onChange(articleContent);
   };
@@ -71,7 +101,7 @@ const ArticleData = ({ article, showImage, onChange }) => {
         <ArticleTemplate contentType={contentType} article={formData} onChange={changeWithDraft} />
       </StyledArticleFields>
       <StyledArticleImage>
-        {contentType.image && (
+        {contentType?.image && (
           <React.Fragment>
             <Caption className="no-margin">FEATURE PHOTO</Caption>
             <UploadInput contentType={contentType} onChange={changeWithDraft} />
