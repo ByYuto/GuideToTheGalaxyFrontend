@@ -34,34 +34,35 @@ const FormRow = styled.div`
 
 const getPlaceHolderText = (field) => `${field.placeholder}${field.required ? '*' : ''}`;
 
+const InputRow = ({field, placeholderText, contentType, newArticle, onChangeData}) => {
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const tooltip = contentType ? contentType[field]?.tooltip : `${field} tooltip`;
+  const textPlaceholder = contentType ? getPlaceHolderText(contentType[field]) : placeholderText;
+  return (
+    <FormRow>
+      <Input
+        placeholder={textPlaceholder}
+        value={newArticle[field]}
+        block
+        onChange={(value) => onChangeData(field, value)}
+        onFocus={() => setTooltipVisible(true)}
+        onBlur={() => setTooltipVisible(false)}
+      />
+      {tooltipVisible && tooltip && <StyledFieldTooltip>{tooltip}</StyledFieldTooltip>}
+    </FormRow>
+  );
+};
+
 const GeneralTemplate = ({ contentType, article, onChangeData }) => {
   const { newArticle } = useSelector((state) => state.newArticle);
-  const InputRow = (field, placeholderText) => {
-    const [tooltipVisible, setTooltipVisible] = useState(false);
-    const tooltip = contentType ? contentType[field]?.tooltip : `${field} tooltip`;
-    const textPlaceholder = contentType ? getPlaceHolderText(contentType[field]) : placeholderText;
-    return (
-      <FormRow>
-        <Input
-          placeholder={textPlaceholder}
-          value={newArticle[field]}
-          block
-          onChange={(value) => onChangeData(field, value)}
-          onFocus={() => setTooltipVisible(true)}
-          onBlur={() => setTooltipVisible(false)}
-        />
-        {tooltipVisible && tooltip && <StyledFieldTooltip>{tooltip}</StyledFieldTooltip>}
-      </FormRow>
-    );
-  };
 
   const textPlaceholder = contentType ? getPlaceHolderText(contentType.date) : 'Date passed*';
   const dateValue = article && article.date ? new Date(article.date) : new Date();
   return (
     <div>
-      {contentType?.location && InputRow('location', 'Location', 'text')}
-      {InputRow('title', 'Title', 'text')}
-      {InputRow('URL', 'Link to more info')}
+      {contentType?.location ? <InputRow field={'location'} placeholderText={'Location'} contentType={contentType} newArticle={newArticle} onChangeData={onChangeData} />: null}
+      <InputRow field={'title'} placeholderText={'Title'} contentType={contentType} newArticle={newArticle} onChangeData={onChangeData} />
+      <InputRow field={'URL'} placeholderText={'Link to more info'} contentType={contentType} newArticle={newArticle} onChangeData={onChangeData} />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {contentType?.date && (
           <FormRow>
