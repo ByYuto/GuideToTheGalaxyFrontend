@@ -7,6 +7,7 @@ export const loginAction = (user) => async (dispatch) => {
     type: USER_LOGIN,
     payload: {
       loading: true,
+      error: false,
     },
   });
   try {
@@ -21,11 +22,12 @@ export const loginAction = (user) => async (dispatch) => {
       },
     });
   } catch (e) {
+    const errorMessage = e.response?.data?.error || e.message;
     dispatch({
       type: USER_LOGIN,
       payload: {
         error: true,
-        errorMessage: e.message,
+        errorMessage: errorMessage,
         loading: false,
       },
     });
