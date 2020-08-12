@@ -6,15 +6,23 @@ const Caption = styled.span`
   font-weight: normal;
   font-size: 12px;
   line-height: 14px;
+  color: #9695b7;
+  margin-bottom: 24px;
 
-  ${props => props.bold ? css`
-    font-weight: bold;
-  ` : null}
+  ${(props) =>
+    props.bold
+      ? css`
+          font-weight: bold;
+        `
+      : null}
 
-  ${props => props.caps ? css`
-      font-size: 10px;
-      line-height: 12px;
-  ` : null}
-`
+  ${(props) =>
+    props.caps
+      ? css`
+          font-size: 10px;
+          line-height: 12px;
+        `
+      : null}
+`;
 
-export default Caption
+export default Caption;

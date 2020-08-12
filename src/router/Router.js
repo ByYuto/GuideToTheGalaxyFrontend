@@ -5,7 +5,7 @@ import CreateArticle from '../views/CreateArticle/CreateArticle';
 import Layout from '../components/Layout/Layout';
 import ComponentsTestPage from '../views/ComponentsTestPage';
 
-const Router = () =>
+const Router = () => (
   <BrowserRouter>
     <Layout>
       {/* A <Switch> looks through its children <Route>s and
@@ -23,5 +23,6 @@ const Router = () =>
       </Switch>
     </Layout>
   </BrowserRouter>
+);
 
 export default Router;

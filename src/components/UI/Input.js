@@ -247,6 +247,34 @@ const Input = ({
   );
 };
 
+export const PickerLayout = styled.div`
+  & input {
+    all: unset;
+    font-family: 'Open Sans';
+    font-size: 14px;
+    line-height: 22px;
+    width: 100%;
+    padding: 9px 35px 9px 26px;
+    background: #151531;
+    border-radius: 8px;
+  }
+
+  & .react-datepicker__day--selected,
+  .react-datepicker__day--in-selecting-range,
+  .react-datepicker__day--in-range,
+  .react-datepicker__month-text--selected,
+  .react-datepicker__month-text--in-selecting-range,
+  .react-datepicker__month-text--in-range,
+  .react-datepicker__quarter-text--selected,
+  .react-datepicker__quarter-text--in-selecting-range,
+  .react-datepicker__quarter-text--in-range,
+  .react-datepicker__year-text--selected,
+  .react-datepicker__year-text--in-selecting-range,
+  .react-datepicker__year-text--in-range {
+    background-color: #6670f0;
+  }
+`;
+
 Input.defaultProps = {
   value: '',
   onChange: null,

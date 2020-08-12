@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import Caption from '../UI/Caption';
+import { useDispatch } from 'react-redux';
 
 const StyledCategory = styled.div`
   background: ${(props) => (props.active ? props.theme.accentColors.primary.color : props.theme.baseColors.darkMiddle)};

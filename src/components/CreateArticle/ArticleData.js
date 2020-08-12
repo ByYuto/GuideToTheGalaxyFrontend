@@ -1,12 +1,25 @@
 import React from 'react';
 import Caption from '../UI/Caption';
-import Input from '../UI/Input';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
 import ArticleTemplate from './ArticleTemplate';
+import UploadInput from '../UI/forms/UploadInput';
+import { useSelector, useDispatch } from 'react-redux';
+import { makeFormDraft } from '../../redux/reducers/newArticleState';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (max-width: 600px) {
+    min-height: 360px;
+    justify-content: space-around;
+  }
+
+  & .no-margin {
+    margin-bottom: 0;
+  }
 `;
 const StyledArticleFields = styled.div`
   display: flex;
@@ -20,7 +33,11 @@ const StyledArticleData = styled.div`
   flex-direction: row;
   align-items: stretch;
   padding-top: 34px;
-  border-top: 1px solid #151531;
+  /*border-top: 1px solid #151531;*/
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 
   ${Caption} {
     text-align: center;
@@ -39,29 +56,67 @@ const StyledArticleData = styled.div`
 const categoriesSelector = (state) => state.app.categories;
 const getContentType = (categories, categoryId, contentTypeId) => {
   const category = categories.find((category) => category.name === categoryId);
-  return category.contentTypes.find((contentType) => contentType.name === contentTypeId);
+  const subCategory = category.contentTypes.find((contentType) => contentType.name === contentTypeId);
+  if (subCategory === undefined) {
+    return {
+      name: 'New Content Type',
+      template: 'GENERAL',
+      title: {
+        placeholder: 'Article title',
+        required: true,
+        tooltip: 'Article title',
+      },
+      URL: {
+        placeholder: 'Put in a URL to help us verify this post',
+        required: true,
+        tooltip: 'Put in a URL to help us verify this post',
+      },
+      location: {
+        placeholder: 'Where did they used to busk?',
+        required: false,
+        tooltip: 'Place a location (optional)',
+      },
+      date: {
+        placeholder: 'Passed date',
+        required: false,
+        tooltip: 'A tooltip',
+      },
+      image: {
+        placeholder: 'Choose an Image',
+        required: false,
+        tooltip: 'A tooltip',
+      },
+    };
+  } else {
+    return subCategory;
+  }
 };
 
 const ArticleData = ({ article, showImage, onChange }) => {
   const categories = useSelector(categoriesSelector);
-  const contentType = getContentType(categories, article.categoryId, article.contentTypeId);
-
-  console.log({ showImage });
+  const { draftForm } = useSelector((store) => store.newArticle);
+  const dispatch = useDispatch();
+  const content = getContentType(categories, article.categoryId, article.contentTypeId);
+  const contentType = content ? content : draftForm[0];
+  const formData = article ? article : draftForm[0].content;
+  const changeWithDraft = (articleContent) => {
+    const draftContent = { ...contentType, content: articleContent };
+    dispatch(makeFormDraft(draftContent));
+    onChange(articleContent);
+  };
   return (
     <StyledArticleData>
       <StyledArticleFields>
         <Caption>KEY INFO</Caption>
-        <ArticleTemplate contentType={contentType} article={article} onChange={onChange} />
+        <ArticleTemplate contentType={contentType} article={formData} onChange={changeWithDraft} />
       </StyledArticleFields>
       <StyledArticleImage>
-        {showImage ? (
+        {contentType?.image && (
           <React.Fragment>
-            <Caption>FEATURE PHOTO</Caption>
-            {/*<p>Aqui va a ir el selector de imagen para selccionar la imagen del articulo</p>*/}
-            {/*<img src="https://via.placeholder.com/288x168" alt="placeholder" />*/}
-            <img src="https://dummyimage.com/288x168" alt="placeholder" />
+            <Caption className="no-margin">FEATURE PHOTO</Caption>
+            <UploadInput contentType={contentType} onChange={changeWithDraft} />
           </React.Fragment>
-        ) : null}
+        )}
       </StyledArticleImage>
     </StyledArticleData>
   );

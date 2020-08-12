@@ -5,7 +5,6 @@ export const GlobalStyle = createGlobalStyle`
 html, body, #root {
   height: 100%;
   width: 100%;
-  overflow: hidden;
 }
 * {
   box-sizing: border-box;
@@ -50,7 +49,7 @@ h4 {
   font-family: Lato;
   font-style: normal;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 19px;
 }
 
@@ -85,6 +84,20 @@ h6 {
   background: #151531;
 }
 
+a {
+ color: #6670F0;
+ font-family: Open Sans;
+ font-style: normal;
+ font-weight: normal;
+ font-size: 14px;
+ line-height: 22px;
+ text-decoration: none;
+
+ &:hover {
+  text-decoration: underlined;
+ }
+}
+
 `;
 
 export default {
@@ -110,7 +123,11 @@ export default {
       color: '#E3BBEA',
       hover: '#CF92E5',
       text: '#1F1F3D',
-      disabled: '#BDBFDF',
+    },
+    darker: {
+      text: '#BDBFDF',
+      color: '#151531',
+      textHover: 'white',
     },
   },
   borderRadius: {

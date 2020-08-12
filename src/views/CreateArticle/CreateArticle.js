@@ -6,7 +6,7 @@ import useHiddenTopbar from '../../hooks/useHiddenTopbar';
 import CreateArticleFooter from '../../components/CreateArticle/CreateArticleFooter';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateNewArticle, setNewArticleStep } from '../../redux/reducers/newArticleState';
+import { updateNewArticle, setNewArticleStep, makeFormDraft } from '../../redux/reducers/newArticleState';
 import ContentTypeSelector from '../../components/CreateArticle/ContentTypeSelector';
 import {
   StyledView,
@@ -15,16 +15,14 @@ import {
   StyledCategorySelectorContainer,
   StyledCategorySelectorTooltip,
   StyledContentTypeSelectorContainer,
-  StyledContent,
-  Fields,
 } from './StyledComponents';
 import { toast } from 'react-toastify';
-import Caption from '../../components/UI/Caption';
-import Input from '../../components/UI/Input';
 import ArticleData from '../../components/CreateArticle/ArticleData';
 import { getCategories } from '../../redux/reducers/appState';
 import Stepper from '../../components/UI/Stepper';
 import ArticleContent from '../../components/CreateArticle/ArticleContent';
+import Divider from '../../components/UI/Divider';
+import Layer from '../../components/UI/Layer';
 
 /*
 const categories = [
@@ -99,18 +97,18 @@ const CreateArticle = () => {
   const categories = useSelector(categoriesSelector);
   const contentTypesAvailableForSelectedCategory =
     categories && newArticle.categoryId ? getContentTypes(categories, newArticle.categoryId) : null;
-  console.log({ step, newArticle });
   useHiddenTopbar(); //hideTopbar
 
   useEffect(() => {
     dispatch(getCategories());
-  }, []);
+  }, [dispatch]);
 
   const onCategoryChange = (category) => {
-    dispatch(updateNewArticle({ categoryId: category, contentTypeId: null }));
+    dispatch(updateNewArticle({ categoryId: category, validStep1: false }));
   };
   const onContentTypeChange = (contentType) => {
-    dispatch(updateNewArticle({ contentTypeId: contentType }));
+    dispatch(updateNewArticle({ contentTypeId: contentType, validStep1: true }));
+    dispatch(setNewArticleStep(2));
   };
 
   const onExitClick = () => {
@@ -123,11 +121,10 @@ const CreateArticle = () => {
   };
 
   const onCustomContentBlur = (value) => {
-    if (customContent === value) {
+    if (customContent === value || value === 'New Content Type') {
       return;
     }
 
-    console.log('ESTE ES', { contentTypesAvailableForSelectedCategory, value });
     if (
       contentTypesAvailableForSelectedCategory &&
       contentTypesAvailableForSelectedCategory.find((cat) => cat.name === value)
@@ -144,43 +141,39 @@ const CreateArticle = () => {
   };
 
   const onChangeArticle = (article) => {
-    console.log('Dispatching new article with', article);
+    //console.log('Dispatching new article with', article);
     dispatch(updateNewArticle(article));
   };
 
+  const arePersistingContent = () => newArticle.title || newArticle.location || newArticle.link || newArticle.photo;
   return (
     <ThemeProvider theme={{ isDark: true }}>
       <StyledView>
-        <MaxWidthContainer>
-          {categories ? (
-            <React.Fragment>
-              <CreateArticleHeader>
+        {categories ? (
+          <React.Fragment>
+            <CreateArticleHeader>
+              <MaxWidthContainer>
                 <StyledCategorySelectorContainer>
                   <CategorySelector
                     categories={categories}
                     value={newArticle.categoryId}
                     onChange={onCategoryChange}
                     showDescriptions={newArticle.categoryId === null}
-                    readOnly={step !== 1}
                   />
                   {!newArticle.categoryId ? (
                     <StyledCategorySelectorTooltip>Select a category for your post!</StyledCategorySelectorTooltip>
                   ) : null}
                 </StyledCategorySelectorContainer>
+              </MaxWidthContainer>
+              <MaxWidthContainer>
                 <StyledContentTypeSelectorContainer>
                   {newArticle.categoryId ? (
-                    <React.Fragment>
-                      {console.log(
-                        'Antes de renderizar',
-                        newArticle.categoryId,
-                        contentTypesAvailableForSelectedCategory
-                      )}
+                    <div style={{ height: '50px', overflow: 'hidden', width: '100%' }}>
                       {contentTypesAvailableForSelectedCategory ? (
                         <ContentTypeSelector
                           contentTypes={contentTypesAvailableForSelectedCategory}
                           value={newArticle.contentTypeId}
                           onChange={onContentTypeChange}
-                          readOnly={step !== 1}
                           onCustomContentBlur={onCustomContentBlur}
                         />
                       ) : (
@@ -192,28 +185,52 @@ const CreateArticle = () => {
                           identify what kind of content it is.
                         </StyledCategorySelectorTooltip>
                       ) : null}
-                    </React.Fragment>
+                    </div>
                   ) : null}
                 </StyledContentTypeSelectorContainer>
-              </CreateArticleHeader>
-              {step >= 2 ? <ArticleData article={newArticle} onChange={onChangeArticle} showImage={step >= 3} /> : null}
-            </React.Fragment>
-          ) : (
-            <p>Loading...</p>
-          )}
-        </MaxWidthContainer>
-        <ThemeProvider theme={{ isDark: step <= 3 }}>
-          <StyledViewContent>
-            {step >= 4 ? <ArticleContent article={newArticle} onChange={onChangeArticle} /> : null}
-            <Stepper step={step} />
-          </StyledViewContent>
-        </ThemeProvider>
-        <CreateArticleFooter
-          exitDisabled={false}
-          onExitClick={onExitClick}
-          nextDisabled={nextDisabled}
-          onNextClick={onNextClick}
-        />
+              </MaxWidthContainer>
+            </CreateArticleHeader>
+            {arePersistingContent() || newArticle.validStep1 ? (
+              <div style={{ position: 'relative' }}>
+                {!newArticle.validStep1 && <Layer className="layer-blocker" />}
+                <Divider className="create-article-divider" />
+                <MaxWidthContainer>
+                  <ArticleData article={newArticle} onChange={onChangeArticle} showImage={true} />
+                </MaxWidthContainer>
+              </div>
+            ) : null}
+          </React.Fragment>
+        ) : (
+          <p>Loading...</p>
+        )}
+        <div style={{ zIndex: 3 }}>
+          <ThemeProvider theme={{ isDark: step <= 2 }}>
+            <StyledViewContent>
+              {step >= 3 && categories ? (
+                <ArticleContent
+                  article={newArticle}
+                  onChangeArticle={onChangeArticle}
+                  //onKeyDown={(a, b) => console.log('PASO POR AQUI', a, b)}
+                />
+              ) : null}
+              <div
+                style={{
+                  backgroundColor:
+                    arePersistingContent() && !newArticle.validStep1 ? 'rgba(21, 21, 49, 0.7)' : 'transparent',
+                }}
+              >
+                <Stepper step={step} />
+              </div>
+            </StyledViewContent>
+          </ThemeProvider>
+
+          <CreateArticleFooter
+            exitDisabled={false}
+            onExitClick={onExitClick}
+            nextDisabled={nextDisabled}
+            onNextClick={onNextClick}
+          />
+        </div>
       </StyledView>
     </ThemeProvider>
   );

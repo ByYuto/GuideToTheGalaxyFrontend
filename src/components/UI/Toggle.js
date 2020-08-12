@@ -1,14 +1,15 @@
-import React from 'react'
-import styled, { css } from 'styled-components'
+import React, { useState } from 'react';
+import styled, { css } from 'styled-components';
+import { StyledFieldTooltip } from '../../views/CreateArticle/StyledComponents';
 
 const ToggleContainer = styled.div`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  position: relative;  
+  position: relative;
   padding: 0 5px 4px 5px;
-`
+`;
 
 // Hide Toggle visually but remain accessible to screen readers.
 // Source: https://polished.js.org/docs/#hidevisually
@@ -23,7 +24,7 @@ const HiddenToggle = styled.input.attrs({ type: 'checkbox' })`
   position: absolute;
   white-space: nowrap;
   width: 1px;
-`
+`;
 
 const StyledToggle = styled.div`
   display: block;
@@ -33,19 +34,25 @@ const StyledToggle = styled.div`
   border-radius: 3em;
   transition: all 150ms;
   position: relative;
-  background-color: ${props => props.theme.isDark ? props.theme.baseColors.middle : props.theme.baseColors.dark};
+  background-color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middle : props.theme.baseColors.dark)};
   transition: all 0.2s;
 
-  ${props => props.checked ? css`
-    background-color: ${props => props.theme.accentColors.primary.color};
-  `: null}
+  ${(props) =>
+    props.checked
+      ? css`
+          background-color: ${(props) => props.theme.accentColors.primary.color};
+        `
+      : null}
 
-  ${props => props.disabled ? css`
-    background-color: ${props => props.theme.baseColors.middleLight};
-  `: null}
+  ${(props) =>
+    props.disabled
+      ? css`
+          background-color: ${(props) => props.theme.baseColors.middleLight};
+        `
+      : null}
 
   &:after {
-    content: "";
+    content: '';
     width: 1.3em;
     height: 1.3em;
     background: white;
@@ -55,27 +62,47 @@ const StyledToggle = styled.div`
     border-radius: 3em;
     transition: all 0.2s;
 
-    ${props => props.checked ? css`
-      left: calc(100% - 0.15em - 1.3em);
-    `: null}
-
+    ${(props) =>
+      props.checked
+        ? css`
+            left: calc(100% - 0.15em - 1.3em);
+          `
+        : null}
   }
-  
+
   ${HiddenToggle}:focus + & {
     box-shadow: 0px 0px 10px rgba(97, 124, 255, 0.3);
   }
-`
+`;
 
-
-const Toggle = ({ className, onChange, checked, disabled, readonly, ...props }) => {
+const Toggle = ({ className, onChange, checked, disabled, readonly, tooltipText, ...props }) => {
   const _onChange = (e) => {
-    !readonly && onChange && onChange(e.target.checked);
+    !readonly && onChange && onChange(!e.target.checked);
+  };
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const tooltip = tooltipText || 'tooltip law is discontinued';
+  return (
+    <ToggleContainerLayout>
+      <ToggleContainer
+        className={className}
+        checked={checked}
+        onClick={_onChange}
+        onMouseEnter={() => setTooltipVisible(true)}
+        onMouseLeave={() => setTooltipVisible(false)}
+      >
+        <HiddenToggle checked={checked} onChange={_onChange} disabled={disabled} readonly={readonly} {...props} />
+        <StyledToggle checked={checked} disabled={disabled} />
+      </ToggleContainer>
+      {tooltipVisible && tooltip && <StyledFieldTooltip className="tooltip-toggle">{tooltip}</StyledFieldTooltip>}
+    </ToggleContainerLayout>
+  );
+};
+
+const ToggleContainerLayout = styled.div`
+  position: relative;
+  & .tooltip-toggle {
+    bottom: 0;
+    top: auto;
   }
-  return <ToggleContainer className={className} checked={checked}>
-    <HiddenToggle checked={checked} onChange={_onChange} disabled={disabled} readonly={readonly} {...props} />
-    <StyledToggle checked={checked} disabled={disabled} />
-  </ToggleContainer>
-}
-
-
-export default Toggle
+`;
+export default Toggle;
