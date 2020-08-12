@@ -34,7 +34,7 @@ const FormRow = styled.div`
 
 const getPlaceHolderText = (field) => `${field.placeholder}${field.required ? '*' : ''}`;
 
-const InputRow = ({field, placeholderText, contentType, newArticle, onChangeData}) => {
+const InputRow = ({ field, placeholderText, contentType, newArticle, onChangeData }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const tooltip = contentType ? contentType[field]?.tooltip : `${field} tooltip`;
   const textPlaceholder = contentType ? getPlaceHolderText(contentType[field]) : placeholderText;
@@ -56,13 +56,33 @@ const InputRow = ({field, placeholderText, contentType, newArticle, onChangeData
 const GeneralTemplate = ({ contentType, article, onChangeData }) => {
   const { newArticle } = useSelector((state) => state.newArticle);
 
-  const textPlaceholder = contentType ? getPlaceHolderText(contentType.date) : 'Date passed*';
+  const textPlaceholder = contentType && contentType.date ? getPlaceHolderText(contentType.date) : 'Date passed';
   const dateValue = article && article.date ? new Date(article.date) : new Date();
   return (
     <div>
-      {contentType?.location ? <InputRow field={'location'} placeholderText={'Location'} contentType={contentType} newArticle={newArticle} onChangeData={onChangeData} />: null}
-      <InputRow field={'title'} placeholderText={'Title'} contentType={contentType} newArticle={newArticle} onChangeData={onChangeData} />
-      <InputRow field={'URL'} placeholderText={'Link to more info'} contentType={contentType} newArticle={newArticle} onChangeData={onChangeData} />
+      {contentType?.location ? (
+        <InputRow
+          field={'location'}
+          placeholderText={'Location'}
+          contentType={contentType}
+          newArticle={newArticle}
+          onChangeData={onChangeData}
+        />
+      ) : null}
+      <InputRow
+        field={'title'}
+        placeholderText={'Title'}
+        contentType={contentType}
+        newArticle={newArticle}
+        onChangeData={onChangeData}
+      />
+      <InputRow
+        field={'URL'}
+        placeholderText={'Link to more info'}
+        contentType={contentType}
+        newArticle={newArticle}
+        onChangeData={onChangeData}
+      />
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {contentType?.date && (
           <FormRow>
@@ -73,8 +93,8 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
           </FormRow>
         )}
         {contentType?.other && (
-          <>
-            <span style={{ marginLeft: '10px', marginBottom: '24px' }}>The Law is DISCONTINUED</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ marginBottom: '24px' }}>{contentType.other.placeholder}</span>
             <div style={{ marginBottom: '24px' }}>
               <Toggle
                 checked={article.discontinued_law}
@@ -82,7 +102,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
                 tooltipText={contentType.other.tooltip || 'Toggle tooltip'}
               />
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

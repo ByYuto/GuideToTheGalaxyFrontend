@@ -12,6 +12,11 @@ const StyledArticleImage = styled.div`
   flex-direction: column;
   align-items: center;
 
+  @media (max-width: 600px) {
+    min-height: 360px;
+    justify-content: space-around;
+  }
+
   & .no-margin {
     margin-bottom: 0;
   }
@@ -30,6 +35,10 @@ const StyledArticleData = styled.div`
   padding-top: 34px;
   /*border-top: 1px solid #151531;*/
 
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+
   ${Caption} {
     text-align: center;
   }
@@ -46,7 +55,9 @@ const StyledArticleData = styled.div`
 
 const categoriesSelector = (state) => state.app.categories;
 const getContentType = (categories, categoryId, contentTypeId) => {
-  if (contentTypeId === 'New Content Type') {
+  const category = categories.find((category) => category.name === categoryId);
+  const subCategory = category.contentTypes.find((contentType) => contentType.name === contentTypeId);
+  if (subCategory === undefined) {
     return {
       name: 'New Content Type',
       template: 'GENERAL',
@@ -77,8 +88,7 @@ const getContentType = (categories, categoryId, contentTypeId) => {
       },
     };
   } else {
-    const category = categories.find((category) => category.name === categoryId);
-    return category.contentTypes.find((contentType) => contentType.name === contentTypeId);
+    return subCategory;
   }
 };
 

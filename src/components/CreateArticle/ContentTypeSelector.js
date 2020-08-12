@@ -192,7 +192,7 @@ const convertToText = (contentType) => {
 const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlur, readOnly }) => {
   const containerRef = useRef(null);
   const editableRef = useRef(null);
-  const [newContentType, setNewContentType] = useState();
+  const [newContentType, setNewContentType] = useState(null);
   const onContentTypeClick = (contentType) => {
     !readOnly && onChange && onChange(contentType);
   };
@@ -218,7 +218,9 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
     onChange(contentType);
   };
 
-  const onClearContentType = () => {
+  const onClearContentType = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     setNewContentType(null);
     onChange(null);
     onCustomContentBlur(null);
@@ -259,17 +261,15 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
           />
         ))}
         {!newContentType ? (
-          !readOnly ? (
-            <AddContentTypeButton
-              secondary
-              circle
-              onClick={onAddNewContentTypeClick}
-              className="custom-content-type"
-              icon
-            >
-              <GoPlus />
-            </AddContentTypeButton>
-          ) : null
+          <AddContentTypeButton
+            secondary
+            circle
+            onClick={onAddNewContentTypeClick}
+            className="custom-content-type"
+            icon
+          >
+            <GoPlus />
+          </AddContentTypeButton>
         ) : (
           <CustomContentType
             value={newContentType}

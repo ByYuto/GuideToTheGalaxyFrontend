@@ -121,7 +121,7 @@ const CreateArticle = () => {
   };
 
   const onCustomContentBlur = (value) => {
-    if (customContent === value) {
+    if (customContent === value || value === 'New Content Type') {
       return;
     }
 
