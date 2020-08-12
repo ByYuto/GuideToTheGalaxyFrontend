@@ -15,10 +15,22 @@ const StyledInput = styled.span`
     width: 93%;
     border-radius: 8px;
     padding: 9px 16px;
+    border: ${(props) => {
+      if (props.isSubmitted) {
+        return !props.valid ? 'solid 1px #F5374E' : 'none';
+      } else {
+        return 'none';
+      }
+    }};
     background: ${(props) => (props.theme.isDark ? props.theme.baseColors.darker : 'white')};
+
     &::placeholder {
       color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
     }
+  }
+  & .validation {
+    color: #f5374e;
+    font-size: 12px;
   }
 `;
 
@@ -35,11 +47,12 @@ export default function Input(props) {
     label,
     valid,
     errorMessage,
+    isSubmitted,
   } = props;
   const displayLabel = label ? <label>{label}</label> : null;
   return (
     <ThemeProvider theme={{ isDark: dark }}>
-      <StyledInput noMargin={noMargin}>
+      <StyledInput noMargin={noMargin} valid={valid} isSubmitted={isSubmitted}>
         {displayLabel}
 
         <input
@@ -50,7 +63,7 @@ export default function Input(props) {
           placeholder={placeholder}
           onChange={handleChange}
         />
-        {!valid && <span>{errorMessage}</span>}
+        {!valid && <span className="validation">{errorMessage}</span>}
       </StyledInput>
     </ThemeProvider>
   );

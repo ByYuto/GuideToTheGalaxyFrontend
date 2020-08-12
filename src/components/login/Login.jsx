@@ -10,19 +10,18 @@ import { FlexContainer } from '../UI/Helpers';
 import { Link } from 'react-router-dom';
 import { BsLock } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
-import { isRequired, validate } from '../../utils/validations';
-import { isValidElement } from 'react';
+import { isRequired, validate, validateEmail } from '../../utils/validations';
 import { loginAction } from '../../redux/actions/authActions';
 import { Loader } from '../UI/Loader';
 
 export default function Login({ handleCancel }) {
-  const [form, setFormState] = useState({ valid: false, loading: false, error: false, errorType: '' });
+  const [form, setFormState] = useState({ valid: false, loading: false, error: false, errorType: '', submit: false });
   const [email, setEmail] = useState({ value: '', valid: false, errorType: '' });
   const [password, setPassword] = useState({ value: '', valid: false, errorType: '' });
   const dispatch = useDispatch();
   const { error, errorMessage, loading } = useSelector((store) => store.auth);
   const handleEmailChange = (value) => {
-    const validation = validate(value, [isRequired]);
+    const validation = validate(value, [isRequired, validateEmail]);
     if (validation.length > 0) {
       const error = validation[0];
       setEmail({ ...email, value: value, valid: error.valid, errorType: error.errorType });
@@ -42,6 +41,7 @@ export default function Login({ handleCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setFormState({ ...form, submit: true });
     handleEmailChange(e.target.elements[0].value);
     handlePasswordChange(e.target.elements[1].value);
     if (email.valid && password.valid) {
@@ -73,6 +73,7 @@ export default function Login({ handleCancel }) {
               handleChange={(e) => handleEmailChange(e.target.value)}
               valid={email.valid}
               errorMessage={email.errorType}
+              isSubmitted={form.submit}
             />
 
             <Input
@@ -83,6 +84,7 @@ export default function Login({ handleCancel }) {
               noMargin
               valid={password.valid}
               errorMessage={password.errorType}
+              isSubmitted={form.submit}
             />
             <div style={{ width: '100%' }}>
               <p>
