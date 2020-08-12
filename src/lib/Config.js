@@ -1,5 +1,5 @@
 const Config = {
-  API_URL: 'http://dev.buskers.guide/api',
+  API_URL: process.env.REACT_APP_API_URL,
 };
 
 export default Config;
