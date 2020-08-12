@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { createEditor, Transforms, Editor } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
+import { LayoutEditor } from './styledComponents';
 
 export default function ContentEditor() {
   const editor = useMemo(() => withReact(createEditor()), []);
@@ -19,26 +20,28 @@ export default function ContentEditor() {
     }
   }, []);
   return (
-    <Slate editor={editor} value={value} onChange={(newValue) => setValue(newValue)}>
-      <Editable
-        renderElement={renderElement}
-        onKeyDown={(event) => {
-          if (event.key === 'c' && event.ctrlKey) {
-            event.preventDefault();
-            // Determine whether any of the currently selected blocks are code blocks.
-            const [match] = Editor.nodes(editor, {
-              match: (n) => n.type === 'code',
-            });
-            // Toggle the block type depending on whether there's already a match.
-            Transforms.setNodes(
-              editor,
-              { type: match ? 'paragraph' : 'code' },
-              { match: (n) => Editor.isBlock(editor, n) }
-            );
-          }
-        }}
-      />
-    </Slate>
+    <LayoutEditor>
+      <Slate editor={editor} value={value} onChange={(newValue) => setValue(newValue)}>
+        <Editable
+          renderElement={renderElement}
+          onKeyDown={(event) => {
+            if (event.key === 'c' && event.ctrlKey) {
+              event.preventDefault();
+              // Determine whether any of the currently selected blocks are code blocks.
+              const [match] = Editor.nodes(editor, {
+                match: (n) => n.type === 'code',
+              });
+              // Toggle the block type depending on whether there's already a match.
+              Transforms.setNodes(
+                editor,
+                { type: match ? 'paragraph' : 'code' },
+                { match: (n) => Editor.isBlock(editor, n) }
+              );
+            }
+          }}
+        />
+      </Slate>
+    </LayoutEditor>
   );
 }
 
