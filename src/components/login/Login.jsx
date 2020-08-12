@@ -109,7 +109,7 @@ export default function Login({ handleCancel }) {
                 </Loader>
               </FlexContainer>
             )}
-            {error && <span>{errorMessage}</span>}
+            {error && <div className="error-message">{errorMessage}</div>}
           </form>
         </FlexContainer>
       </LoginLayout>

@@ -6,6 +6,7 @@ import { BsTypeBold, BsTypeItalic, BsTypeUnderline } from 'react-icons/bs';
 import LinkIcon from '../../assets/icons/Link.svg';
 import { StyledFieldTooltip } from '../../views/CreateArticle/StyledComponents';
 import { ImageMediaIcon, VideoMediaIcon, HaveFive, PlusIcon } from '../../assets/icons/svg-icons';
+import ContentEditor from '../UI/editor/ContentEditor';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -295,6 +296,9 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
               />
             ))
           : null}
+      </MaxWidthContainer>
+      <MaxWidthContainer>
+        <ContentEditor />
       </MaxWidthContainer>
     </StyledArticleContent>
   );

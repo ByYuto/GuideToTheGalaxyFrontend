@@ -4,10 +4,5 @@ const api = process.env.REACT_APP_API_URL;
 const loginRoute = api + '/login';
 
 export const login = (loginData) => {
-  return axios
-    .post(loginRoute, loginData)
-    .then((response) => {
-      return response.data.token;
-    })
-    .catch((e) => e);
+  return axios.post(loginRoute, loginData);
 };
