@@ -12,7 +12,7 @@ export const loginAction = (user) => async (dispatch) => {
   });
   try {
     const token = await login(user);
-    window.localStorage.setItem('_token', token);
+    window.localStorage.setItem('_token', token.data.token);
     dispatch({
       type: USER_LOGIN,
       payload: {

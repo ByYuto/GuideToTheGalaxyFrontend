@@ -137,12 +137,14 @@ const ImageElement = ({ attributes, children, element }) => {
       <div contentEditable={false}>
         <img
           src={element.url}
-          className={css`
-            display: block;
-            max-width: 100%;
-            max-height: 20em;
-            box-shadow: ${selected && focused ? '0 0 0 3px #B4D5FF' : 'none'};
-          `}
+          style={{
+            display: 'block',
+            maxWidth: '90%',
+            height: 'auto',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            boxShadow: selected && focused ? '0 0 0 3px #B4D5FF' : 'none',
+          }}
         />
       </div>
       {children}

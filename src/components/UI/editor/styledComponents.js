@@ -30,6 +30,12 @@ export const MediaToolbarLayout = styled.div`
   margin-right: auto;
   width: auto;
 
+  & input[type='file'] {
+    position: absolute;
+    z-index: -999;
+    opacity: 0;
+  }
+
   ${(props) => props.left && `margin-right: auto; margin-left: 10px;`}
 
   & button {

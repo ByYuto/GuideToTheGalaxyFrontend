@@ -38,6 +38,7 @@ const CATEGORY_SELECTION = 'CATEGORY_SELECTION';
 const DRAFT_FORM = 'DRAFT_FORM';
 const INSERT_CONTENT = 'INSERT_CONTENT';
 const CHANGE_EDITOR_FOCUS = 'CHANGE_EDITOR_FOCUS';
+const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
 
 //Action Creators
 export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });

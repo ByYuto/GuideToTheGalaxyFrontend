@@ -3,6 +3,9 @@ import Caption from '../UI/Caption';
 import styled, { css } from 'styled-components';
 import ContentEditor from '../UI/editor/ContentEditor';
 import { useSelector, useDispatch } from 'react-redux';
+import Divider from '../UI/Divider';
+import UploadPdf from '../UI/forms/UploadPdf';
+import ToggleContributor from '../UI/ToggleContributor';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -232,6 +235,11 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
             ]}
           />
         )}
+      </MaxWidthContainer>
+      <MaxWidthContainer>
+        <Divider />
+        <UploadPdf />
+        <ToggleContributor />
       </MaxWidthContainer>
     </StyledArticleContent>
   );
