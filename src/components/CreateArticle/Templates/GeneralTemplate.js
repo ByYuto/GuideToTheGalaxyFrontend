@@ -83,6 +83,15 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
         newArticle={newArticle}
         onChangeData={onChangeData}
       />
+      {contentType?.other && contentType?.other.type === 'text' ? (
+        <InputRow
+          field={'other'}
+          placeholderText={contentType.other.placeholder}
+          contentType={contentType}
+          newArticle={newArticle}
+          onChangeData={onChangeData}
+        />
+      ) : null}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         {contentType?.date && (
           <FormRow>
@@ -92,7 +101,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
             </div>
           </FormRow>
         )}
-        {contentType?.other && (
+        {contentType?.other && contentType?.other.type === 'boolean' && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <span style={{ marginBottom: '24px' }}>{contentType.other.placeholder}</span>
             <div style={{ marginBottom: '24px' }}>
