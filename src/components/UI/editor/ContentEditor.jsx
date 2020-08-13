@@ -57,7 +57,11 @@ export default function ContentEditor({ id, editorValue, focused }) {
     dispatch(changeFocusEditor(id));
   };
   return (
-    <EditorContainer key={id}>
+    <EditorContainer
+      key={id}
+      onMouseLeave={() => dispatch(changeFocusEditor(999))}
+      onMouseEnter={() => dispatch(changeFocusEditor(id))}
+    >
       {focused && (
         <TextFormat
           setBold={toggleBoldMark}
@@ -76,7 +80,6 @@ export default function ContentEditor({ id, editorValue, focused }) {
             renderElement={renderElement}
             renderLeaf={renderLeaf}
             placeholder="Type text here..."
-            onFocus={handleFocus}
             autoFocus={focused}
             onKeyDown={(event) => {
               if (event.keyCode === 13) {
