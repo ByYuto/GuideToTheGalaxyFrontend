@@ -30,6 +30,10 @@ export const MediaToolbarLayout = styled.div`
   margin-right: auto;
   width: auto;
 
+  & div {
+    display: inline-block;
+  }
+
   & input[type='file'] {
     position: absolute;
     z-index: -999;
@@ -67,5 +71,14 @@ export const MediaToolbarLayout = styled.div`
   & .active svg path,
   .active svg rect {
     fill: #6670f0;
+  }
+
+  & .insert-video-container {
+    position: relative;
+
+    & .input-container {
+      position: absolute;
+      top: 100%;
+    }
   }
 `;
