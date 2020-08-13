@@ -7,7 +7,7 @@ const Divider = styled.div`
   display: block;
   margin-top: 24px;
   margin-bottom: 24px;
-  border-bottom: 1px solid #151531;
+  border-bottom: ${(props) => (props.theme.isDark ? '1px solid #151531;' : '1px solid #6670F0;')}
   content: ' ';
 `;
 

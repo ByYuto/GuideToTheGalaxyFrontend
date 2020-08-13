@@ -14,36 +14,21 @@ const initialState = {
     URL: '',
     discontinued_law: false,
     date: null,
-    content: [
+    contents: [
       {
-        type: 'text',
-        content: '<p>This is my first paragraph</p>',
+        id: 0,
+        content: [
+          {
+            type: 'paragraph',
+            children: [{ text: '' }],
+          },
+        ],
       },
     ],
   },
+  currentValueEditor: [],
   draftForm: [],
-
-  //Override some values Just for TESTING purpose
-  /*
-  step: 4,
-  newArticle: {
-    categoryId: 'MUSEUM',
-    contentTypeId: 'CELEBRITY',
-    location: 'Manizales',
-    title: 'Hola mundo',
-    link: '',
-    URL: 'http://google.com',
-    content: [
-      {
-        type: 'text',
-        content: "<p>This is my first paragraph with a link to <a href='http://www.google.com'>Google</a></p>",
-      },
-      {
-        type: 'text',
-        content: '<p>This is another paragraph</p>',
-      },
-    ],
-  },*/
+  currentIndex: 0,
 };
 
 //Action Types
@@ -51,14 +36,17 @@ const UPDATE = 'NEW_ARTICLE/UPDATE';
 const SET_STEP = 'NEW_ARTICLE/SET_STEP';
 const CATEGORY_SELECTION = 'CATEGORY_SELECTION';
 const DRAFT_FORM = 'DRAFT_FORM';
+const INSERT_CONTENT = 'INSERT_CONTENT';
+const CHANGE_EDITOR_FOCUS = 'CHANGE_EDITOR_FOCUS';
+const UPLOAD_IMAGE = 'UPLOAD_IMAGE';
 
 //Action Creators
 export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });
 export const setNewArticleStep = (step) => ({ type: SET_STEP, payload: { step } });
-
 export const categorySelected = (id) => ({ type: CATEGORY_SELECTION, payload: id });
-
 export const makeFormDraft = (form) => ({ type: DRAFT_FORM, payload: form });
+export const insertArticleContent = (data) => ({ type: INSERT_CONTENT, payload: data });
+export const changeFocusEditor = (id) => ({ type: CHANGE_EDITOR_FOCUS, payload: id });
 
 //Reducer
 export default (state = initialState, { type, payload }) => {
@@ -88,6 +76,35 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         draftForm: [payload],
+      };
+    case INSERT_CONTENT:
+      const index = state.newArticle.contents[state.newArticle.contents.length - 1].id + 1;
+      const newContents = state.newArticle.contents.map((content) =>
+        content.id === payload.id ? { ...payload } : content
+      );
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          contents: [
+            ...newContents,
+            {
+              id: index,
+              content: [
+                {
+                  type: 'paragraph',
+                  children: [{ text: '' }],
+                },
+              ],
+            },
+          ],
+        },
+        currentIndex: index,
+      };
+    case CHANGE_EDITOR_FOCUS:
+      return {
+        ...state,
+        currentIndex: payload,
       };
     default:
       return state;

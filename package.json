@@ -10,6 +10,7 @@
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
+    "image-extensions": "^1.1.0",
     "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",

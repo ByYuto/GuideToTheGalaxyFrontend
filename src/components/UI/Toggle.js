@@ -80,7 +80,7 @@ const Toggle = ({ className, onChange, checked, disabled, readonly, tooltipText,
     !readonly && onChange && onChange(!e.target.checked);
   };
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  const tooltip = tooltipText || 'tooltip law is discontinued';
+  const tooltip = tooltipText || 'tooltip toggle';
   return (
     <ToggleContainerLayout>
       <ToggleContainer

@@ -1,12 +1,11 @@
 import React, { useState, useRef } from 'react';
 import Caption from '../UI/Caption';
 import styled, { css } from 'styled-components';
-import { Editor } from '@tinymce/tinymce-react';
-import { BsTypeBold, BsTypeItalic, BsTypeUnderline } from 'react-icons/bs';
-import LinkIcon from '../../assets/icons/Link.svg';
-import { StyledFieldTooltip } from '../../views/CreateArticle/StyledComponents';
-import { ImageMediaIcon, VideoMediaIcon, HaveFive, PlusIcon } from '../../assets/icons/svg-icons';
 import ContentEditor from '../UI/editor/ContentEditor';
+import { useSelector, useDispatch } from 'react-redux';
+import Divider from '../UI/Divider';
+import UploadPdf from '../UI/forms/UploadPdf';
+import ToggleContributor from '../UI/ToggleContributor';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -115,7 +114,7 @@ const getContentType = (categories, categoryId, contentTypeId) => {
   return category.contentTypes.find((contentType) => contentType.name === contentTypeId);
 };
 */
-const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onAddContentPart }) => {
+/*const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onAddContentPart }) => {
   const [focused, setFocused] = useState(false);
   const blurTimeoutId = useRef(null);
   const tinyMCEEditorRef = useRef(null);
@@ -154,7 +153,7 @@ const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onAd
               icon={<BsTypeUnderline />}
               tinyMCEEditorRef={tinyMCEEditorRef}
             />
-            {/*<FormatButton label="Link" icon={<LinkIcon />} tinyMCEEditorRef={tinyMCEEditorRef} />*/}
+            {<FormatButton label="Link" icon={<LinkIcon />} tinyMCEEditorRef={tinyMCEEditorRef} />}
           </FormatContentContainer>
         )}
         <Editor
@@ -187,80 +186,11 @@ const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onAd
       )}
     </>
   );
-};
-
-const AddContentComponent = ({ index, onAddContentPart }) => {
-  const onAddParagraph = () => {
-    onAddContentPart && onAddContentPart(index, 'text');
-  };
-  const onAddMedia = () => {
-    onAddContentPart && onAddContentPart(index, 'media');
-  };
-
-  const onAddPhoto = () => {
-    onAddContentPart && onAddContentPart(index, 'photo');
-  };
-
-  const onAddLink = () => {
-    onAddContentPart && onAddContentPart(index, 'link');
-  };
-
-  return (
-    <MediaToolbar>
-      <button onClick={onAddParagraph}>
-        <PlusIcon /> INSERT
-      </button>
-      <button onClick={onAddPhoto}>
-        <ImageMediaIcon />
-      </button>
-      <button onClick={onAddMedia}>
-        <VideoMediaIcon />
-      </button>
-
-      <button onClick={onAddLink}>
-        <HaveFive />
-      </button>
-    </MediaToolbar>
-  );
-};
-
-export const MediaToolbar = styled.div`
-  box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
-  border-radius: 5px;
-  display: inline-block;
-  justify-content: center;
-  margin-left: auto;
-  margin-right: auto;
-  width: auto;
-
-  & button {
-    border: none;
-    background-color: transparent;
-    outline: 0;
-    box-shadow: none;
-    padding: 5px;
-    cursor: pointer;
-    padding: 11px 11px;
-    font-family: Lato;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 14px;
-    display: inline-block;
-    justify-content: center;
-    align-items: center;
-
-    &:hover {
-      svg path,
-      svg rect {
-        fill: #6670f0;
-      }
-      color: #6670f0;
-    }
-  }
-`;
+};*/
 
 const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
+  const { newArticle, currentIndex } = useSelector((store) => store.newArticle);
+  const { contents } = newArticle;
   const onAddContentPart = (index, type, data) => {
     //console.log('trying to add a ' + type + ' content at index ' + index);
     const newArticle = { ...article };
@@ -277,28 +207,39 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
     newArticle.content[index].content = content;
     onChangeArticle && onChangeArticle(newArticle);
   };
-
   return (
     <StyledArticleContent>
       <MaxWidthContainer>
         <p style={{ textAlign: 'center' }}>
           <Caption>MAIN CONTENT</Caption>
         </p>
-        {article.content && article.content.length
-          ? article.content.map((contentPart, index) => (
-              <ArticleContentPart
-                key={index}
-                contentIndex={index}
-                contentPart={contentPart}
-                onKeyDown={onKeyDown}
-                onAddContentPart={onAddContentPart}
-                onChange={onContentPartChange}
-              />
-            ))
-          : null}
       </MaxWidthContainer>
       <MaxWidthContainer>
-        <ContentEditor />
+        {contents.length > 0 ? (
+          contents.map((content) => (
+            <ContentEditor
+              key={content.id}
+              id={content.id}
+              editorValue={content.content}
+              focused={currentIndex === content.id}
+            />
+          ))
+        ) : (
+          <ContentEditor
+            key={0}
+            editorValue={[
+              {
+                type: 'paragraph',
+                children: [{ text: '' }],
+              },
+            ]}
+          />
+        )}
+      </MaxWidthContainer>
+      <MaxWidthContainer>
+        <Divider />
+        <UploadPdf />
+        <ToggleContributor />
       </MaxWidthContainer>
     </StyledArticleContent>
   );
