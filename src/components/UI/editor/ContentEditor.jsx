@@ -1,14 +1,16 @@
 import React, { useMemo, useState, useCallback, useRef } from 'react';
 import { createEditor, Transforms, Text } from 'slate';
-import { Slate, Editable, withReact } from 'slate-react';
+import { Slate, Editable, withReact, useFocused, useSelected } from 'slate-react';
 import { LayoutEditor, EditorContainer } from './styledComponents';
 import MediaToolbar from './MediaToolbar';
 import TextFormat from './TextFormat';
 import { useDispatch } from 'react-redux';
 import { insertArticleContent, changeFocusEditor } from '../../../redux/reducers/newArticleState';
+import { withImages, insertImage, isImageUrl } from './customContent';
+import { css } from 'styled-components';
 
 export default function ContentEditor({ id, editorValue, focused }) {
-  const editor = useMemo(() => withReact(createEditor()), []);
+  const editor = useMemo(() => withImages(withReact(createEditor())), []);
   const [bold, setBold] = useState(false);
   const [italic, setItalic] = useState(false);
   const [underlined, setUnderlined] = useState(false);
@@ -17,6 +19,8 @@ export default function ContentEditor({ id, editorValue, focused }) {
 
   const renderElement = useCallback((props) => {
     switch (props.element.type) {
+      case 'image':
+        return <ImageElement {...props} />;
       default:
         return <DefaultElement {...props} />;
     }
@@ -72,7 +76,7 @@ export default function ContentEditor({ id, editorValue, focused }) {
             renderElement={renderElement}
             renderLeaf={renderLeaf}
             placeholder="Type text here..."
-            onMouseEnter={handleFocus}
+            onFocus={handleFocus}
             autoFocus={focused}
             onKeyDown={(event) => {
               if (event.keyCode === 13) {
@@ -100,7 +104,7 @@ export default function ContentEditor({ id, editorValue, focused }) {
           />
         </Slate>
       </LayoutEditor>
-      {focused && <MediaToolbar onInsert={handleInsertContent} />}
+      {focused && <MediaToolbar editor={editor} onInsert={handleInsertContent} />}
     </EditorContainer>
   );
 }
@@ -123,4 +127,25 @@ const Leaf = ({ attributes, children, leaf }) => {
   }
 
   return <span {...attributes}>{children}</span>;
+};
+
+const ImageElement = ({ attributes, children, element }) => {
+  const selected = useSelected();
+  const focused = useFocused();
+  return (
+    <div {...attributes}>
+      <div contentEditable={false}>
+        <img
+          src={element.url}
+          className={css`
+            display: block;
+            max-width: 100%;
+            max-height: 20em;
+            box-shadow: ${selected && focused ? '0 0 0 3px #B4D5FF' : 'none'};
+          `}
+        />
+      </div>
+      {children}
+    </div>
+  );
 };
