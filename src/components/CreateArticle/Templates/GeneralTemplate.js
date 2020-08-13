@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Toggle from '../../UI/Toggle';
+import { DivInputColumn, DivInputRow } from '../styledComponents';
 
 const PickerDate = ({ value = new Date(), _onChange }) => {
   return (
@@ -83,7 +84,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
         newArticle={newArticle}
         onChangeData={onChangeData}
       />
-      {contentType?.other && contentType?.other.type === 'text' ? (
+      {contentType?.other?.type === 'text' ? (
         <InputRow
           field={'other'}
           placeholderText={contentType.other.placeholder}
@@ -92,17 +93,17 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
           onChangeData={onChangeData}
         />
       ) : null}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+      <DivInputColumn>
         {contentType?.date && (
           <FormRow>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            <DivInputRow>
               <span>{textPlaceholder}</span>
               <PickerDate value={dateValue} _onChange={(value) => onChangeData('date', value)} />
-            </div>
+            </DivInputRow>
           </FormRow>
         )}
-        {contentType?.other && contentType?.other.type === 'boolean' && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {contentType?.other?.type === 'boolean' && (
+          <DivInputRow>
             <span style={{ marginBottom: '24px' }}>{contentType.other.placeholder}</span>
             <div style={{ marginBottom: '24px' }}>
               <Toggle
@@ -111,9 +112,9 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
                 tooltipText={contentType.other.tooltip || 'Toggle tooltip'}
               />
             </div>
-          </div>
+          </DivInputRow>
         )}
-      </div>
+      </DivInputColumn>
     </div>
   );
 };

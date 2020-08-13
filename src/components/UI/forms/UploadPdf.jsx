@@ -3,6 +3,11 @@ import styled from 'styled-components';
 import { PDFIcon } from '../../../assets/icons/svg-icons';
 
 const PDFUploaderLayout = styled.div`
+  & input[type='file'] {
+    position: absolute;
+    z-index: -999;
+    opacity: 0;
+  }
   & button {
     box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
     border-radius: 8px;
@@ -34,8 +39,8 @@ const PDFUploaderLayout = styled.div`
 export default function UploadPdf() {
   return (
     <PDFUploaderLayout>
-      <input type="file" style={{ position: 'absolute', opacity: 0, zIndex: '-999' }} />
-      <button style={{ border: 'none !important' }}>
+      <input type="file" />
+      <button>
         + ADD PDF <PDFIcon />
       </button>
     </PDFUploaderLayout>
