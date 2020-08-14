@@ -14,7 +14,14 @@ export default function TextFormat({
 }) {
   return (
     <MediaToolbarLayout left>
-      <button onClick={() => setBold(editor)} className={activeBold ? 'active' : ''}>
+      <button
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          setBold(editor);
+          return;
+        }}
+        className={activeBold ? 'active' : ''}
+      >
         <BoldIcon />
       </button>
       <button onClick={() => setItalic(editor)} className={activeItalic ? 'active' : ''}>

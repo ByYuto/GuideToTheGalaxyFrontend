@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback, useRef } from 'react';
+import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
 import { createEditor, Transforms, Text } from 'slate';
 import { Slate, Editable, withReact, useFocused, useSelected } from 'slate-react';
 import { LayoutEditor, EditorContainer } from './styledComponents';
@@ -16,6 +16,7 @@ export default function ContentEditor({ id, editorValue, focused }) {
   const [underlined, setUnderlined] = useState(false);
   const dispatch = useDispatch();
   const [value, setValue] = useState(editorValue);
+  const editorRef = useRef(null);
 
   const renderElement = useCallback((props) => {
     switch (props.element.type) {
@@ -25,6 +26,11 @@ export default function ContentEditor({ id, editorValue, focused }) {
         return <DefaultElement {...props} />;
     }
   }, []);
+
+  useEffect(() => {
+    console.log(editorRef.current);
+  });
+
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
 
   const toggleBoldMark = (editor) => {
@@ -59,8 +65,8 @@ export default function ContentEditor({ id, editorValue, focused }) {
   return (
     <EditorContainer
       key={id}
-      onMouseLeave={() => dispatch(changeFocusEditor(999))}
-      onMouseEnter={() => dispatch(changeFocusEditor(id))}
+      //onMouseLeave={() => dispatch(changeFocusEditor(999))}
+      onFocus={() => dispatch(changeFocusEditor(id))}
     >
       {focused && (
         <TextFormat
@@ -77,10 +83,12 @@ export default function ContentEditor({ id, editorValue, focused }) {
       <LayoutEditor>
         <Slate editor={editor} value={value} onChange={(newValue) => setValue(newValue)}>
           <Editable
+            ref={editorRef}
             renderElement={renderElement}
             renderLeaf={renderLeaf}
             placeholder="Type text here..."
             autoFocus={focused}
+            onBlur={(e) => {}}
             onKeyDown={(event) => {
               if (event.keyCode === 13) {
                 handleInsertContent();
