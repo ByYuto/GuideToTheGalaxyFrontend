@@ -45,7 +45,6 @@ export default function TextFormat({
       <button
         onMouseDown={(event) => {
           event.preventDefault();
-          insertLink();
         }}
       >
         <LinkIcon />
