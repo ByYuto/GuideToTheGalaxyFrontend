@@ -14,6 +14,7 @@ export const LayoutEditor = styled.div`
     box-shadow: none;
     min-height: 55px;
     border-radius: 8px;
+    padding-left: 20px;
   }
   & > div:focus {
     box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);

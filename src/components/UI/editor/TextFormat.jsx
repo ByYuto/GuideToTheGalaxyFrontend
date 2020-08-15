@@ -14,17 +14,39 @@ export default function TextFormat({
 }) {
   return (
     <MediaToolbarLayout left>
-      <button onClick={() => setBold(editor)} className={activeBold ? 'active' : ''}>
+      <button
+        onMouseDown={(event) => {
+          event.preventDefault();
+          setBold(editor);
+        }}
+        className={activeBold ? 'active' : ''}
+      >
         <BoldIcon />
       </button>
-      <button onClick={() => setItalic(editor)} className={activeItalic ? 'active' : ''}>
+      <button
+        onMouseDown={(event) => {
+          event.preventDefault();
+          setItalic(editor);
+        }}
+        className={activeItalic ? 'active' : ''}
+      >
         <ItalicIcon />
       </button>
-      <button onClick={() => setUnderlined(editor)} className={activeUnderline ? 'active' : ''}>
+      <button
+        onMouseDown={(event) => {
+          event.preventDefault();
+          setUnderlined(editor);
+        }}
+        className={activeUnderline ? 'active' : ''}
+      >
         <UnderlineIcon />
       </button>
 
-      <button onClick={insertLink}>
+      <button
+        onMouseDown={(event) => {
+          event.preventDefault();
+        }}
+      >
         <LinkIcon />
       </button>
     </MediaToolbarLayout>
