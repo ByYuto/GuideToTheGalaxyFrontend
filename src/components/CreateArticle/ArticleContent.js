@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Divider from '../UI/Divider';
 import UploadPdf from '../UI/forms/UploadPdf';
 import ToggleContributor from '../UI/ToggleContributor';
+import ImageEditorComponent from './ImageEditor/ImageEditorComponent';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -207,6 +208,7 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
     newArticle.content[index].content = content;
     onChangeArticle && onChangeArticle(newArticle);
   };
+  console.log('contents', contents);
   return (
     <StyledArticleContent>
       <MaxWidthContainer>
@@ -216,14 +218,19 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
       </MaxWidthContainer>
       <MaxWidthContainer>
         {contents.length > 0 ? (
-          contents.map((content) => (
-            <ContentEditor
-              key={content.id}
-              id={content.id}
-              editorValue={content.content}
-              focused={currentIndex === content.id}
-            />
-          ))
+          contents.map((contentObj, index) => {
+            if(contentObj.type === 'image'){
+              return <ImageEditorComponent key={contentObj.id} contentId={contentObj.id} images={contentObj.content[0].children} />
+            }
+            return(
+              <ContentEditor
+                index={index}
+                key={contentObj.id}
+                id={contentObj.id}
+                editorValue={contentObj.content}
+                focused={currentIndex === contentObj.id}
+              />)
+          })
         ) : (
           <ContentEditor
             key={0}

@@ -6,17 +6,14 @@ import MediaToolbar from './MediaToolbar';
 import TextFormat from './TextFormat';
 import { useDispatch } from 'react-redux';
 import { insertArticleContent, changeFocusEditor } from '../../../redux/reducers/newArticleState';
-import { withImages, insertImage, isImageUrl } from './customContent';
-import { css } from 'styled-components';
 
-export default function ContentEditor({ id, editorValue, focused }) {
-  const editor = useMemo(() => withImages(withReact(createEditor())), []);
+export default function ContentEditor({ id, editorValue, focused, index }) {
+  const editor = useMemo(() => withReact(createEditor()), []);
   const [bold, setBold] = useState(false);
   const [italic, setItalic] = useState(false);
   const [underlined, setUnderlined] = useState(false);
   const dispatch = useDispatch();
   const [value, setValue] = useState(editorValue);
-  const editorRef = useRef(null);
 
   const renderElement = useCallback((props) => {
     switch (props.element.type) {
@@ -26,10 +23,6 @@ export default function ContentEditor({ id, editorValue, focused }) {
         return <DefaultElement {...props} />;
     }
   }, []);
-
-  useEffect(() => {
-    console.log(editorRef.current);
-  });
 
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
 
@@ -83,7 +76,6 @@ export default function ContentEditor({ id, editorValue, focused }) {
       <LayoutEditor>
         <Slate editor={editor} value={value} onChange={(newValue) => setValue(newValue)}>
           <Editable
-            ref={editorRef}
             renderElement={renderElement}
             renderLeaf={renderLeaf}
             placeholder="Type text here..."
@@ -115,7 +107,7 @@ export default function ContentEditor({ id, editorValue, focused }) {
           />
         </Slate>
       </LayoutEditor>
-      {focused && <MediaToolbar editor={editor} onInsert={handleInsertContent} />}
+      {focused && <MediaToolbar index={index} editor={editor} onInsert={handleInsertContent} />}
     </EditorContainer>
   );
 }
@@ -141,12 +133,11 @@ const Leaf = ({ attributes, children, leaf }) => {
 };
 
 const ImageElement = ({ attributes, children, element }) => {
-  const selected = useSelected();
-  const focused = useFocused();
   return (
     <div {...attributes}>
       <div contentEditable={false}>
         <img
+          alt="descriptive about the article"
           src={element.url}
           style={{
             display: 'block',
@@ -154,7 +145,7 @@ const ImageElement = ({ attributes, children, element }) => {
             height: 'auto',
             marginLeft: 'auto',
             marginRight: 'auto',
-            boxShadow: selected && focused ? '0 0 0 3px #B4D5FF' : 'none',
+            borderRadius: 16,
           }}
         />
       </div>

@@ -28,7 +28,8 @@
     "redux-thunk": "^2.3.0",
     "slate": "^0.58.4",
     "slate-react": "^0.58.4",
-    "styled-components": "^5.0.1"
+    "styled-components": "^5.0.1",
+    "uid": "^1.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -52,6 +53,9 @@
     "printWidth": 120,
     "singleQuote": true,
     "offsetTernaryExpressions": true
+  },
+  "resolutions": {
+    "styled-components": "^5"
   },
   "browserslist": {
     "production": [

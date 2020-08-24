@@ -3,7 +3,7 @@ import imageExtensions from 'image-extensions';
 
 export const withImages = (editor) => {
   const { insertData, isVoid } = editor;
-
+  
   editor.isVoid = (element) => {
     return element.type === 'image' ? true : isVoid(element);
   };
@@ -35,11 +35,13 @@ export const withImages = (editor) => {
 
   return editor;
 };
+
 export const insertImage = (editor, url) => {
   const text = { text: '' };
   const image = { type: 'image', url, children: [text] };
   Transforms.insertNodes(editor, image);
 };
+
 export const isImageUrl = (url) => {
   if (!url) return false;
   const ext = new URL(url).pathname.split('.').pop();
