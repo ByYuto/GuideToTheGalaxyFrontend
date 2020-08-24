@@ -36,7 +36,6 @@ export const loginAction = (user) => async (dispatch) => {
 
 export const checkLogin = () => (dispatch) => {
   const token = window.localStorage.setItem('_token', token);
-  debugger;
   const auth = token !== null;
   dispatch({ type: CHECK_LOGIN, payload: { authorization: auth } });
 };

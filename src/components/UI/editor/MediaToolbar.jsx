@@ -1,49 +1,39 @@
-import React, { useState, useRef } from 'react';
-
+import React, { useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { MediaToolbarLayout } from './styledComponents';
 import { ImageMediaIcon, VideoMediaIcon, HaveFive, PlusIcon } from '../../../assets/icons/svg-icons';
-import { insertImage } from './customContent';
-import { uploadImage } from '../../../http/createArticleService';
-import { useHistory } from 'react-router-dom';
+import { addImagesContent } from '../../../redux/reducers/newArticleState';
 
-const MediaToolbar = ({ editor, onInsert }) => {
-  const inputRef = useRef(null);
-  const handleImgSelect = () => inputRef.current.click();
-  const history = useHistory();
-  const [inputMedia, setVisibleInputMedia] = useState(false);
+const MAX_IMAGES = 4;
+
+const MediaToolbar = ({ editor, onInsert, index }) => {
+  const dispatch = useDispatch();
+  const fileInputRef = useRef(null);
+  const handleImgSelect = () => fileInputRef.current.click();
 
   const handleUploadImage = async (event) => {
     event.preventDefault();
-    const dataSrc = event.target.files[0];
-    const formData = new FormData();
-    formData.append('file', dataSrc);
-    try {
-      const dataImage = await uploadImage(formData);
-      const url = dataImage.data.url;
-      if (!url) return;
-      insertImage(editor, url);
-    } catch (e) {
-      console.log(e.response || e.message);
-      localStorage.removeItem('_token');
-      history.push('/');
+    const files = Array.from(event.target.files);
+    if (files && files.length && MAX_IMAGES - files.length >= 0) {
+      dispatch(addImagesContent(index, files));
     }
   };
 
-  const handleVisibleMediaInput = (e) => {
-    e.preventDefault();
-  };
   return (
     <MediaToolbarLayout>
       <button onClick={onInsert}>
         <PlusIcon /> INSERT
       </button>
       <div>
-        <input type="file" ref={inputRef} onChange={handleUploadImage} />
-        <button
-          onClick={(event) => {
-            handleImgSelect();
-          }}
-        >
+        <input
+          className="d-none"
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleUploadImage}
+          multiple
+        />
+        <button onMouseDown={handleImgSelect}>
           <ImageMediaIcon />
         </button>
       </div>
@@ -52,7 +42,7 @@ const MediaToolbar = ({ editor, onInsert }) => {
           <VideoMediaIcon />
         </button>
         <div className="input-container">
-          <input type="file" ref={inputRef} onChange={handleUploadImage} />
+          <input type="file" onChange={handleUploadImage} />
         </div>
       </div>
       <button onClick={null}>
