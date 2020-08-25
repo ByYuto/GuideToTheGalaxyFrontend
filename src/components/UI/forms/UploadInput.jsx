@@ -81,10 +81,9 @@ const UploadInputLayout = styled.div`
   }
 `;
 
-export default function UploadInput({ contentType, onChange }) {
+export default function UploadInput({ contentType, onChange, srcImg = PlaceholderImg }) {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const tooltip = contentType ? contentType['image']?.tooltip : 'Select an Image';
-  const [srcImg, setImg] = useState(PlaceholderImg);
   const inputRef = useRef(null);
   const dispatch = useDispatch();
   const { articleValidations } = useSelector((store) => store.newArticle);
@@ -109,16 +108,20 @@ export default function UploadInput({ contentType, onChange }) {
       handleImageValidation(e.target.files);
       var reader = new FileReader();
       reader.onload = function (evt) {
-        setImg(reader.result);
+        const newArticle = {
+          photo: reader.result,
+        };
+        onChange(newArticle);
       };
       reader.readAsDataURL(dataSrc);
-      onChange(srcImg);
     }
   };
+  const imgToPlace = srcImg !== null && srcImg !== '' ? srcImg : PlaceholderImg;
+
   return (
     <>
       <UploadInputLayout onClick={handleImgSelect} isRequired={contentType.image.required}>
-        <img src={srcImg} onFocus={() => setTooltipVisible(true)} onBlur={() => setTooltipVisible(false)} />
+        <img src={imgToPlace} onFocus={() => setTooltipVisible(true)} onBlur={() => setTooltipVisible(false)} />
         <button onFocus={() => setTooltipVisible(true)} onBlur={() => setTooltipVisible(false)}>
           <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#clip0)">

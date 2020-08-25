@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Caption from '../UI/Caption';
 import styled from 'styled-components';
 import ArticleTemplate from './ArticleTemplate';
@@ -102,24 +102,29 @@ const ArticleData = ({ article, showImage, onChange }) => {
   const contentType = content ? content : draftForm[0];
   const formData = article ? article : draftForm[0].content;
   const changeWithDraft = (articleContent) => {
-    const existTemplate = Object.keys(articleValidations);
-    if (existTemplate.length === 0) {
-      const validationTemplate = {};
-      for (const key in contentType) {
-        if (key !== 'name' && key !== 'template') {
-          if (contentType[key].required) {
-            validationTemplate[key] = { valid: false, errorType: '' };
-          }
-        }
-      }
-      console.log(validationTemplate);
-      dispatch(updateValidationTemplate(validationTemplate));
-    }
-    console.log(articleValidations);
     const draftContent = { ...contentType, content: articleContent };
     dispatch(makeFormDraft(draftContent));
     onChange(articleContent);
   };
+
+  useEffect(() => {
+    const existTemplate = Object.keys(articleValidations);
+    if (existTemplate.length <= 0) {
+      const validationTemplate = {};
+      for (const key in contentType) {
+        if (key !== 'name' && key !== 'template') {
+          if (contentType[key].required) {
+            if (key === 'date') {
+              validationTemplate[key] = { valid: true, errorType: '' };
+            } else {
+              validationTemplate[key] = { valid: false, errorType: '' };
+            }
+          }
+        }
+      }
+      dispatch(updateValidationTemplate({ ...validationTemplate, ...articleValidations }));
+    }
+  }, [articleValidations]);
 
   return (
     <StyledArticleData>
@@ -131,7 +136,7 @@ const ArticleData = ({ article, showImage, onChange }) => {
         {contentType?.image && (
           <React.Fragment>
             <Caption className="no-margin">FEATURE PHOTO</Caption>
-            <UploadInput contentType={contentType} onChange={changeWithDraft} />
+            <UploadInput contentType={contentType} onChange={changeWithDraft} srcImg={formData.photo} />
           </React.Fragment>
         )}
       </StyledArticleImage>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Input, { PickerLayout } from '../../UI/Input';
 import styled from 'styled-components';
 import { StyledFieldTooltip } from '../../../views/CreateArticle/StyledComponents';
@@ -11,7 +11,20 @@ import { validate, isRequired, validateMaxLength, validateUrl, requiredDate } fr
 import { validateField } from '../../../redux/reducers/newArticleState';
 import { TextValidation } from '../../UI/forms/styledComponents';
 
-const PickerDate = ({ value = new Date(), _onChange }) => {
+const PickerDate = ({ value = new Date(), _onChange, contentType }) => {
+  const dispatch = useDispatch();
+  const { articleValidations } = useSelector((store) => store.newArticle);
+  useEffect(() => {
+    handleDateValidation(value);
+  }, [value.getDate(), articleValidations.length]);
+
+  const handleDateValidation = async (value) => {
+    const validationsUpdate = contentType['date'].required && [requiredDate];
+    const isValidDate = validate(value, validationsUpdate);
+    const fieldValidation = {};
+    fieldValidation['date'] = isValidDate.length > 0 ? isValidDate[0] : { valid: true, errorType: '' };
+    await dispatch(validateField(fieldValidation));
+  };
   return (
     <PickerLayout>
       <DatePicker selected={value} onChange={_onChange} dateFormat="MMMM d, yyyy" />
@@ -86,12 +99,6 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
   const dateValue = article && article.date ? new Date(article.date) : new Date();
 
   const handleDateValidation = async (value) => {
-    const validationsUpdate = contentType['date'].required && [requiredDate];
-    const isValidDate = validate(value, validationsUpdate);
-    const fieldValidation = {};
-    fieldValidation['date'] = isValidDate.length > 0 ? isValidDate[0] : { valid: true, errorType: '' };
-    debugger;
-    await dispatch(validateField(fieldValidation));
     return onChangeData('date', value);
   };
 
@@ -146,7 +153,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
           <FormRow>
             <DivInputRow>
               <span>{textPlaceholder}</span>
-              <PickerDate value={dateValue} _onChange={handleDateValidation} />
+              <PickerDate value={dateValue} _onChange={handleDateValidation} contentType={contentType} />
             </DivInputRow>
           </FormRow>
         )}

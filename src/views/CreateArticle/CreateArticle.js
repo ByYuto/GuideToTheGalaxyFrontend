@@ -110,7 +110,7 @@ const CreateArticle = () => {
     dispatch(updateNewArticle({ categoryId: category, validStep1: false }));
   };
   const onContentTypeChange = (contentType) => {
-    dispatch(updateNewArticle({ contentTypeId: contentType, validStep1: true }));
+    dispatch(updateNewArticle({ contentTypeId: contentType, validStep1: true, articleValidations: {} }));
     dispatch(setNewArticleStep(2));
   };
 
