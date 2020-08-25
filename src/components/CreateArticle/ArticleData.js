@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import ArticleTemplate from './ArticleTemplate';
 import UploadInput from '../UI/forms/UploadInput';
 import { useSelector, useDispatch } from 'react-redux';
-import { makeFormDraft } from '../../redux/reducers/newArticleState';
+import { makeFormDraft, updateValidationTemplate } from '../../redux/reducers/newArticleState';
+import { validate, isRequired, validateMaxLength } from '../../utils/validations';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -57,6 +58,7 @@ const categoriesSelector = (state) => state.app.categories;
 const getContentType = (categories, categoryId, contentTypeId) => {
   const category = categories.find((category) => category.name === categoryId);
   const subCategory = category.contentTypes.find((contentType) => contentType.name === contentTypeId);
+
   if (subCategory === undefined) {
     return {
       name: 'New Content Type',
@@ -94,16 +96,31 @@ const getContentType = (categories, categoryId, contentTypeId) => {
 
 const ArticleData = ({ article, showImage, onChange }) => {
   const categories = useSelector(categoriesSelector);
-  const { draftForm } = useSelector((store) => store.newArticle);
+  const { draftForm, articleValidations } = useSelector((store) => store.newArticle);
   const dispatch = useDispatch();
   const content = getContentType(categories, article.categoryId, article.contentTypeId);
   const contentType = content ? content : draftForm[0];
   const formData = article ? article : draftForm[0].content;
   const changeWithDraft = (articleContent) => {
+    const existTemplate = Object.keys(articleValidations);
+    if (existTemplate.length === 0) {
+      const validationTemplate = {};
+      for (const key in contentType) {
+        if (key !== 'name' && key !== 'template') {
+          if (contentType[key].required) {
+            validationTemplate[key] = { valid: false, errorType: '' };
+          }
+        }
+      }
+      console.log(validationTemplate);
+      dispatch(updateValidationTemplate(validationTemplate));
+    }
+    console.log(articleValidations);
     const draftContent = { ...contentType, content: articleContent };
     dispatch(makeFormDraft(draftContent));
     onChange(articleContent);
   };
+
   return (
     <StyledArticleData>
       <StyledArticleFields>
