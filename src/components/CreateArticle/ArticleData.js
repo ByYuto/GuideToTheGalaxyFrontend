@@ -124,7 +124,8 @@ const ArticleData = ({ article, showImage, onChange }) => {
       }
       dispatch(updateValidationTemplate({ ...validationTemplate, ...articleValidations }));
     }
-  }, [articleValidations]);
+    console.log(articleValidations);
+  }, []);
 
   return (
     <StyledArticleData>

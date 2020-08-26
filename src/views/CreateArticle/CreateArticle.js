@@ -143,7 +143,7 @@ const CreateArticle = () => {
     setCustomContent(value);
   };
 
-  const onChangeArticle = async (article) => {
+  const onChangeArticle = (article) => {
     const fieldsInvalids = [];
     for (const prop in articleValidations) {
       if (!articleValidations[prop].valid) {
@@ -152,10 +152,11 @@ const CreateArticle = () => {
     }
 
     if (fieldsInvalids.length === 0) {
-      await dispatch(updateNewArticle({ ...article, validStep2: true }));
+      dispatch(updateNewArticle({ ...article, validStep2: true }));
     } else {
-      await dispatch(updateNewArticle({ ...article, validStep2: false }));
-      await dispatch(setNewArticleStep(2));
+      dispatch(updateNewArticle({ ...article, validStep2: false }));
+      dispatch(setNewArticleStep(2));
+      console.log('volvemos al 2');
     }
   };
 

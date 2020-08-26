@@ -19,7 +19,7 @@ const PickerDate = ({ value = new Date(), _onChange, contentType }) => {
   }, [value.getDate(), articleValidations.length]);
 
   const handleDateValidation = async (value) => {
-    const validationsUpdate = contentType['date'].required && [requiredDate];
+    const validationsUpdate = contentType['date'].required ? [requiredDate] : [];
     const isValidDate = validate(value, validationsUpdate);
     const fieldValidation = {};
     fieldValidation['date'] = isValidDate.length > 0 ? isValidDate[0] : { valid: true, errorType: '' };
