@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Caption from '../UI/Caption';
 import styled from 'styled-components';
 import ArticleTemplate from './ArticleTemplate';
 import UploadInput from '../UI/forms/UploadInput';
 import { useSelector, useDispatch } from 'react-redux';
-import { makeFormDraft } from '../../redux/reducers/newArticleState';
+import { makeFormDraft, updateValidationTemplate } from '../../redux/reducers/newArticleState';
+import { validate, isRequired, validateMaxLength } from '../../utils/validations';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -57,6 +58,7 @@ const categoriesSelector = (state) => state.app.categories;
 const getContentType = (categories, categoryId, contentTypeId) => {
   const category = categories.find((category) => category.name === categoryId);
   const subCategory = category.contentTypes.find((contentType) => contentType.name === contentTypeId);
+
   if (subCategory === undefined) {
     return {
       name: 'New Content Type',
@@ -94,7 +96,7 @@ const getContentType = (categories, categoryId, contentTypeId) => {
 
 const ArticleData = ({ article, showImage, onChange }) => {
   const categories = useSelector(categoriesSelector);
-  const { draftForm } = useSelector((store) => store.newArticle);
+  const { draftForm, articleValidations } = useSelector((store) => store.newArticle);
   const dispatch = useDispatch();
   const content = getContentType(categories, article.categoryId, article.contentTypeId);
   const contentType = content ? content : draftForm[0];
@@ -104,6 +106,26 @@ const ArticleData = ({ article, showImage, onChange }) => {
     dispatch(makeFormDraft(draftContent));
     onChange(articleContent);
   };
+
+  useEffect(() => {
+    const existTemplate = Object.keys(articleValidations);
+    if (existTemplate.length <= 0) {
+      const validationTemplate = {};
+      for (const key in contentType) {
+        if (key !== 'name' && key !== 'template') {
+          if (contentType[key].required) {
+            if (key === 'date') {
+              validationTemplate[key] = { valid: true, errorType: '' };
+            } else {
+              validationTemplate[key] = { valid: false, errorType: '' };
+            }
+          }
+        }
+      }
+      dispatch(updateValidationTemplate({ ...validationTemplate, ...articleValidations }));
+    }
+  }, []);
+
   return (
     <StyledArticleData>
       <StyledArticleFields>
@@ -114,7 +136,7 @@ const ArticleData = ({ article, showImage, onChange }) => {
         {contentType?.image && (
           <React.Fragment>
             <Caption className="no-margin">FEATURE PHOTO</Caption>
-            <UploadInput contentType={contentType} onChange={changeWithDraft} />
+            <UploadInput contentType={contentType} onChange={changeWithDraft} srcImg={formData.photo} />
           </React.Fragment>
         )}
       </StyledArticleImage>

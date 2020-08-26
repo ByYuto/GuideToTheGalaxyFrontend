@@ -208,7 +208,6 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
     newArticle.content[index].content = content;
     onChangeArticle && onChangeArticle(newArticle);
   };
-  console.log('contents', contents);
   return (
     <StyledArticleContent>
       <MaxWidthContainer>
@@ -219,17 +218,24 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
       <MaxWidthContainer>
         {contents.length > 0 ? (
           contents.map((contentObj, index) => {
-            if(contentObj.type === 'image'){
-              return <ImageEditorComponent key={contentObj.id} contentId={contentObj.id} images={contentObj.content[0].children} />
+            if (contentObj.type === 'image') {
+              return (
+                <ImageEditorComponent
+                  key={contentObj.id}
+                  contentId={contentObj.id}
+                  images={contentObj.content[0].children}
+                />
+              );
             }
-            return(
+            return (
               <ContentEditor
                 index={index}
                 key={contentObj.id}
                 id={contentObj.id}
                 editorValue={contentObj.content}
                 focused={currentIndex === contentObj.id}
-              />)
+              />
+            );
           })
         ) : (
           <ContentEditor

@@ -1,5 +1,5 @@
 import uid from 'uid';
-import { uploadImage } from "../../http/createArticleService";
+import { uploadImage } from '../../http/createArticleService';
 
 const initialState = {
   step: 1,
@@ -29,6 +29,7 @@ const initialState = {
       },
     ],
   },
+  articleValidations: {},
   currentValueEditor: [],
   draftForm: [],
   currentIndex: 0,
@@ -45,6 +46,8 @@ const ADD_IMAGES_SUCCESS = 'ADD_IMAGES_SUCCESS';
 const ADD_IMAGES_CONTENT_SUCCESS = 'ADD_IMAGES_CONTENT_SUCCESS';
 const DELETE_IMAGE = 'DELETE_IMAGE';
 const DELETE_CONTENT = 'DELETE_CONTENT';
+const VALIDATE_FIELD = 'VALIDATE_FIELD';
+const UPDATE_VALIDATIONS = 'UPDATE_VALIDATIONS';
 
 //Action Creators
 export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });
@@ -53,30 +56,45 @@ export const categorySelected = (id) => ({ type: CATEGORY_SELECTION, payload: id
 export const makeFormDraft = (form) => ({ type: DRAFT_FORM, payload: form });
 export const insertArticleContent = (data) => ({ type: INSERT_CONTENT, payload: data });
 export const changeFocusEditor = (id) => ({ type: CHANGE_EDITOR_FOCUS, payload: id });
+export const updateValidationTemplate = (articleValidations) => ({
+  type: UPDATE_VALIDATIONS,
+  payload: articleValidations,
+});
 
 export const addImagesContent = (index, files) => async (dispatch) => {
   try {
     const images = await Promise.all(files.map(uploadImage));
-    dispatch(addImagesContentSuccess(index, images.filter(image=>image.url)));
+    dispatch(
+      addImagesContentSuccess(
+        index,
+        images.filter((image) => image.url)
+      )
+    );
   } catch (error) {
     // TODO: show error
-    console.log(error.message)
+    console.log(error.message);
   }
 };
-const addImagesContentSuccess = (index, images) => ({ type: ADD_IMAGES_CONTENT_SUCCESS, payload: {index, images} });
+const addImagesContentSuccess = (index, images) => ({ type: ADD_IMAGES_CONTENT_SUCCESS, payload: { index, images } });
 
 export const addImages = (contentId, files) => async (dispatch) => {
   try {
     const images = await Promise.all(files.map(uploadImage));
-    dispatch(addImagesSuccess(contentId, images.filter(image=>image.url)));
+    dispatch(
+      addImagesSuccess(
+        contentId,
+        images.filter((image) => image.url)
+      )
+    );
   } catch (error) {
     // TODO: show error
-    console.log(error.message)
+    console.log(error.message);
   }
 };
-const addImagesSuccess = (contentId, images) => ({ type: ADD_IMAGES_SUCCESS, payload: {contentId,images} });
-export const deleteImage = (contentId, index) => ({ type: DELETE_IMAGE, payload: {contentId,index} });
-export const deleteContent = (contentId) => ({ type: DELETE_CONTENT, payload: {contentId} });
+const addImagesSuccess = (contentId, images) => ({ type: ADD_IMAGES_SUCCESS, payload: { contentId, images } });
+export const deleteImage = (contentId, index) => ({ type: DELETE_IMAGE, payload: { contentId, index } });
+export const deleteContent = (contentId) => ({ type: DELETE_CONTENT, payload: { contentId } });
+export const validateField = (field) => ({ type: VALIDATE_FIELD, payload: { ...field } });
 
 //Reducer
 export default (state = initialState, { type, payload }) => {
@@ -142,29 +160,29 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         newArticle: {
           ...state.newArticle,
-          contents: state.newArticle.contents.filter((item)=>item.id !== contentId)
+          contents: state.newArticle.contents.filter((item) => item.id !== contentId),
         },
       };
     }
-    case DELETE_IMAGE:{
+    case DELETE_IMAGE: {
       const { contentId, index } = payload;
       return {
         ...state,
         newArticle: {
           ...state.newArticle,
-          contents: state.newArticle.contents.map((item)=>{
-            if(item.id === contentId){
+          contents: state.newArticle.contents.map((item) => {
+            if (item.id === contentId) {
               return {
                 ...item,
                 content: [
                   {
-                    children: item.content[0].children.filter((_, childrenIndex) => childrenIndex !== index)
-                  }
-                ]
-              }
+                    children: item.content[0].children.filter((_, childrenIndex) => childrenIndex !== index),
+                  },
+                ],
+              };
             }
             return item;
-          })
+          }),
         },
       };
     }
@@ -174,19 +192,19 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         newArticle: {
           ...state.newArticle,
-          contents: state.newArticle.contents.map((item)=>{
-            if(item.id === contentId){
+          contents: state.newArticle.contents.map((item) => {
+            if (item.id === contentId) {
               return {
                 ...item,
                 content: [
                   {
-                    children: [...item.content[0].children ,...images]
-                  }
-                ]
-              }
+                    children: [...item.content[0].children, ...images],
+                  },
+                ],
+              };
             }
             return item;
-          })
+          }),
         },
       };
     }
@@ -207,11 +225,26 @@ export default (state = initialState, { type, payload }) => {
                 },
               ],
             },
-            ...state.newArticle.contents.slice(index)
-          ]
+            ...state.newArticle.contents.slice(index),
+          ],
         },
       };
     }
+    case VALIDATE_FIELD:
+      return {
+        ...state,
+        articleValidations: {
+          ...state.articleValidations,
+          ...payload,
+        },
+      };
+    case UPDATE_VALIDATIONS:
+      return {
+        ...state,
+        articleValidations: {
+          ...payload,
+        },
+      };
     default:
       return state;
   }

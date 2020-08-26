@@ -79,7 +79,10 @@ const contentTypes = {
 const nextDisabledSelector = (state) => {
   const { newArticle, step } = state.newArticle;
   if (step === 1) {
-    return !newArticle.categoryId || !newArticle.contentTypeId;
+    return !newArticle.validStep1;
+  } else if (step === 2) {
+    return !newArticle.validStep2;
+  } else if (step === 3) {
   } else {
   }
 };
@@ -91,7 +94,7 @@ const getContentTypes = (categories, selectedCategory) => {
 const CreateArticle = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { newArticle, step } = useSelector((state) => state.newArticle);
+  const { newArticle, step, articleValidations } = useSelector((state) => state.newArticle);
   const [customContent, setCustomContent] = useState(null);
   const nextDisabled = useSelector(nextDisabledSelector);
   const categories = useSelector(categoriesSelector);
@@ -107,7 +110,7 @@ const CreateArticle = () => {
     dispatch(updateNewArticle({ categoryId: category, validStep1: false }));
   };
   const onContentTypeChange = (contentType) => {
-    dispatch(updateNewArticle({ contentTypeId: contentType, validStep1: true }));
+    dispatch(updateNewArticle({ contentTypeId: contentType, validStep1: true, articleValidations: {} }));
     dispatch(setNewArticleStep(2));
   };
 
@@ -141,8 +144,20 @@ const CreateArticle = () => {
   };
 
   const onChangeArticle = (article) => {
-    //console.log('Dispatching new article with', article);
-    dispatch(updateNewArticle(article));
+    const fieldsInvalids = [];
+    for (const prop in articleValidations) {
+      if (!articleValidations[prop].valid) {
+        fieldsInvalids.push(articleValidations[prop].valid);
+      }
+    }
+
+    if (fieldsInvalids.length === 0) {
+      dispatch(updateNewArticle({ ...article, validStep2: true }));
+    } else {
+      dispatch(updateNewArticle({ ...article, validStep2: false }));
+      dispatch(setNewArticleStep(2));
+      console.log('volvemos al 2');
+    }
   };
 
   const arePersistingContent = () => newArticle.title || newArticle.location || newArticle.link || newArticle.photo;
