@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Button from '../UI/Button';
 
@@ -18,15 +18,18 @@ const StyledFooter = styled.div`
   }
 `;
 
-const CreateArticleFooter = ({ onExitClick, onNextClick, exitDisabled, nextDisabled }) => (
-  <StyledFooter>
-    <Button primary rounded onClick={onExitClick} disabled={exitDisabled}>
-      EXIT
-    </Button>
-    <Button primary rounded onClick={onNextClick} disabled={nextDisabled}>
-      NEXT
-    </Button>
-  </StyledFooter>
-);
+const CreateArticleFooter = ({ onExitClick, onNextClick, exitDisabled, nextDisabled }) => {
+  const nextRef = useRef(null);
+  return (
+    <StyledFooter>
+      <Button primary rounded onClick={onExitClick} disabled={exitDisabled}>
+        EXIT
+      </Button>
+      <Button primary rounded onClick={onNextClick} disabled={nextDisabled} ref={nextRef}>
+        NEXT
+      </Button>
+    </StyledFooter>
+  );
+};
 
 export default CreateArticleFooter;

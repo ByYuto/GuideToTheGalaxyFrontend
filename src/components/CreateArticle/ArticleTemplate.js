@@ -4,7 +4,7 @@ import GeneralTemplate from './Templates/GeneralTemplate';
 import NoDateTemplate from './Templates/NoDateTemplate';
 import ProductTemplate from './Templates/ProductTemplate';
 
-const ArticleTemplate = ({ contentType, article, onChange }) => {
+const ArticleTemplate = ({ contentType, article, onChange, readOnly }) => {
   const _onChangeData = (key, value) => {
     const newArticle = {
       ...article,
@@ -28,7 +28,12 @@ const ArticleTemplate = ({ contentType, article, onChange }) => {
   }
 
   return SelectedArticleTemplate ? (
-    <SelectedArticleTemplate contentType={contentType} article={article} onChangeData={_onChangeData} />
+    <SelectedArticleTemplate
+      contentType={contentType}
+      article={article}
+      onChangeData={_onChangeData}
+      readOnly={readOnly}
+    />
   ) : (
     <p>NO Template function defined for {template}</p>
   );

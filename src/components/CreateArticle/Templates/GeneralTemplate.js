@@ -11,23 +11,23 @@ import { validate, isRequired, validateMaxLength, validateUrl, requiredDate } fr
 import { validateField } from '../../../redux/reducers/newArticleState';
 import { TextValidation } from '../../UI/forms/styledComponents';
 
-const PickerDate = ({ value = new Date(), _onChange, contentType }) => {
+const PickerDate = ({ value = new Date(), _onChange, contentType, readOnly }) => {
   const dispatch = useDispatch();
   const { articleValidations } = useSelector((store) => store.newArticle);
   useEffect(() => {
     handleDateValidation(value);
   }, [value.getDate(), articleValidations.length]);
 
-  const handleDateValidation = async (value) => {
+  const handleDateValidation = (value) => {
     const validationsUpdate = contentType['date'].required ? [requiredDate] : [];
     const isValidDate = validate(value, validationsUpdate);
     const fieldValidation = {};
     fieldValidation['date'] = isValidDate.length > 0 ? isValidDate[0] : { valid: true, errorType: '' };
-    await dispatch(validateField(fieldValidation));
+    dispatch(validateField(fieldValidation));
   };
   return (
     <PickerLayout>
-      <DatePicker selected={value} onChange={_onChange} dateFormat="MMMM d, yyyy" />
+      <DatePicker selected={value} onChange={_onChange} dateFormat="MMMM d, yyyy" readOnly={readOnly} />
     </PickerLayout>
   );
 };
@@ -60,6 +60,7 @@ const InputRow = ({
   validate,
   validations,
   validateError,
+  readOnly,
 }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const dispatch = useDispatch();
@@ -85,6 +86,7 @@ const InputRow = ({
         onChange={handleChangeValidations}
         onFocus={() => setTooltipVisible(true)}
         onBlur={() => setTooltipVisible(false)}
+        readOnly={readOnly}
       />
       {!validateError?.valid && validateError?.errorType && <TextValidation>{validateError?.errorType}</TextValidation>}
       {tooltipVisible && tooltip && <StyledFieldTooltip>{tooltip}</StyledFieldTooltip>}
@@ -92,7 +94,7 @@ const InputRow = ({
   );
 };
 
-const GeneralTemplate = ({ contentType, article, onChangeData }) => {
+const GeneralTemplate = ({ contentType, article, onChangeData, readOnly }) => {
   const { newArticle, articleValidations } = useSelector((state) => state.newArticle);
   const dispatch = useDispatch();
   const textPlaceholder = contentType && contentType.date ? getPlaceHolderText(contentType.date) : 'Date passed';
@@ -114,6 +116,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
           validate={validate}
           validations={[]}
           validateError={articleValidations.location}
+          readOnly={readOnly}
         />
       ) : null}
       <InputRow
@@ -125,6 +128,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
         validate={validate}
         validations={[validateMaxLength]}
         validateError={articleValidations.title}
+        readOnly={readOnly}
       />
       <InputRow
         field={'URL'}
@@ -135,6 +139,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
         validate={validate}
         validations={[validateUrl]}
         validateError={articleValidations.URL}
+        readOnly={readOnly}
       />
       {contentType?.other?.type === 'text' ? (
         <InputRow
@@ -146,6 +151,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
           validate={validate}
           validations={[]}
           validateError={articleValidations.other}
+          readOnly={readOnly}
         />
       ) : null}
       <DivInputColumn>
@@ -153,7 +159,12 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
           <FormRow>
             <DivInputRow>
               <span>{textPlaceholder}</span>
-              <PickerDate value={dateValue} _onChange={handleDateValidation} contentType={contentType} />
+              <PickerDate
+                value={dateValue}
+                _onChange={handleDateValidation}
+                contentType={contentType}
+                readOnly={readOnly}
+              />
             </DivInputRow>
           </FormRow>
         )}
@@ -165,6 +176,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData }) => {
                 checked={article.discontinued_law}
                 onChange={(value) => onChangeData('discontinued_law', value)}
                 tooltipText={contentType.other.tooltip || 'Toggle tooltip'}
+                readOnly={readOnly}
               />
             </div>
           </DivInputRow>

@@ -158,6 +158,7 @@ const Input = ({
   block,
   onFocus,
   onBlur,
+  readOnly,
   ...props
 }) => {
   const inputRef = useRef(null);
@@ -212,7 +213,6 @@ const Input = ({
     }
     setFocusedCount(focusedCount + 1);
   };
-
   return (
     <StyledInputContainer
       onFocus={_onFocus}
@@ -233,8 +233,15 @@ const Input = ({
         optionsOpened={optionsOpened}
       >
         {Icon ? <Icon className="icon" /> : null}
-        <input ref={inputRef} {...props} value={value} disabled={disabled} onChange={onInputChange} />
-        {!disabled ? (
+        <input
+          ref={inputRef}
+          {...props}
+          value={value}
+          disabled={disabled}
+          onChange={onInputChange}
+          readOnly={readOnly}
+        />
+        {!disabled && !readOnly ? (
           <ClearButton icon transparent onClick={onClearClick} show={!!(value ? value.trim() : false)}>
             <IoIosClose />
           </ClearButton>
