@@ -101,10 +101,20 @@ const CreateArticle = () => {
   const contentTypesAvailableForSelectedCategory =
     categories && newArticle.categoryId ? getContentTypes(categories, newArticle.categoryId) : null;
   useHiddenTopbar(); //hideTopbar
-
+  const fields = Object.keys(articleValidations);
+  let fieldsInvalids = false;
+  for (const prop in articleValidations) {
+    if (!articleValidations[prop].valid) {
+      fieldsInvalids = true;
+    }
+  }
   useEffect(() => {
     dispatch(getCategories());
-  }, [dispatch]);
+
+    if (fields.length > 0) {
+      dispatch(updateNewArticle({ validStep2: !fieldsInvalids }));
+    }
+  }, [dispatch, articleValidations, newArticle.validStep2]);
 
   const onCategoryChange = (category) => {
     dispatch(updateNewArticle({ categoryId: category, validStep1: false }));
@@ -144,20 +154,8 @@ const CreateArticle = () => {
   };
 
   const onChangeArticle = (article) => {
-    const fieldsInvalids = [];
-    for (const prop in articleValidations) {
-      if (!articleValidations[prop].valid) {
-        fieldsInvalids.push(articleValidations[prop].valid);
-      }
-    }
-
-    if (fieldsInvalids.length === 0) {
-      dispatch(updateNewArticle({ ...article, validStep2: true }));
-    } else {
-      dispatch(updateNewArticle({ ...article, validStep2: false }));
-      dispatch(setNewArticleStep(2));
-      console.log('volvemos al 2');
-    }
+    dispatch(updateNewArticle({ ...article }));
+    dispatch(setNewArticleStep(2));
   };
 
   const arePersistingContent = () => newArticle.title || newArticle.location || newArticle.link || newArticle.photo;
@@ -174,6 +172,7 @@ const CreateArticle = () => {
                     value={newArticle.categoryId}
                     onChange={onCategoryChange}
                     showDescriptions={newArticle.categoryId === null}
+                    readOnly={step > 2}
                   />
                   {!newArticle.categoryId ? (
                     <StyledCategorySelectorTooltip>Select a category for your post!</StyledCategorySelectorTooltip>
@@ -190,6 +189,7 @@ const CreateArticle = () => {
                           value={newArticle.contentTypeId}
                           onChange={onContentTypeChange}
                           onCustomContentBlur={onCustomContentBlur}
+                          readOnly={step > 2}
                         />
                       ) : (
                         <p>No content types defined for this category</p>
@@ -210,7 +210,7 @@ const CreateArticle = () => {
                 {!newArticle.validStep1 && <Layer className="layer-blocker" />}
                 <Divider className="create-article-divider" />
                 <MaxWidthContainer>
-                  <ArticleData article={newArticle} onChange={onChangeArticle} showImage={true} />
+                  <ArticleData article={newArticle} onChange={onChangeArticle} showImage={true} readOnly={step > 2} />
                 </MaxWidthContainer>
               </div>
             ) : null}
@@ -242,7 +242,7 @@ const CreateArticle = () => {
           <CreateArticleFooter
             exitDisabled={false}
             onExitClick={onExitClick}
-            nextDisabled={nextDisabled}
+            nextDisabled={!newArticle.validStep2}
             onNextClick={onNextClick}
           />
         </div>

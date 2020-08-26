@@ -75,9 +75,9 @@ const StyledToggle = styled.div`
   }
 `;
 
-const Toggle = ({ className, onChange, checked, disabled, readonly, tooltipText, ...props }) => {
+const Toggle = ({ className, onChange, checked, disabled, readOnly, tooltipText, ...props }) => {
   const _onChange = (e) => {
-    !readonly && onChange && onChange(!e.target.checked);
+    !readOnly && onChange && onChange(!e.target.checked);
   };
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const tooltip = tooltipText || 'tooltip toggle';
@@ -90,7 +90,7 @@ const Toggle = ({ className, onChange, checked, disabled, readonly, tooltipText,
         onMouseEnter={() => setTooltipVisible(true)}
         onMouseLeave={() => setTooltipVisible(false)}
       >
-        <HiddenToggle checked={checked} onChange={_onChange} disabled={disabled} readonly={readonly} {...props} />
+        <HiddenToggle checked={checked} onChange={_onChange} disabled={disabled} readonly={readOnly} {...props} />
         <StyledToggle checked={checked} disabled={disabled} />
       </ToggleContainer>
       {tooltipVisible && tooltip && <StyledFieldTooltip className="tooltip-toggle">{tooltip}</StyledFieldTooltip>}

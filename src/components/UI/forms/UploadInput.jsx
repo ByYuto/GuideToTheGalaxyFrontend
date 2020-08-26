@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import PlaceholderImg from '../../../assets/images/Rectangle.png';
 import { StyledFieldTooltip } from '../../../views/CreateArticle/StyledComponents';
@@ -81,7 +81,7 @@ const UploadInputLayout = styled.div`
   }
 `;
 
-export default function UploadInput({ contentType, onChange, srcImg = PlaceholderImg }) {
+export default function UploadInput({ contentType, onChange, readOnly, srcImg = PlaceholderImg }) {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const tooltip = contentType ? contentType['image']?.tooltip : 'Select an Image';
   const inputRef = useRef(null);
@@ -98,14 +98,18 @@ export default function UploadInput({ contentType, onChange, srcImg = Placeholde
   };
 
   const handleImgSelect = () => {
-    handleImageValidation(inputRef.current.files);
-    return inputRef.current.click();
+    if (!readOnly) {
+      //handleImageValidation(inputRef.current.files);
+      return inputRef.current.click();
+    } else {
+      return;
+    }
   };
   const handleFileChange = (e) => {
     e.preventDefault();
     const dataSrc = e.target.files[0];
     if (e.target.files[0]) {
-      handleImageValidation(e.target.files);
+      //handleImageValidation(e.target.files);
       var reader = new FileReader();
       reader.onload = function (evt) {
         const newArticle = {
@@ -117,7 +121,11 @@ export default function UploadInput({ contentType, onChange, srcImg = Placeholde
     }
   };
   const imgToPlace = srcImg !== null && srcImg !== '' ? srcImg : PlaceholderImg;
-
+  useEffect(() => {
+    if (inputRef && inputRef.current) {
+      handleImageValidation(inputRef.current.files);
+    }
+  }, [srcImg]);
   return (
     <>
       <UploadInputLayout onClick={handleImgSelect} isRequired={contentType.image.required}>

@@ -94,7 +94,7 @@ const getContentType = (categories, categoryId, contentTypeId) => {
   }
 };
 
-const ArticleData = ({ article, showImage, onChange }) => {
+const ArticleData = ({ article, showImage, onChange, readOnly }) => {
   const categories = useSelector(categoriesSelector);
   const { draftForm, articleValidations } = useSelector((store) => store.newArticle);
   const dispatch = useDispatch();
@@ -124,19 +124,24 @@ const ArticleData = ({ article, showImage, onChange }) => {
       }
       dispatch(updateValidationTemplate({ ...validationTemplate, ...articleValidations }));
     }
-  }, []);
+  }, [articleValidations]);
 
   return (
     <StyledArticleData>
       <StyledArticleFields>
         <Caption>KEY INFO</Caption>
-        <ArticleTemplate contentType={contentType} article={formData} onChange={changeWithDraft} />
+        <ArticleTemplate contentType={contentType} article={formData} onChange={changeWithDraft} readOnly={readOnly} />
       </StyledArticleFields>
       <StyledArticleImage>
         {contentType?.image && (
           <React.Fragment>
             <Caption className="no-margin">FEATURE PHOTO</Caption>
-            <UploadInput contentType={contentType} onChange={changeWithDraft} srcImg={formData.photo} />
+            <UploadInput
+              contentType={contentType}
+              onChange={changeWithDraft}
+              srcImg={formData.photo}
+              readOnly={readOnly}
+            />
           </React.Fragment>
         )}
       </StyledArticleImage>

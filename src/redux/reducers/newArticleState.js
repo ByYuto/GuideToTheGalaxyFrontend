@@ -233,6 +233,9 @@ export default (state = initialState, { type, payload }) => {
     case VALIDATE_FIELD:
       return {
         ...state,
+        newArticle: {
+          ...state.newArticle,
+        },
         articleValidations: {
           ...state.articleValidations,
           ...payload,
