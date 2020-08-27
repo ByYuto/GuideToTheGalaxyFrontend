@@ -61,7 +61,7 @@ const StyledInput = styled.div`
   height: 40px;
   overflow: hidden;
   flex: 1;
-
+  
   border: 1px solid ${(props) => (props.theme.isDark ? 'transparent' : props.theme.baseColors.middleLight)};
   color: ${(props) => (props.theme.isDark ? props.theme.baseColors.light : props.theme.baseColors.dark)};
   border-radius: ${(props) => props.theme.borderRadius.small};
@@ -101,7 +101,7 @@ const StyledInput = styled.div`
     font-size: 14px;
     line-height: 22px;
     width: 100%;
-    padding: 9px 35px 9px ${(props) => (props.Icon ? 48 : 26)}px;
+    padding: 9px 25px 9px ${(props) => (props.leftIcon ? 9 : 26)}px;
     background: ${(props) => (props.theme.isDark ? props.theme.baseColors.darker : 'white')};    
     &::placeholder {
       color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
@@ -110,11 +110,12 @@ const StyledInput = styled.div`
 
   .icon {
     display: block;
-    position: absolute;
+    position: static;
     left: 0;
     top: 0;
     bottom: 0;
-    font-size: 18px;    
+    font-size: 18px; 
+    margin-left: 10px;   
     padding: 13px 0 0 16px;
     color: ${(props) =>
       props.theme.isDark
@@ -151,7 +152,7 @@ const Input = ({
   onChange,
   onClear,
   disabled,
-  Icon,
+  leftIcon,
   squaredRight,
   squaredLeft,
   autoCompleteOptions,
@@ -159,6 +160,8 @@ const Input = ({
   onFocus,
   onBlur,
   readOnly,
+  contained,
+  actionButton,
   ...props
 }) => {
   const inputRef = useRef(null);
@@ -217,22 +220,23 @@ const Input = ({
     <StyledInputContainer
       onFocus={_onFocus}
       onBlur={_onBlur}
-      focused={focused}
+      focused={contained ? false : focused}
       onClick={onInputClick}
       optionsOpened={optionsOpened}
-      Icon={Icon}
+      Icon={leftIcon}
       block={block}
     >
       <StyledInput
         tabIndex={-1}
         disabled={disabled}
-        Icon={Icon}
         squaredRight={squaredRight}
         squaredLeft={squaredLeft}
-        focused={focused}
+        focused={contained ? false : focused}
         optionsOpened={optionsOpened}
+        actionButton
+        leftIcon={leftIcon ? true : false}
       >
-        {Icon ? <Icon className="icon" /> : null}
+        {leftIcon ? leftIcon : null}
         <input
           ref={inputRef}
           {...props}
@@ -243,9 +247,10 @@ const Input = ({
         />
         {!disabled && !readOnly ? (
           <ClearButton icon transparent onClick={onClearClick} show={!!(value ? value.trim() : false)}>
-            <IoIosClose />
+            <IoIosClose className="close-btn" />
           </ClearButton>
         ) : null}
+        {actionButton && actionButton}
       </StyledInput>
       {autoCompleteOptions && (optionsOpened || false) ? (
         <Menu options={autoCompleteOptions} onOptionClick={onOptionClick} />
@@ -287,7 +292,7 @@ Input.defaultProps = {
   onChange: null,
   onClear: null,
   disabled: false,
-  Icon: null,
+  leftIcon: null,
   squaredRight: false,
   squaredLeft: false,
   autoCompleteOptions: undefined,
@@ -298,7 +303,7 @@ Input.propTypes = {
   onChange: PropTypes.func,
   onClear: PropTypes.func,
   disabled: PropTypes.bool,
-  Icon: PropTypes.elementType,
+  leftIcon: PropTypes.any,
   squaredRight: PropTypes.bool,
   squaredLeft: PropTypes.bool,
 };
