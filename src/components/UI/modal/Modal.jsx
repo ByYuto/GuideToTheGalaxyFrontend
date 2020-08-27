@@ -5,7 +5,16 @@ import Button from '../Button';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
-export default function Modal({ children, title, footer, visible = false, setVisibility, elmWidth, elmHeight }) {
+export default function Modal({
+  children,
+  title,
+  footer,
+  visible = false,
+  setVisibility,
+  elmWidth,
+  elmHeight,
+  className,
+}) {
   const displayFooter =
     footer === undefined ? (
       <div className="modal-footer">
@@ -21,7 +30,7 @@ export default function Modal({ children, title, footer, visible = false, setVis
     );
 
   const content = visible ? (
-    <ModalLayout elmHeight={elmHeight} elmWidth={elmWidth}>
+    <ModalLayout elmHeight={elmHeight} elmWidth={elmWidth} className={className}>
       <div className="modal-body">
         <div className="modal-header">
           <h4>{title}</h4>

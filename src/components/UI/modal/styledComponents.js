@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import { screen } from '../../../utils/constants';
 
 export const ModalLayout = styled.div`
-  position: absolute;
+  position: fixed;
   width: 100vw;
   min-height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 3;
+  z-index: 999;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,9 +14,9 @@ export const ModalLayout = styled.div`
   & .modal-body {
     min-height: ${(props) => (props.elmHeight ? props.elmHeight : '354px')};
     min-width: ${(props) => (props.elmWidth ? props.elmWidth : '600px')};
-    background-color: #1f1f3d;
+    background-color: ${(props) => (props.theme.isDark ? '#1f1f3d' : '#FFFFFF')};
     border-radius: 16px;
-    color: #bdbfdf;
+    color: ${(props) => (props.theme.isDark ? '#bdbfdf' : '#1F1F3D')};
     z-index: 4;
     display: flex;
     flex-direction: column;
@@ -31,7 +31,7 @@ export const ModalLayout = styled.div`
       display: flex;
       justify-content: space-between;
       padding: 16px;
-      border-bottom: 1px solid #151531;
+      border-bottom: 1px solid ${(props) => (props.theme.isDark ? '#151531' : '#F6F8FF')};
       align-items: center;
 
       & h4 {

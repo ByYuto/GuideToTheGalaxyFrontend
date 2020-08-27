@@ -12,7 +12,7 @@ import Modal from './UI/modal/Modal';
 import { useModal } from './UI/modal/useModal';
 import Login from './login/Login';
 import WithAuth from './login/withAuth';
-import { useSelector } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
 
 const Separator = styled.div`
   display: block;
@@ -61,16 +61,18 @@ const TopBar = () => {
               <Button primary onClick={modal.handleClick}>
                 Log in
               </Button>{' '}
-              <Modal
-                title="Sign in"
-                setVisibility={modal.handleClick}
-                visible={modal.visible}
-                elmHeight="auto"
-                elmWidth="496px"
-                footer={null}
-              >
-                <Login handleCancel={modal.handleClick} />
-              </Modal>
+              <ThemeProvider theme={{ isDark: true }}>
+                <Modal
+                  title="Sign in"
+                  setVisibility={modal.handleClick}
+                  visible={modal.visible}
+                  elmHeight="auto"
+                  elmWidth="496px"
+                  footer={null}
+                >
+                  <Login handleCancel={modal.handleClick} />
+                </Modal>
+              </ThemeProvider>
             </>
           }
         />
