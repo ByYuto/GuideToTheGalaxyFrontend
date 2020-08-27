@@ -43,7 +43,7 @@ export default function ShareArticleCard() {
               <Tag>Keyword</Tag>
             </FlexContainer>
           </div>
-          <div style={{ width: '35%' }}>
+          <div style={{ width: '32%' }}>
             <FlexContainer justify="space-between" align="center" className="reactions-toolbar">
               <div>
                 <FlexContainer justify="space-around" align="center" inline>
