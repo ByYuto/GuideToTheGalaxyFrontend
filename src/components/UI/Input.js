@@ -61,7 +61,7 @@ const StyledInput = styled.div`
   height: 40px;
   overflow: hidden;
   flex: 1;
-  
+
   border: 1px solid ${(props) => (props.theme.isDark ? 'transparent' : props.theme.baseColors.middleLight)};
   color: ${(props) => (props.theme.isDark ? props.theme.baseColors.light : props.theme.baseColors.dark)};
   border-radius: ${(props) => props.theme.borderRadius.small};
@@ -88,24 +88,24 @@ const StyledInput = styled.div`
         `
       : null}
     ${(props) =>
-      props.squaredLeft
-        ? css`
-            border-top-left-radius: 0px;
-            border-bottom-left-radius: 0px;
-          `
-        : null}
+    props.squaredLeft
+      ? css`
+          border-top-left-radius: 0px;
+          border-bottom-left-radius: 0px;
+        `
+      : null}
 
   input {
-    all: unset;    
-    font-family: 'Open Sans';    
+    all: unset;
+    font-family: 'Open Sans';
     font-size: 14px;
     line-height: 22px;
     width: 100%;
     padding: 9px 25px 9px ${(props) => (props.leftIcon ? 9 : 26)}px;
-    background: ${(props) => (props.theme.isDark ? props.theme.baseColors.darker : 'white')};    
+    background: ${(props) => (props.theme.isDark ? props.theme.baseColors.darker : 'white')};
     &::placeholder {
       color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
-    }    
+    }
   }
 
   .icon {
@@ -114,8 +114,8 @@ const StyledInput = styled.div`
     left: 0;
     top: 0;
     bottom: 0;
-    font-size: 18px; 
-    margin-left: 10px;   
+    font-size: 18px;
+    margin-left: 10px;
     padding: 13px 0 0 16px;
     color: ${(props) =>
       props.theme.isDark
@@ -126,7 +126,7 @@ const StyledInput = styled.div`
         ? props.theme.baseColors.light
         : props.theme.baseColors.middleLight};
   }
-  
+
   ${(props) =>
     props.disabled
       ? css`
@@ -141,8 +141,6 @@ const StyledInput = styled.div`
           }
         `
       : null}
-
-  
 `;
 
 const autoCloseTime = 50;
@@ -246,8 +244,14 @@ const Input = ({
           readOnly={readOnly}
         />
         {!disabled && !readOnly ? (
-          <ClearButton icon transparent onClick={onClearClick} show={!!(value ? value.trim() : false)}>
-            <IoIosClose className="close-btn" />
+          <ClearButton
+            className="close-btn"
+            icon
+            transparent
+            onClick={onClearClick}
+            show={!!(value ? value.trim() : false)}
+          >
+            <IoIosClose />
           </ClearButton>
         ) : null}
         {actionButton && actionButton}

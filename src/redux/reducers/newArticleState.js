@@ -48,6 +48,8 @@ const DELETE_IMAGE = 'DELETE_IMAGE';
 const DELETE_CONTENT = 'DELETE_CONTENT';
 const VALIDATE_FIELD = 'VALIDATE_FIELD';
 const UPDATE_VALIDATIONS = 'UPDATE_VALIDATIONS';
+const INSERT_EMBED = 'INSERT_EMBED';
+const REMOVE_EMBED = 'REMOVE_EMBED';
 
 //Action Creators
 export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });
@@ -60,6 +62,13 @@ export const updateValidationTemplate = (articleValidations) => ({
   type: UPDATE_VALIDATIONS,
   payload: articleValidations,
 });
+
+export const insertEmbed = (index, content) => ({
+  type: INSERT_EMBED,
+  payload: { index: index, content: { id: uid(), ...content, type: 'embed' } },
+});
+
+export const removeEmbed = (id) => ({ type: REMOVE_EMBED, payload: id });
 
 export const addImagesContent = (index, files) => async (dispatch) => {
   try {
@@ -246,6 +255,31 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         articleValidations: {
           ...payload,
+        },
+      };
+    case INSERT_EMBED:
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          contents: [
+            ...state.newArticle.contents.slice(0, payload.index),
+            payload.content,
+            ...state.newArticle.contents.slice(payload.index),
+          ],
+        },
+      };
+    case REMOVE_EMBED:
+      const elementIndex = state.newArticle.contents.findIndex((v) => v.id === payload);
+      const contents = [
+        ...state.newArticle.contents.slice(0, elementIndex),
+        ...state.newArticle.contents.slice(elementIndex + 1),
+      ];
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          contents: [...contents],
         },
       };
     default:
