@@ -10,6 +10,7 @@ import { DivInputColumn, DivInputRow } from '../styledComponents';
 import { validate, isRequired, validateMaxLength, validateUrl, requiredDate } from '../../../utils/validations';
 import { validateField } from '../../../redux/reducers/newArticleState';
 import { TextValidation } from '../../UI/forms/styledComponents';
+import { CheckIcon } from '../../../assets/icons/svg-icons';
 
 const PickerDate = ({ value = new Date(), _onChange, contentType, readOnly }) => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const PickerDate = ({ value = new Date(), _onChange, contentType, readOnly }) =>
     fieldValidation['date'] = isValidDate.length > 0 ? isValidDate[0] : { valid: true, errorType: '' };
     dispatch(validateField(fieldValidation));
   };
+
   return (
     <PickerLayout>
       <DatePicker selected={value} onChange={_onChange} dateFormat="MMMM d, yyyy" readOnly={readOnly} />
@@ -47,6 +49,45 @@ const FormRow = styled.div`
     color: white;
     filter: invert(1);
   }
+
+  ${(props) =>
+    props.field === 'URL'
+      ? `
+      
+  & .close-btn {
+    margin-right: 1.3em;
+  }
+
+
+  & input {
+      padding-left: 10px:
+  }
+
+
+  
+  `
+      : ''}
+
+  & .action-button {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #6670f0;
+    border: none;
+    outline: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+    cursor: pointer;
+
+    & svg path,
+    svg rect {
+      fill: white;
+      stroke: white;
+    }
+  }
 `;
 
 const getPlaceHolderText = (field) => `${field.placeholder}${field.required ? '*' : ''}`;
@@ -63,6 +104,7 @@ const InputRow = ({
   readOnly,
 }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [validUrl, setValidUrl] = useState(false);
   const dispatch = useDispatch();
   const tooltip = contentType ? contentType[field]?.tooltip : `${field} tooltip`;
   const textPlaceholder = contentType ? getPlaceHolderText(contentType[field]) : placeholderText;
@@ -73,12 +115,19 @@ const InputRow = ({
       const isValid = validate(value, validationsUpdate);
       const fieldValidation = {};
       fieldValidation[field] = isValid.length > 0 ? isValid[0] : { valid: true, errorType: '' };
+      setValidUrl(fieldValidation[field].valid);
       await dispatch(validateField(fieldValidation));
     }
     return onChangeData(field, value);
   };
+  const actionUrl =
+    field === 'URL' ? (
+      <button className="action-button" disabled={!validUrl}>
+        <CheckIcon />
+      </button>
+    ) : null;
   return (
-    <FormRow>
+    <FormRow field={field} disabled={!validUrl}>
       <Input
         placeholder={textPlaceholder}
         value={newArticle[field]}
@@ -87,6 +136,7 @@ const InputRow = ({
         onFocus={() => setTooltipVisible(true)}
         onBlur={() => setTooltipVisible(false)}
         readOnly={readOnly}
+        actionButton={actionUrl}
       />
       {!validateError?.valid && validateError?.errorType && <TextValidation>{validateError?.errorType}</TextValidation>}
       {tooltipVisible && tooltip && <StyledFieldTooltip>{tooltip}</StyledFieldTooltip>}

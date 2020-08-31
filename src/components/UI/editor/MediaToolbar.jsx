@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { MediaToolbarLayout } from './styledComponents';
 import { ImageMediaIcon, VideoMediaIcon, ArticleIcon, PlusIcon } from '../../../assets/icons/svg-icons';
@@ -6,10 +6,13 @@ import { addImagesContent } from '../../../redux/reducers/newArticleState';
 import Modal from '../modal/Modal';
 import { useModal } from '../modal/useModal';
 import ShareArticle from '../../CreateArticle/ShareArticle/ShareArticle';
+import ShareEmbed from '../../CreateArticle/ShareEmbed/ShareEmbed';
+import FlexContainer from '../FlexContainer';
 
 const MAX_IMAGES = 4;
 
 const MediaToolbar = ({ editor, onInsert, index }) => {
+  const [embedActive, setEmbedActivation] = useState(false);
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
   const handleImgSelect = () => fileInputRef.current.click();
@@ -42,7 +45,7 @@ const MediaToolbar = ({ editor, onInsert, index }) => {
           </button>
         </div>
         <div className="insert-video-container">
-          <button onClick={null}>
+          <button onClick={() => setEmbedActivation(!embedActive)}>
             <VideoMediaIcon />
           </button>
           <div className="input-container">
@@ -53,6 +56,12 @@ const MediaToolbar = ({ editor, onInsert, index }) => {
           <ArticleIcon />
         </button>
       </MediaToolbarLayout>
+      {embedActive ? (
+        <FlexContainer className="share-embed-input-container" justify="center">
+          <ShareEmbed index={index} showEmbed={setEmbedActivation} />
+        </FlexContainer>
+      ) : null}
+
       <Modal
         title="SELECT AN ARTICLE FROM THE LIBRARY"
         visible={modal.visible}

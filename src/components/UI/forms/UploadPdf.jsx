@@ -1,48 +1,52 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useState, useRef } from 'react';
+import { PDFUploaderLayout } from './styledComponents';
 import { PDFIcon } from '../../../assets/icons/svg-icons';
+import PdfMountedImage from '../../../assets/icons/pdf-large.svg';
+import FlexContainer from '../FlexContainer';
 
-const PDFUploaderLayout = styled.div`
-  & input[type='file'] {
-    position: absolute;
-    z-index: -999;
-    opacity: 0;
-  }
-  & button {
-    box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
-    border-radius: 8px;
-    background-color: transparent;
-    padding: 10px 20px;
-    color: #9695b7;
-    display: flex;
-    align-items: center;
-    border: none !important;
-    outline: 0;
-    font-weight: bold;
-    font-family: Lato;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 14px;
-    cursor: pointer;
-
-    &:focus {
-      outline: 0;
-      border: none;
-    }
-
-    & svg {
-      margin-left: 15px;
-    }
-  }
-`;
 export default function UploadPdf() {
+  const inputPdf = useRef(null);
+  const [fileName, setFileName] = useState('');
+  const handleCleanInputFile = () => {
+    setFileName('');
+  };
+  const handleOnChange = (e) => {
+    e.preventDefault();
+    setFileName(e.target.files[0].name);
+  };
+
+  const handleLoadPdf = () => {
+    if (inputPdf && inputPdf.current) inputPdf.current.click();
+  };
+
+  useEffect(() => {
+    if (fileName === '' && inputPdf && inputPdf.current) {
+      inputPdf.current.value = '';
+    }
+  }, [fileName]);
+
   return (
     <PDFUploaderLayout>
-      <input type="file" />
-      <button>
-        + ADD PDF <PDFIcon />
-      </button>
+      {fileName === '' ? (
+        <>
+          <input type="file" ref={inputPdf} onChange={handleOnChange} accept="application/pdf" />
+          <button onClick={handleLoadPdf}>
+            + ADD PDF <PDFIcon />
+          </button>
+        </>
+      ) : (
+        <FlexContainer className="pdf-selected-container" align="center">
+          <figure>
+            <img src={PdfMountedImage} />
+          </figure>
+          <FlexContainer column>
+            <h4>{fileName}</h4>
+            <button className="delete-pdf" onClick={handleCleanInputFile}>
+              <span>Delete</span>
+            </button>
+          </FlexContainer>
+        </FlexContainer>
+      )}
     </PDFUploaderLayout>
   );
 }

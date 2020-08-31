@@ -69,6 +69,9 @@ export const StyledCategorySelectorContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  & .category-tooltip {
+    top: 25%;
+  }
 `;
 
 export const StyledContentTypeSelectorContainer = styled.div`

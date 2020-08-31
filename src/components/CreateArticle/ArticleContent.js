@@ -7,6 +7,7 @@ import Divider from '../UI/Divider';
 import UploadPdf from '../UI/forms/UploadPdf';
 import ToggleContributor from '../UI/ToggleContributor';
 import ImageEditorComponent from './ImageEditor/ImageEditorComponent';
+import EmbedPreview from './ShareEmbed/EmbedPreview';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -208,6 +209,7 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
     newArticle.content[index].content = content;
     onChangeArticle && onChangeArticle(newArticle);
   };
+
   return (
     <StyledArticleContent>
       <MaxWidthContainer>
@@ -224,6 +226,15 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
                   key={contentObj.id}
                   contentId={contentObj.id}
                   images={contentObj.content[0].children}
+                />
+              );
+            }
+            if (contentObj.type === 'embed') {
+              return (
+                <EmbedPreview
+                  key={contentObj.id}
+                  id={contentObj.id}
+                  embedSource={contentObj.content[0].children[0].source}
                 />
               );
             }
