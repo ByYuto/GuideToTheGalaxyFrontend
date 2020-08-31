@@ -28,6 +28,13 @@ export const PDFUploaderLayout = styled.div`
     padding: 0;
     margin-top: 10px;
     color: #6670f0;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    display: flex;
+    align-items: center;
   }
   & input[type='file'] {
     position: absolute;
