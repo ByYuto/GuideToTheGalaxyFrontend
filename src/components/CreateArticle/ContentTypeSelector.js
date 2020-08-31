@@ -31,6 +31,7 @@ const StyledContentType = styled.div`
       !props.readOnly
         ? css`
             border: 1px solid ${props.theme.accentColors.primary.color};
+            background-color: #5767f9;
           `
         : null}
   }

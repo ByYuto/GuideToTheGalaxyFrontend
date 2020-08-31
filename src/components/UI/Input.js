@@ -20,6 +20,11 @@ const StyledInputContainer = styled.div`
   position: relative;
   flex: 1;
   justify-content: center;
+  ${(props) =>
+    props.theme.isDark
+      ? `background-color: #151531;
+  border-radius: 8px;`
+      : ''}
 
   ${Menu} {
     position: absolute;

@@ -171,11 +171,13 @@ const CreateArticle = () => {
                     categories={categories}
                     value={newArticle.categoryId}
                     onChange={onCategoryChange}
-                    showDescriptions={newArticle.categoryId === null}
+                    showDescriptions={step < 3}
                     readOnly={step > 2}
                   />
                   {!newArticle.categoryId ? (
-                    <StyledCategorySelectorTooltip>Select a category for your post!</StyledCategorySelectorTooltip>
+                    <StyledCategorySelectorTooltip className="category-tooltip">
+                      Select a category for your post!
+                    </StyledCategorySelectorTooltip>
                   ) : null}
                 </StyledCategorySelectorContainer>
               </MaxWidthContainer>
