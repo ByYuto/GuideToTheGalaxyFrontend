@@ -54,9 +54,7 @@ const FormRow = styled.div`
     props.field === 'URL'
       ? `
       
-  & .close-btn {
-    margin-right: 1.3em;
-  }
+  
 
 
   & input {
@@ -79,7 +77,7 @@ const FormRow = styled.div`
     justify-content: center;
     align-items: center;
     margin-right: 10px;
-    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+    display: ${(props) => (props.disabled ? 'none' : 'flex')};
     cursor: pointer;
 
     & svg path,
@@ -87,6 +85,14 @@ const FormRow = styled.div`
       fill: white;
       stroke: white;
     }
+  }
+
+  & .close-btn {
+    ${(props) => {
+      if (props.field === 'URL') {
+        return props.disabled ? '' : 'margin-right:1.3em;';
+      }
+    }}
   }
 `;
 
