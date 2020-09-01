@@ -22,11 +22,26 @@ export default function ShareEmbed({ index, showEmbed }) {
   const handleSubmitValue = () => {
     if (validEmbed) {
       showEmbed(false);
+      const params = new URL(embed);
+      const isYoutube = /youtube.com/.test(embed);
+      const isVimeo = /vimeo.com/.test(embed);
+      let videoId;
+      if (isYoutube) {
+        videoId = params.searchParams.get('v');
+      } else if (isVimeo) {
+        videoId = params.searchParams.get('v');
+        const regExp = /\/\d+/;
+        const match = embed.match(regExp);
+        const result = match[0].split('/');
+        videoId = result[1];
+      } else {
+        videoId = embed;
+      }
       const data = {
         content: [
           {
             type: 'embed',
-            children: [{ source: embed }],
+            children: [{ source: videoId }],
           },
         ],
       };

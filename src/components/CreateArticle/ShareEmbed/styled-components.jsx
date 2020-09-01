@@ -6,7 +6,7 @@ export const ShareEmbedLayout = styled.div`
   } 
 
   & .close-btn {
-    margin-right: 1.3em;
+    margin-right: ${(props) => (props.disabled ? '0.5em' : '1.3em')};;
   }
 
   & .icon-search {
@@ -33,7 +33,7 @@ export const ShareEmbedLayout = styled.div`
     justify-content: center;
     align-items: center;
     margin-right: 10px;
-    opacity: ${(props) => (props.disabled ? '0.5' : '1')};
+    display: ${(props) => (props.disabled ? 'none' : 'flex')};
     cursor: pointer;
 
     & svg path, svg rect {
@@ -49,11 +49,12 @@ export const EmbedLayout = styled.div`
   justify-content: center;
   flex-direction: column;
   position: relative;
+  background-color: black;
   & div {
     position: absolute;
     width: 100%;
     text-align: right;
-    height: 100%;
+    top: 0;
 
     & svg {
       color: #f6f8ff;
