@@ -11,6 +11,8 @@ import { validate, isRequired, validateMaxLength, validateUrl, requiredDate } fr
 import { validateField } from '../../../redux/reducers/newArticleState';
 import { TextValidation } from '../../UI/forms/styledComponents';
 import { CheckIcon } from '../../../assets/icons/svg-icons';
+import LocationAutocomplete from '../Location/LocationAutocomplete';
+import { getPlaceHolderText } from '../../../utils/utils';
 
 const PickerDate = ({ value = new Date(), _onChange, contentType, readOnly }) => {
   const dispatch = useDispatch();
@@ -96,8 +98,6 @@ const FormRow = styled.div`
   }
 `;
 
-const getPlaceHolderText = (field) => `${field.placeholder}${field.required ? '*' : ''}`;
-
 const InputRow = ({
   field,
   placeholderText,
@@ -163,17 +163,19 @@ const GeneralTemplate = ({ contentType, article, onChangeData, readOnly }) => {
   return (
     <div>
       {contentType?.location ? (
-        <InputRow
-          field={'location'}
-          placeholderText={'Location'}
-          contentType={contentType}
-          newArticle={newArticle}
-          onChangeData={onChangeData}
-          validate={validate}
-          validations={[]}
-          validateError={articleValidations.location}
-          readOnly={readOnly}
-        />
+        <FormRow>
+          <LocationAutocomplete
+            field={'location'}
+            placeholderText={'Location'}
+            contentType={contentType}
+            newArticle={newArticle}
+            onChangeData={onChangeData}
+            validate={validate}
+            validations={[]}
+            validateError={articleValidations.location}
+            readOnly={readOnly}
+          />
+        </FormRow>
       ) : null}
       <InputRow
         field={'title'}
