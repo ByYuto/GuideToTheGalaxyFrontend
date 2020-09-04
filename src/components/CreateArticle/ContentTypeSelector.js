@@ -6,7 +6,7 @@ import { FiChevronRight } from 'react-icons/fi';
 import Button from '../UI/Button';
 import { GoPlus } from 'react-icons/go';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { IoIosClose } from 'react-icons/io';
 
 const StyledContentType = styled.div`
   display: flex;
@@ -51,6 +51,10 @@ const StyledContentType = styled.div`
 
   button {
     margin-left: 10px;
+  }
+
+  & .close-custom-cat svg:hover {
+    color: white;
   }
 `;
 
@@ -176,8 +180,8 @@ const CustomContentType = ({
         {value}
       </h6>
       {!readOnly ? (
-        <Button onClick={onClearContentType} transparent secondary icon>
-          X
+        <Button className="close-custom-cat" onClick={onClearContentType} transparent secondary icon>
+          <IoIosClose size={28} />
         </Button>
       ) : null}
     </StyledContentType>
@@ -262,13 +266,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
           />
         ))}
         {!newContentType ? (
-          <AddContentTypeButton
-            secondary
-            circle
-            onClick={onAddNewContentTypeClick}
-            className="custom-content-type"
-            icon
-          >
+          <AddContentTypeButton primary circle onClick={onAddNewContentTypeClick} className="custom-content-type" icon>
             <GoPlus />
           </AddContentTypeButton>
         ) : (

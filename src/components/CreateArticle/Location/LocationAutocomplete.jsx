@@ -97,7 +97,9 @@ export default function LocationAutocomplete(props) {
           );
         }}
       </PlacesAutocomplete>
-      {!validateError?.valid && validateError?.errorType && <TextValidation>{validateError?.errorType}</TextValidation>}
+      {!validateError?.valid && validateError?.errorType && (
+        <TextValidation className="validation-message">{validateError?.errorType}</TextValidation>
+      )}
       {tooltipVisible && tooltip && <StyledFieldTooltip>{tooltip}</StyledFieldTooltip>}
     </PlacesAutocompleteContainerLayout>
   );

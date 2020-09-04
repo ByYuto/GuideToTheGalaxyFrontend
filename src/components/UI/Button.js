@@ -22,27 +22,27 @@ const Button = styled.button`
   font-size: 12px;
   line-height: 14px;
   margin-left: ${(props) => (props.span ? props.span : '2px')};
-  margin-top:${(props) => (props.span ? props.span : '2px')};
+  margin-top: ${(props) => (props.span ? props.span : '2px')};
   margin-right: 2px;
   min-width: ${(props) => (props.elmWidth ? props.elmWidth : 'auto')};
   min-height: ${(props) => (props.elmHeight ? props.elmHeight : 'auto')};
 
   &:hover {
     background: ${(props) => (props.transparent ? 'transparent' : props.theme.accentColors.secondary.hover)};
-  }  
+  }
 
   &:disabled {
     background: ${(props) => (props.transparent ? 'transparent' : props.theme.accentColors.secondary.disabled)};
     cursor: auto;
   }
 
-  &:hover:disabled{
+  &:hover:disabled {
     background: ${(props) => (props.transparent ? 'transparent' : props.theme.accentColors.secondary.disabled)};
     cursor: auto;
   }
 
   &:focus {
-    box-shadow: ${(props) => (props.transparent ? 'nonw' : '0px 4px 12px rgba(44, 67, 175, 0.12)')}
+    box-shadow: ${(props) => (props.transparent ? 'nonw' : '0px 4px 12px rgba(44, 67, 175, 0.12)')};
   }
 
   /*&:active {
@@ -130,6 +130,7 @@ const Button = styled.button`
           & svg, img {
             margin-right: 15px;
           }
+
         `
       : '';
   }}

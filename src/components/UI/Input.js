@@ -194,6 +194,7 @@ const Input = ({
   };
 
   const onInputChange = (e) => {
+    e.preventDefault();
     const value = e.target.value;
     if (value.length >= 3) {
       setOptionsOpened(true);

@@ -214,7 +214,7 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
     <StyledArticleContent>
       <MaxWidthContainer>
         <p style={{ textAlign: 'center' }}>
-          <Caption>MAIN CONTENT</Caption>
+          <Caption bold>MAIN CONTENT</Caption>
         </p>
       </MaxWidthContainer>
       <MaxWidthContainer>

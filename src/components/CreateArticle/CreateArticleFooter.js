@@ -10,7 +10,7 @@ const StyledFooter = styled.div`
   border-top: 1px solid ${(props) => props.theme.accentColors.primary.color};
   padding-top: 24px;
   padding-bottom: 24px;
-  z-index: 3;
+  z-index: 21;
   ${Button} {
     min-width: 128px;
     //background-color: ${(props) => props.theme.baseColors.middle};
