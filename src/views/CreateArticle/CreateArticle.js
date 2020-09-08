@@ -6,7 +6,15 @@ import useHiddenTopbar from '../../hooks/useHiddenTopbar';
 import CreateArticleFooter from '../../components/CreateArticle/CreateArticleFooter';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateNewArticle, setNewArticleStep, makeFormDraft } from '../../redux/reducers/newArticleState';
+import {
+  updateNewArticle,
+  setNewArticleStep,
+  makeFormDraft,
+  clearArticleData,
+  saveArticle,
+  successSavedArticle,
+  errorArticle,
+} from '../../redux/reducers/newArticleState';
 import ContentTypeSelector from '../../components/CreateArticle/ContentTypeSelector';
 import {
   StyledView,
@@ -24,6 +32,10 @@ import Stepper from '../../components/UI/Stepper';
 import ArticleContent from '../../components/CreateArticle/ArticleContent';
 import Divider from '../../components/UI/Divider';
 import Layer from '../../components/UI/Layer';
+import Modal from '../../components/UI/modal/Modal';
+import { useModal } from '../../components/UI/modal/useModal';
+import { getContentType, setArticleContent } from './helpers';
+import Notice from '../../components/UI/notice/Notice';
 
 const nextDisabledSelector = (state) => {
   const { newArticle, step } = state.newArticle;
@@ -41,13 +53,16 @@ const getContentTypes = (categories, selectedCategory) => {
   return categories.find((category) => category.name === selectedCategory).contentTypes;
 };
 const CreateArticle = () => {
+  const modal = useModal();
   const history = useHistory();
   const dispatch = useDispatch();
   const refHeaderContainer = useRef(null);
   const refContentContainer = useRef(null);
   const refParentContainer = useRef(null);
   const [contentHeight, setContentHeight] = useState(100);
-  const { newArticle, step, articleValidations } = useSelector((state) => state.newArticle);
+  const { newArticle, step, articleValidations, error, errorMessage, success, loading } = useSelector(
+    (state) => state.newArticle
+  );
   const [customContent, setCustomContent] = useState(null);
   const nextDisabled = useSelector(nextDisabledSelector);
   const categories = useSelector(categoriesSelector);
@@ -62,10 +77,21 @@ const CreateArticle = () => {
     }
   }
   useEffect(() => {
-    dispatch(getCategories());
-
+    if (categories === null || !(categories.length > 0)) {
+      dispatch(getCategories());
+    }
     if (fields.length > 0) {
       dispatch(updateNewArticle({ validStep2: !fieldsInvalids }));
+    }
+    if (
+      (newArticle.contents[0].type === 'paragraph' && newArticle.contents[0].content[0].children[0].text.length > 0) ||
+      newArticle.contents[0].type === 'image' ||
+      newArticle.contents[0].type === 'image' ||
+      newArticle.contents[0].type === 'article'
+    ) {
+      dispatch(updateNewArticle({ validStep3: true }));
+    } else {
+      dispatch(updateNewArticle({ validStep3: false }));
     }
 
     if (
@@ -76,11 +102,21 @@ const CreateArticle = () => {
       refParentContainer &&
       refParentContainer.current
     ) {
-      const refContentSize = refParentContainer.current.offsetHeight - refHeaderContainer.current.offsetHeight;
-      const newSize = window.innerHeight < 723 ? refContentSize + 30 : refContentSize;
-      setContentHeight(newSize);
+      resizeLayer();
     }
-  }, [dispatch, articleValidations, newArticle.validStep2]);
+
+    window.addEventListener('resize', resizeLayer);
+
+    return () => {
+      window.removeEventListener('resize', resizeLayer);
+    };
+  }, [dispatch, articleValidations, newArticle.validStep2, newArticle.contents[0].content[0].children]);
+
+  const resizeLayer = () => {
+    const refContentSize = refParentContainer.current.offsetHeight - refHeaderContainer.current.offsetHeight;
+    const newSize = window.innerHeight < 723 ? refContentSize + 30 : refContentSize;
+    setContentHeight(newSize);
+  };
 
   const onCategoryChange = (category) => {
     dispatch(updateNewArticle({ categoryId: category, contentTypeId: null, validStep1: false }));
@@ -92,6 +128,7 @@ const CreateArticle = () => {
   };
 
   const onExitClick = () => {
+    dispatch(clearArticleData());
     history.push('/');
   };
 
@@ -126,8 +163,39 @@ const CreateArticle = () => {
   };
 
   const arePersistingContent = () => newArticle.title || newArticle.location || newArticle.link || newArticle.photo;
+
+  const onPublishArticle = () => {
+    if (newArticle.validStep1 && newArticle.validStep2 && newArticle.validStep3) {
+      const contentType = getContentType(categories, newArticle.categoryId, newArticle.contentTypeId);
+      const article = setArticleContent(newArticle, contentType, categories);
+      dispatch(saveArticle(article));
+    } else {
+      return;
+    }
+  };
   return (
     <ThemeProvider theme={{ isDark: true }}>
+      {success && (
+        <Notice
+          duration={2000}
+          type="success"
+          text="Your article has been Published"
+          callBack={() => {
+            dispatch(clearArticleData());
+            history.push('/');
+            dispatch(successSavedArticle(false));
+          }}
+        />
+      )}
+      {error && (
+        <Notice
+          duration={4000}
+          type="error"
+          text={errorMessage}
+          callBack={() => dispatch(errorArticle({ error: false, errorType: '' }))}
+        />
+      )}
+      {loading && <Notice duration={0} type="info" text="Saving post..." />}
       <CreateArticleContainerLayout>
         <StyledView className="article-body-container" ref={refParentContainer}>
           {categories ? (
@@ -213,12 +281,26 @@ const CreateArticle = () => {
           </ThemeProvider>
           <CreateArticleFooter
             exitDisabled={false}
-            onExitClick={onExitClick}
+            onExitClick={step > 1 && arePersistingContent() ? modal.handleClick : onExitClick}
             nextDisabled={!newArticle.validStep2}
             onNextClick={onNextClick}
+            publish={step > 2 && newArticle.validStep1 && newArticle.validStep2}
+            publishDisabled={!newArticle.validStep3}
+            onPublish={onPublishArticle}
           />
         </div>
       </CreateArticleContainerLayout>
+      <Modal
+        title="Exit Page"
+        setVisibility={modal.handleClick}
+        visible={modal.visible}
+        elmHeight="auto"
+        elmWidth="496px"
+        textOk="Leave"
+        okClick={onExitClick}
+      >
+        <p style={{ textAlign: 'center' }}>Are you sure you want to exit this page? You’ll lose all your progress</p>
+      </Modal>
     </ThemeProvider>
   );
 };

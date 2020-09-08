@@ -3,16 +3,24 @@ import { PDFUploaderLayout } from './styledComponents';
 import { PDFIcon } from '../../../assets/icons/svg-icons';
 import PdfMountedImage from '../../../assets/icons/pdf-large.svg';
 import FlexContainer from '../FlexContainer';
+import { uploadFile } from '../../../http/createArticleService';
+import { insertPdf } from '../../../redux/reducers/newArticleState';
+import { useDispatch } from 'react-redux';
 
 export default function UploadPdf() {
   const inputPdf = useRef(null);
   const [fileName, setFileName] = useState('');
+  const dispatch = useDispatch();
   const handleCleanInputFile = () => {
+    dispatch(insertPdf(null));
     setFileName('');
   };
-  const handleOnChange = (e) => {
+  const handleOnChange = async (e) => {
     e.preventDefault();
     setFileName(e.target.files[0].name);
+    const dataSrc = e.target.files[0];
+    const fileData = await uploadFile(dataSrc);
+    await dispatch(insertPdf('file:' + fileData.fileId));
   };
 
   const handleLoadPdf = () => {

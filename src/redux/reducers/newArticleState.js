@@ -1,22 +1,23 @@
 import uid from 'uid';
-import { uploadImage } from '../../http/createArticleService';
+import { uploadImage, createArticle } from '../../http/createArticleService';
 
 const initialState = {
   step: 1,
-  validStep1: false,
-  validStep2: false,
-  validStep3: false,
-  validStep4: false,
   newArticle: {
     categoryId: '', //'MUSEUM',
     contentTypeId: '', //'CELEBRITY',
     location: '',
     title: '',
     link: '',
-    photo: '',
+    photo: {
+      imageId: '',
+      url: '',
+    },
     URL: '',
     discontinued_law: false,
-    date: null,
+    date: new Date(),
+    pdf: null,
+    contributions: false,
     contents: [
       {
         id: 0,
@@ -26,6 +27,7 @@ const initialState = {
             children: [{ text: '' }],
           },
         ],
+        type: 'paragraph',
       },
     ],
   },
@@ -33,6 +35,10 @@ const initialState = {
   currentValueEditor: [],
   draftForm: [],
   currentIndex: 0,
+  error: false,
+  errorMessage: '',
+  loading: false,
+  success: false,
 };
 
 //Action Types
@@ -50,13 +56,20 @@ const VALIDATE_FIELD = 'VALIDATE_FIELD';
 const UPDATE_VALIDATIONS = 'UPDATE_VALIDATIONS';
 const INSERT_EMBED = 'INSERT_EMBED';
 const REMOVE_EMBED = 'REMOVE_EMBED';
-
+const CLEAR_DATA = 'CLEAR_DATA';
+const ON_CHANGE_CONTENT = 'ON_CHANGE_CONTENT';
+const LOADING = 'LOADING';
+const ARTICLE_ERROR = 'ARTICLE_ERROR';
+const PDF_INSERT = 'PDF_INSERT';
+const ACTIVATE_CONTRIBUTIONS = 'ACTIVATE_CONTRIBUTIONS';
+const ARTICLE_SUCCESS = 'ARTICLE_SUCCESS';
 //Action Creators
 export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });
 export const setNewArticleStep = (step) => ({ type: SET_STEP, payload: { step } });
 export const categorySelected = (id) => ({ type: CATEGORY_SELECTION, payload: id });
 export const makeFormDraft = (form) => ({ type: DRAFT_FORM, payload: form });
 export const insertArticleContent = (data) => ({ type: INSERT_CONTENT, payload: data });
+export const onChangeArticleContent = (data) => ({ type: ON_CHANGE_CONTENT, payload: data });
 export const changeFocusEditor = (id) => ({ type: CHANGE_EDITOR_FOCUS, payload: id });
 export const updateValidationTemplate = (articleValidations) => ({
   type: UPDATE_VALIDATIONS,
@@ -104,7 +117,24 @@ const addImagesSuccess = (contentId, images) => ({ type: ADD_IMAGES_SUCCESS, pay
 export const deleteImage = (contentId, index) => ({ type: DELETE_IMAGE, payload: { contentId, index } });
 export const deleteContent = (contentId) => ({ type: DELETE_CONTENT, payload: { contentId } });
 export const validateField = (field) => ({ type: VALIDATE_FIELD, payload: { ...field } });
-
+export const clearArticleData = () => ({ type: CLEAR_DATA });
+export const loadingArticle = (isLoading) => ({ type: LOADING, payload: isLoading });
+export const errorArticle = (error) => ({ type: ARTICLE_ERROR, payload: error });
+export const saveArticle = (article) => async (dispatch) => {
+  dispatch(loadingArticle(true));
+  dispatch(errorArticle({ error: false, message: '' }));
+  const response = await createArticle(article);
+  if (response.status === 200) {
+    dispatch(loadingArticle(false));
+    dispatch(successSavedArticle(true));
+  } else {
+    dispatch(loadingArticle(false));
+    dispatch(errorArticle({ error: true, message: response.message }));
+  }
+};
+export const successSavedArticle = (response) => ({ type: ARTICLE_SUCCESS, payload: response });
+export const insertPdf = (fileId) => ({ type: PDF_INSERT, payload: fileId });
+export const activateContributions = (value) => ({ type: ACTIVATE_CONTRIBUTIONS, payload: value });
 //Reducer
 export default (state = initialState, { type, payload }) => {
   switch (type) {
@@ -153,10 +183,23 @@ export default (state = initialState, { type, payload }) => {
                   children: [{ text: '' }],
                 },
               ],
+              type: 'paragraph',
             },
           ],
         },
         currentIndex: index,
+      };
+    case ON_CHANGE_CONTENT:
+      const conteents = state.newArticle.contents.map((content) =>
+        content.id === payload.id ? { ...payload } : content
+      );
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          contents: [...conteents],
+        },
+        currentIndex: state.currentIndex,
       };
     case CHANGE_EDITOR_FOCUS:
       return {
@@ -281,6 +324,42 @@ export default (state = initialState, { type, payload }) => {
           ...state.newArticle,
           contents: [...contents],
         },
+      };
+    case CLEAR_DATA:
+      return {
+        ...initialState,
+      };
+    case LOADING:
+      return {
+        ...state,
+        loading: payload,
+      };
+    case ARTICLE_ERROR:
+      return {
+        ...state,
+        error: payload.error,
+        errorMessage: payload.message,
+      };
+    case PDF_INSERT:
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          pdf: payload,
+        },
+      };
+    case ACTIVATE_CONTRIBUTIONS:
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          contributions: payload,
+        },
+      };
+    case ARTICLE_SUCCESS:
+      return {
+        ...state,
+        success: payload,
       };
     default:
       return state;

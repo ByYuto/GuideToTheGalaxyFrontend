@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Toggle from '../../UI/Toggle';
 import { DivInputColumn, DivInputRow } from '../styledComponents';
-import { validate, isRequired, validateMaxLength, validateUrl, requiredDate } from '../../../utils/validations';
+import { validate, isRequired, validateMaxLength, validateEmbed, requiredDate } from '../../../utils/validations';
 import { validateField } from '../../../redux/reducers/newArticleState';
 import { TextValidation } from '../../UI/forms/styledComponents';
 import { CheckIcon } from '../../../assets/icons/svg-icons';
@@ -206,7 +206,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData, readOnly }) => {
           newArticle={newArticle}
           onChangeData={onChangeData}
           validate={validate}
-          validations={[validateUrl]}
+          validations={[validateEmbed]}
           validateError={articleValidations.URL}
           readOnly={readOnly}
         />

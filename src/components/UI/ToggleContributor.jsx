@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Toggle from './Toggle';
+import { useSelector, useDispatch } from 'react-redux';
+import { activateContributions } from '../../redux/reducers/newArticleState';
 
 export const ToggleContributorLayout = styled.div`
   background-color: #f6f8ff;
@@ -23,11 +25,15 @@ export const ToggleContributorLayout = styled.div`
 `;
 
 export default function ToggleContributor() {
-  const [contributions, setContributiosn] = useState(false);
+  const { newArticle } = useSelector((store) => store.newArticle);
+  const dispatch = useDispatch();
   return (
     <ToggleContributorLayout>
       <span>Edits from the community LOCKED</span>
-      <Toggle checked={contributions} onChange={setContributiosn} />
+      <Toggle
+        checked={newArticle.contributions}
+        onChange={() => dispatch(activateContributions(!newArticle.contributions))}
+      />
     </ToggleContributorLayout>
   );
 }

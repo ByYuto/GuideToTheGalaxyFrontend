@@ -14,15 +14,18 @@ export default function Modal({
   elmWidth,
   elmHeight,
   className,
+  okClick,
+  textOk,
+  textCancel,
 }) {
   const displayFooter =
     footer === undefined ? (
       <div className="modal-footer">
         <Button span="24px" rounded secondary onClick={setVisibility}>
-          Cancel
+          {textCancel ? textCancel : 'Cancel'}
         </Button>
-        <Button span="24px" rounded>
-          Ok
+        <Button span="24px" onClick={okClick} rounded>
+          {textOk ? textOk : 'Ok'}
         </Button>
       </div>
     ) : (

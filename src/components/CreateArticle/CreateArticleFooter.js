@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Button from '../UI/Button';
+import { useSelector } from 'react-redux';
+import { Loader } from '../UI/Loader';
 
 const StyledFooter = styled.div`
   display: flex;
@@ -18,16 +20,41 @@ const StyledFooter = styled.div`
   }
 `;
 
-const CreateArticleFooter = ({ onExitClick, onNextClick, exitDisabled, nextDisabled }) => {
+const CreateArticleFooter = ({
+  onExitClick,
+  onNextClick,
+  exitDisabled,
+  nextDisabled,
+  publish,
+  publishDisabled,
+  onPublish,
+}) => {
   const nextRef = useRef(null);
+  const { loading, error, errorMessage } = useSelector((store) => store.newArticle);
   return (
     <StyledFooter>
-      <Button primary rounded onClick={onExitClick} disabled={exitDisabled}>
-        EXIT
-      </Button>
-      <Button primary rounded onClick={onNextClick} disabled={nextDisabled} ref={nextRef}>
-        NEXT
-      </Button>
+      {!loading ? (
+        <>
+          <Button primary rounded onClick={onExitClick} disabled={exitDisabled}>
+            EXIT
+          </Button>
+          {!publish && (
+            <Button primary rounded onClick={onNextClick} disabled={nextDisabled} ref={nextRef}>
+              NEXT
+            </Button>
+          )}
+          {publish && (
+            <Button primary rounded onClick={onPublish} disabled={publishDisabled} ref={nextRef}>
+              Publish
+            </Button>
+          )}
+        </>
+      ) : (
+        <Loader>
+          <div></div>
+          <div></div>
+        </Loader>
+      )}
     </StyledFooter>
   );
 };

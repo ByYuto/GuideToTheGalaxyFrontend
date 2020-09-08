@@ -19,6 +19,8 @@ export default function ShareEmbed({ index, showEmbed }) {
     setValidEmbed(isValid.valid);
   }, [embed]);
 
+  const getEmbedType = (isYoutube, isVimeo) => (isYoutube && 'youtube') || (isVimeo && 'vimeo') || 'embed';
+
   const handleSubmitValue = () => {
     if (validEmbed) {
       showEmbed(false);
@@ -37,11 +39,13 @@ export default function ShareEmbed({ index, showEmbed }) {
       } else {
         videoId = embed;
       }
+      const embedType = getEmbedType(isYoutube, isVimeo);
       const data = {
         content: [
           {
             type: 'embed',
             children: [{ source: videoId }],
+            embedType: embedType,
           },
         ],
       };
@@ -78,7 +82,6 @@ export default function ShareEmbed({ index, showEmbed }) {
             disabled={!validEmbed}
             onClick={(e) => {
               e.preventDefault();
-              console.log('clicked');
               handleSubmitValue();
             }}
           >
