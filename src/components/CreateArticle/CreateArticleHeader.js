@@ -30,8 +30,8 @@ const StyledHeader = styled.div`
   }
 `;
 
-const CreateArticleHeader = ({ children }) => (
-  <StyledHeader>
+const CreateArticleHeader = ({ children, headerRef }) => (
+  <StyledHeader ref={headerRef}>
     <h3>Create an article</h3>
     <Caption bold>CATEGORY AND SUBCATEGORY</Caption>
     {children}

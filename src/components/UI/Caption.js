@@ -6,7 +6,7 @@ const Caption = styled.span`
   font-weight: normal;
   font-size: 12px;
   line-height: 14px;
-  color: #9695b7;
+  color: #bdbfdf;
   margin-bottom: 24px;
 
   ${(props) =>

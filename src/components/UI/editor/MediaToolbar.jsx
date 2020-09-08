@@ -28,7 +28,7 @@ const MediaToolbar = ({ editor, onInsert, index }) => {
   return (
     <>
       <MediaToolbarLayout>
-        <button onClick={onInsert}>
+        <button className="no-hover">
           <PlusIcon /> INSERT
         </button>
         <div>

@@ -40,6 +40,12 @@ const FormRow = styled.div`
   position: relative;
   /*margin-top: 10px;*/
   margin-bottom: 24px;
+
+  & .validation-message {
+    position: absolute;
+    top: 100%;
+  }
+
   & .react-datepicker__header {
     background-color: white;
   }
@@ -144,7 +150,9 @@ const InputRow = ({
         readOnly={readOnly}
         actionButton={actionUrl}
       />
-      {!validateError?.valid && validateError?.errorType && <TextValidation>{validateError?.errorType}</TextValidation>}
+      {!validateError?.valid && validateError?.errorType && (
+        <TextValidation className="validation-message">{validateError?.errorType}</TextValidation>
+      )}
       {tooltipVisible && tooltip && <StyledFieldTooltip>{tooltip}</StyledFieldTooltip>}
     </FormRow>
   );
@@ -177,28 +185,33 @@ const GeneralTemplate = ({ contentType, article, onChangeData, readOnly }) => {
           />
         </FormRow>
       ) : null}
-      <InputRow
-        field={'title'}
-        placeholderText={'Title'}
-        contentType={contentType}
-        newArticle={newArticle}
-        onChangeData={onChangeData}
-        validate={validate}
-        validations={[validateMaxLength]}
-        validateError={articleValidations.title}
-        readOnly={readOnly}
-      />
-      <InputRow
-        field={'URL'}
-        placeholderText={'Link to more info'}
-        contentType={contentType}
-        newArticle={newArticle}
-        onChangeData={onChangeData}
-        validate={validate}
-        validations={[validateUrl]}
-        validateError={articleValidations.URL}
-        readOnly={readOnly}
-      />
+      {contentType?.title ? (
+        <InputRow
+          field={'title'}
+          placeholderText={'Title'}
+          contentType={contentType}
+          newArticle={newArticle}
+          onChangeData={onChangeData}
+          validate={validate}
+          validations={[validateMaxLength]}
+          validateError={articleValidations.title}
+          readOnly={readOnly}
+        />
+      ) : null}
+      {contentType?.URL ? (
+        <InputRow
+          field={'URL'}
+          placeholderText={'Link to more info'}
+          contentType={contentType}
+          newArticle={newArticle}
+          onChangeData={onChangeData}
+          validate={validate}
+          validations={[validateUrl]}
+          validateError={articleValidations.URL}
+          readOnly={readOnly}
+        />
+      ) : null}
+
       {contentType?.other?.type === 'text' ? (
         <InputRow
           field={'other'}

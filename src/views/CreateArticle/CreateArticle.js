@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CreateArticleHeader from '../../components/CreateArticle/CreateArticleHeader';
 import { ThemeProvider } from 'styled-components';
 import CategorySelector from '../../components/CreateArticle/CategorySelector';
@@ -15,6 +15,7 @@ import {
   StyledCategorySelectorContainer,
   StyledCategorySelectorTooltip,
   StyledContentTypeSelectorContainer,
+  CreateArticleContainerLayout,
 } from './StyledComponents';
 import { toast } from 'react-toastify';
 import ArticleData from '../../components/CreateArticle/ArticleData';
@@ -23,58 +24,6 @@ import Stepper from '../../components/UI/Stepper';
 import ArticleContent from '../../components/CreateArticle/ArticleContent';
 import Divider from '../../components/UI/Divider';
 import Layer from '../../components/UI/Layer';
-
-/*
-const categories = [
-  {
-    id: 'equipment',
-    title: 'Equipment',
-    description: 'The equipment you use in the street, plus books, surveys, polls, placemaking, guides...',
-  },
-  {
-    id: 'legal',
-    title: 'Legal',
-    description: 'Legislation, laws, rules, arrests and everything political. Help others (or ask for help) here.',
-  },
-  {
-    id: 'museum',
-    title: 'Museum',
-    description: 'Festivals, organisations, services, lawyers, videographers, and anyone else who works with buskers.',
-  },
-  {
-    id: 'supporting_orgs',
-    title: 'Supporting Orgs',
-    description:
-      'Buskers in TV/movies/fine art, busking historical events, ex-busking celebrities, busker hall-of-famers etc.',
-  },
-  {
-    id: 'general',
-    title: 'General',
-    description: 'Have something that doesn’t fit elsewhere? Want to start a debate? Post it here.',
-  },
-];
-*/
-
-/*
-const contentTypes = {
-  equipment: [
-    'MICROPHONE',
-    'LOOP PEDALS',
-    'AMPS',
-    'CASHLESS',
-    'GUITAR',
-    'CASE',
-    'OTHER SUBCATEGORY',
-    'OTHER SUBCATEGORY2',
-    'OTHER SUBCATEGORY3',
-    'OTHER SUBCATEGORY4',
-  ],
-  legal: ['ABOGADOS', 'PLEITOS', 'DEMANDAS'],
-  museum: [],
-  supporting_orgs: [],
-  general: [],
-};
-*/
 
 const nextDisabledSelector = (state) => {
   const { newArticle, step } = state.newArticle;
@@ -94,6 +43,10 @@ const getContentTypes = (categories, selectedCategory) => {
 const CreateArticle = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const refHeaderContainer = useRef(null);
+  const refContentContainer = useRef(null);
+  const refParentContainer = useRef(null);
+  const [contentHeight, setContentHeight] = useState(100);
   const { newArticle, step, articleValidations } = useSelector((state) => state.newArticle);
   const [customContent, setCustomContent] = useState(null);
   const nextDisabled = useSelector(nextDisabledSelector);
@@ -114,10 +67,24 @@ const CreateArticle = () => {
     if (fields.length > 0) {
       dispatch(updateNewArticle({ validStep2: !fieldsInvalids }));
     }
+
+    if (
+      refContentContainer &&
+      refContentContainer.current &&
+      refHeaderContainer &&
+      refHeaderContainer.current &&
+      refParentContainer &&
+      refParentContainer.current
+    ) {
+      const refContentSize = refParentContainer.current.offsetHeight - refHeaderContainer.current.offsetHeight;
+      const newSize = window.innerHeight < 723 ? refContentSize + 30 : refContentSize;
+      setContentHeight(newSize);
+    }
   }, [dispatch, articleValidations, newArticle.validStep2]);
 
   const onCategoryChange = (category) => {
-    dispatch(updateNewArticle({ categoryId: category, validStep1: false }));
+    dispatch(updateNewArticle({ categoryId: category, contentTypeId: null, validStep1: false }));
+    dispatch(setNewArticleStep(1));
   };
   const onContentTypeChange = (contentType) => {
     dispatch(updateNewArticle({ contentTypeId: contentType, validStep1: true, articleValidations: {} }));
@@ -161,66 +128,65 @@ const CreateArticle = () => {
   const arePersistingContent = () => newArticle.title || newArticle.location || newArticle.link || newArticle.photo;
   return (
     <ThemeProvider theme={{ isDark: true }}>
-      <StyledView>
-        {categories ? (
-          <React.Fragment>
-            <CreateArticleHeader>
-              <MaxWidthContainer>
-                <StyledCategorySelectorContainer>
-                  <CategorySelector
-                    categories={categories}
-                    value={newArticle.categoryId}
-                    onChange={onCategoryChange}
-                    showDescriptions={step < 3}
-                    readOnly={step > 2}
-                  />
-                  {!newArticle.categoryId ? (
-                    <StyledCategorySelectorTooltip className="category-tooltip">
-                      Select a category for your post!
-                    </StyledCategorySelectorTooltip>
-                  ) : null}
-                </StyledCategorySelectorContainer>
-              </MaxWidthContainer>
-              <MaxWidthContainer>
-                <StyledContentTypeSelectorContainer>
-                  {newArticle.categoryId ? (
-                    <div style={{ height: '50px', overflow: 'hidden', width: '100%' }}>
-                      {contentTypesAvailableForSelectedCategory ? (
-                        <ContentTypeSelector
-                          contentTypes={contentTypesAvailableForSelectedCategory}
-                          value={newArticle.contentTypeId}
-                          onChange={onContentTypeChange}
-                          onCustomContentBlur={onCustomContentBlur}
-                          readOnly={step > 2}
-                        />
-                      ) : (
-                        <p>No content types defined for this category</p>
-                      )}
-                      {step === 1 ? (
-                        <StyledCategorySelectorTooltip>
-                          Select a Content Type for your post to help other users find it, and for them to quickly
-                          identify what kind of content it is.
-                        </StyledCategorySelectorTooltip>
-                      ) : null}
-                    </div>
-                  ) : null}
-                </StyledContentTypeSelectorContainer>
-              </MaxWidthContainer>
-            </CreateArticleHeader>
-            {arePersistingContent() || newArticle.validStep1 ? (
-              <div style={{ position: 'relative' }}>
-                {!newArticle.validStep1 && <Layer className="layer-blocker" />}
+      <CreateArticleContainerLayout>
+        <StyledView className="article-body-container" ref={refParentContainer}>
+          {categories ? (
+            <React.Fragment>
+              <CreateArticleHeader headerRef={refHeaderContainer}>
+                <MaxWidthContainer>
+                  <StyledCategorySelectorContainer>
+                    <CategorySelector
+                      categories={categories}
+                      value={newArticle.categoryId}
+                      onChange={onCategoryChange}
+                      showDescriptions={step < 3}
+                    />
+                    {!newArticle.categoryId ? (
+                      <StyledCategorySelectorTooltip className="category-tooltip">
+                        Select a category for your post!
+                      </StyledCategorySelectorTooltip>
+                    ) : null}
+                  </StyledCategorySelectorContainer>
+                </MaxWidthContainer>
+                <MaxWidthContainer>
+                  <StyledContentTypeSelectorContainer>
+                    {newArticle.categoryId ? (
+                      <div style={{ height: '50px', overflow: 'hidden', width: '100%' }}>
+                        {contentTypesAvailableForSelectedCategory ? (
+                          <ContentTypeSelector
+                            contentTypes={contentTypesAvailableForSelectedCategory}
+                            value={newArticle.contentTypeId}
+                            onChange={onContentTypeChange}
+                            onCustomContentBlur={onCustomContentBlur}
+                          />
+                        ) : (
+                          <p>No content types defined for this category</p>
+                        )}
+                        {step === 1 ? (
+                          <StyledCategorySelectorTooltip>
+                            Select a Content Type for your post to help other users find it, and for them to quickly
+                            identify what kind of content it is.
+                          </StyledCategorySelectorTooltip>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </StyledContentTypeSelectorContainer>
+                </MaxWidthContainer>
+              </CreateArticleHeader>
+              <div>
+                {!newArticle.validStep1 && (
+                  <Layer layerHeight={contentHeight} className="layer-blocker" ref={refContentContainer} />
+                )}
                 <Divider className="create-article-divider" />
                 <MaxWidthContainer>
-                  <ArticleData article={newArticle} onChange={onChangeArticle} showImage={true} readOnly={step > 2} />
+                  <ArticleData article={newArticle} onChange={onChangeArticle} showImage={true} />
                 </MaxWidthContainer>
               </div>
-            ) : null}
-          </React.Fragment>
-        ) : (
-          <p>Loading...</p>
-        )}
-        <div style={{ zIndex: 3 }}>
+            </React.Fragment>
+          ) : (
+            <p>Loading...</p>
+          )}
+
           <ThemeProvider theme={{ isDark: step <= 2 }}>
             <StyledViewContent>
               {step >= 3 && categories ? (
@@ -230,17 +196,21 @@ const CreateArticle = () => {
                   //onKeyDown={(a, b) => console.log('PASO POR AQUI', a, b)}
                 />
               ) : null}
+            </StyledViewContent>
+          </ThemeProvider>
+        </StyledView>
+        <div style={{ zIndex: 50 }}>
+          <ThemeProvider theme={{ isDark: step <= 2 }}>
+            <StyledViewContent>
               <div
                 style={{
-                  backgroundColor:
-                    arePersistingContent() && !newArticle.validStep1 ? 'rgba(21, 21, 49, 0.7)' : 'transparent',
+                  backgroundColor: !newArticle.validStep1 ? 'rgba(21, 21, 49, 0.7)' : '#1F1F3D',
                 }}
               >
                 <Stepper step={step} />
               </div>
             </StyledViewContent>
           </ThemeProvider>
-
           <CreateArticleFooter
             exitDisabled={false}
             onExitClick={onExitClick}
@@ -248,7 +218,7 @@ const CreateArticle = () => {
             onNextClick={onNextClick}
           />
         </div>
-      </StyledView>
+      </CreateArticleContainerLayout>
     </ThemeProvider>
   );
 };

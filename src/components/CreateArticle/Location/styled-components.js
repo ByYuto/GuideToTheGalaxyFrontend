@@ -88,4 +88,9 @@ export const SuggestionLayout = styled.div`
 
 export const PlacesAutocompleteContainerLayout = styled.div`
   margin-bottom: 24px;
+  position: relative;
+  & validation-message {
+    position: absolute;
+    top: 100%;
+  }
 `;

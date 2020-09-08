@@ -6,12 +6,14 @@ import UploadInput from '../UI/forms/UploadInput';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeFormDraft, updateValidationTemplate } from '../../redux/reducers/newArticleState';
 import { validate, isRequired, validateMaxLength } from '../../utils/validations';
+import { generalTemplate } from '../../utils/constants';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relativee;
 
   @media (max-width: 600px) {
     min-height: 360px;
@@ -56,41 +58,19 @@ const StyledArticleData = styled.div`
 
 const categoriesSelector = (state) => state.app.categories;
 const getContentType = (categories, categoryId, contentTypeId) => {
-  const category = categories.find((category) => category.name === categoryId);
-  const subCategory = category.contentTypes.find((contentType) => contentType.name === contentTypeId);
-
-  if (subCategory === undefined) {
-    return {
-      name: 'New Content Type',
-      template: 'GENERAL',
-      title: {
-        placeholder: 'Article title',
-        required: true,
-        tooltip: 'Article title',
-      },
-      URL: {
-        placeholder: 'Put in a URL to help us verify this post',
-        required: true,
-        tooltip: 'Put in a URL to help us verify this post',
-      },
-      location: {
-        placeholder: 'Where did they used to busk?',
-        required: false,
-        tooltip: 'Place a location (optional)',
-      },
-      date: {
-        placeholder: 'Passed date',
-        required: false,
-        tooltip: 'A tooltip',
-      },
-      image: {
-        placeholder: 'Choose an Image',
-        required: false,
-        tooltip: 'A tooltip',
-      },
-    };
-  } else {
+  if (
+    categoryId !== null &&
+    categoryId !== '' &&
+    categoryId !== undefined &&
+    contentTypeId !== null &&
+    contentTypeId !== '' &&
+    contentTypeId !== undefined
+  ) {
+    const category = categories.find((category) => category.name === categoryId);
+    const subCategory = category.contentTypes.find((contentType) => contentType.name === contentTypeId);
     return subCategory;
+  } else {
+    return generalTemplate;
   }
 };
 
@@ -129,13 +109,15 @@ const ArticleData = ({ article, showImage, onChange, readOnly }) => {
   return (
     <StyledArticleData>
       <StyledArticleFields>
-        <Caption>KEY INFO</Caption>
+        <Caption bold>KEY INFO</Caption>
         <ArticleTemplate contentType={contentType} article={formData} onChange={changeWithDraft} readOnly={readOnly} />
       </StyledArticleFields>
       <StyledArticleImage>
         {contentType?.image && (
           <React.Fragment>
-            <Caption className="no-margin">FEATURE PHOTO</Caption>
+            <Caption bold className="no-margin">
+              FEATURE PHOTO
+            </Caption>
             <UploadInput
               contentType={contentType}
               onChange={changeWithDraft}

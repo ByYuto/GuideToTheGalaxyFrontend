@@ -2,6 +2,8 @@ import View from '../../components/View';
 import styled from 'styled-components';
 import CreateArticleTooltip from '../../components/CreateArticle/CreateArticleTooltip';
 
+const screenHeight = window.innerHeight + 'px';
+
 export const Fields = styled.div`
   max-width: 70%;
 `;
@@ -12,6 +14,7 @@ export const StyledCategorySelectorTooltip = styled(CreateArticleTooltip)`
   left: calc(100% + 12px);
   top: 0;
   width: calc((100vw - 1016px - 5%) / 2);
+  z-index: 20;
 
   @media screen and (max-width: 1260px) {
     position: relative;
@@ -39,7 +42,7 @@ export const StyledFieldTooltip = styled(CreateArticleTooltip)`
   left: calc(100% + 12px);
   top: 0;
   width: calc((100vw - 1016px - 5%) / 2);
-  z-index: 10;
+  z-index: 20;
 
   @media screen and (max-width: 1260px) {
     position: relative;
@@ -89,13 +92,14 @@ export const MaxWidthContainer = styled.div`
 `;
 
 export const StyledView = styled(View)`
-  min-height: 100vh;
-  justify-content: space-between;
+  justify-content: flex-start;
   overflow: auto;
   height: auto;
+  position: relative;
 
   & .create-article-divider {
     margin-bottom: 0;
+    margin-top: 0;
   }
 
   & > * {
@@ -109,3 +113,16 @@ export const StyledView = styled(View)`
 `;
 
 export const StyledViewContent = styled(View)``;
+
+export const CreateArticleContainerLayout = styled.div`
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: space-between;
+  & .article-body-container {
+    height: calc(100vh - 131px) !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+`;
