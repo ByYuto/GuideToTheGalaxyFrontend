@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { validateField } from '../../../redux/reducers/newArticleState';
 import { TextValidation } from './styledComponents';
 import { CameraIcon } from '../../../assets/icons/svg-icons';
+import { uploadImage } from '../../../http/createArticleService';
+
 const UploadInputLayout = styled.div`
   display: flex;
   position: relative;
@@ -106,19 +108,21 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
       return;
     }
   };
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     e.preventDefault();
     const dataSrc = e.target.files[0];
-    if (e.target.files[0]) {
-      //handleImageValidation(e.target.files);
-      var reader = new FileReader();
-      reader.onload = function (evt) {
+    if (dataSrc) {
+      const imageData = await uploadImage(dataSrc);
+      if (imageData.url) {
         const newArticle = {
-          photo: reader.result,
+          photo: imageData,
         };
         onChange(newArticle);
-      };
-      reader.readAsDataURL(dataSrc);
+      } else {
+        return;
+      }
+    } else {
+      return;
     }
   };
   const imgToPlace = srcImg !== null && srcImg !== '' ? srcImg : PlaceholderImg;

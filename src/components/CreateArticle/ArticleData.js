@@ -5,7 +5,7 @@ import ArticleTemplate from './ArticleTemplate';
 import UploadInput from '../UI/forms/UploadInput';
 import { useSelector, useDispatch } from 'react-redux';
 import { makeFormDraft, updateValidationTemplate } from '../../redux/reducers/newArticleState';
-import { validate, isRequired, validateMaxLength } from '../../utils/validations';
+import PlaceholderImg from '../../assets/images/Rectangle.png';
 import { generalTemplate } from '../../utils/constants';
 
 const StyledArticleImage = styled.div`
@@ -121,7 +121,7 @@ const ArticleData = ({ article, showImage, onChange, readOnly }) => {
             <UploadInput
               contentType={contentType}
               onChange={changeWithDraft}
-              srcImg={formData.photo}
+              srcImg={formData.photo?.url || PlaceholderImg}
               readOnly={readOnly}
             />
           </React.Fragment>

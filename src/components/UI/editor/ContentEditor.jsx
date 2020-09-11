@@ -5,7 +5,11 @@ import { LayoutEditor, EditorContainer } from './styledComponents';
 import MediaToolbar from './MediaToolbar';
 import TextFormat from './TextFormat';
 import { useDispatch } from 'react-redux';
-import { insertArticleContent, changeFocusEditor } from '../../../redux/reducers/newArticleState';
+import {
+  insertArticleContent,
+  onChangeArticleContent,
+  changeFocusEditor,
+} from '../../../redux/reducers/newArticleState';
 import { insertUrl, withLinks, isLinkActive } from './link/linkHelpers';
 
 export default function ContentEditor({ id, editorValue, focused, index }) {
@@ -66,10 +70,14 @@ export default function ContentEditor({ id, editorValue, focused, index }) {
 
   const handleInsertContent = () => {
     if (value.length > 0 && value[0].children[0].text !== '') {
-      dispatch(insertArticleContent({ id: id, content: value }));
+      dispatch(insertArticleContent({ id: id, content: value, type: 'paragraph' }));
     } else {
       //dispatch(changeFocusEditor(999));
     }
+  };
+
+  const handleOnChange = (value) => {
+    setValue(value);
   };
 
   const handleFocus = () => {
@@ -85,7 +93,8 @@ export default function ContentEditor({ id, editorValue, focused, index }) {
     if (focused) {
       ReactEditor.focus(editor);
     }
-  }, []);
+    setTimeout(() => dispatch(onChangeArticleContent({ id: id, content: value, type: 'paragraph' })), 500);
+  }, [value]);
 
   return (
     <EditorContainer
@@ -93,7 +102,6 @@ export default function ContentEditor({ id, editorValue, focused, index }) {
       onMouseDown={(e) => {
         dispatch(changeFocusEditor(id));
       }}
-      //isFocused={focused}
     >
       {focused && (
         <TextFormat
@@ -112,7 +120,7 @@ export default function ContentEditor({ id, editorValue, focused, index }) {
         />
       )}
       <LayoutEditor focused={focused}>
-        <Slate editor={editor} value={value} onChange={(newValue) => setValue(newValue)}>
+        <Slate editor={editor} value={value} onChange={(newValue) => handleOnChange(newValue)}>
           <Editable
             renderElement={renderElement}
             renderLeaf={renderLeaf}
