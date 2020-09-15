@@ -11,6 +11,7 @@ export const ToggleContributorLayout = styled.div`
   padding: 20px;
   justify-content: space-between;
   margin-top: 24px;
+  margin-bottom: 24px;
 
   & span {
     font-family: Open Sans;

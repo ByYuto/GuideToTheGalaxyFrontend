@@ -8,6 +8,7 @@ import UploadPdf from '../UI/forms/UploadPdf';
 import ToggleContributor from '../UI/ToggleContributor';
 import ImageEditorComponent from './ImageEditor/ImageEditorComponent';
 import EmbedPreview from './ShareEmbed/EmbedPreview';
+import ArticleEmbed from './ShareArticle/ArticleEmbed';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -96,100 +97,6 @@ const EditorButton = styled.button`
   }
 `;
 
-const FormatButton = ({ command, label, tinyMCEEditorRef, icon }) => {
-  //TODO: Convert to a Styled Component
-  return (
-    <EditorButton
-      onClick={() => tinyMCEEditorRef.current.editor.editorCommands.execCommand(command)}
-      style={{
-        color: tinyMCEEditorRef.current.editor.editorCommands.queryCommandState(command) === true && '#6670F0',
-      }}
-    >
-      {icon}
-    </EditorButton>
-  );
-};
-/*
-const categoriesSelector = (state) => state.app.categories;
-const getContentType = (categories, categoryId, contentTypeId) => {
-  const category = categories.find((category) => category.name === categoryId);
-  return category.contentTypes.find((contentType) => contentType.name === contentTypeId);
-};
-*/
-/*const ArticleContentPart = ({ contentPart, contentIndex, article, onChange, onAddContentPart }) => {
-  const [focused, setFocused] = useState(false);
-  const blurTimeoutId = useRef(null);
-  const tinyMCEEditorRef = useRef(null);
-  const [selectionChangeCount, setSelectionChangeCount] = useState(0);
-  const [tooltipVisible, setTooltipVisible] = useState(false);
-  const tooltip = 'Tooltip text for wywyg';
-  const handleEditorChange = (content, editor) => {
-    onChange && onChange(contentIndex, content);
-  };
-  const _onFocus = (e) => {
-    clearTimeout(blurTimeoutId.current);
-    setFocused(true);
-  };
-  const _onBlur = (e) => {
-    blurTimeoutId.current = setTimeout(() => {
-      setFocused(false);
-    }, 10);
-  };
-  const _onKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      onAddContentPart(contentIndex + 1, 'text');
-      e.stopPropagation();
-    }
-  };
-
-  return (
-    <>
-      <ArticleContentPartContainer onFocus={_onFocus} onBlur={_onBlur} tabIndex={0} focused={focused}>
-        {focused && tinyMCEEditorRef.current && (
-          <FormatContentContainer>
-            <FormatButton command="Bold" label="B" icon={<BsTypeBold />} tinyMCEEditorRef={tinyMCEEditorRef} />
-            <FormatButton command="Italic" label="I" icon={<BsTypeItalic />} tinyMCEEditorRef={tinyMCEEditorRef} />
-            <FormatButton
-              command="Underline"
-              label="U"
-              icon={<BsTypeUnderline />}
-              tinyMCEEditorRef={tinyMCEEditorRef}
-            />
-            {<FormatButton label="Link" icon={<LinkIcon />} tinyMCEEditorRef={tinyMCEEditorRef} />}
-          </FormatContentContainer>
-        )}
-        <Editor
-          ref={tinyMCEEditorRef}
-          apiKey="hgxskwg9eqfbgmwxdybae640x48524e9fu29wko5bsvywhs1"
-          inline={true}
-          init={{
-            menubar: false,
-            branding: false,
-            plugins: ['autolink link fullscreen insertdatetime media table paste'],
-            toolbar: false,
-            link_context_toolbar: true,
-            default_link_target: '_blank',
-            link_assume_external_targets: true,
-          }}
-          value={contentPart.content}
-          onEditorChange={handleEditorChange}
-          onKeyDown={_onKeyDown}
-          onSelectionChange={() => {
-            //Force an update
-            setSelectionChangeCount(selectionChangeCount + 1);
-          }}
-        />
-        {focused && <StyledFieldTooltip className="light-tooltip">{tooltip}</StyledFieldTooltip>}
-      </ArticleContentPartContainer>
-      {focused && (
-        <div style={{ position: 'relative', top: '100%', boxShadow: 'none', display: 'flex' }}>
-          <AddContentComponent index={contentIndex} onAddContentPart={onAddContentPart}></AddContentComponent>
-        </div>
-      )}
-    </>
-  );
-};*/
-
 const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
   const { newArticle, currentIndex } = useSelector((store) => store.newArticle);
   const { contents } = newArticle;
@@ -237,6 +144,10 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
                   embedSource={contentObj.content[0].children[0].source}
                 />
               );
+            }
+
+            if (contentObj.type === 'article') {
+              return <ArticleEmbed key={contentObj.id} id={contentObj.id} articleId={contentObj.content} />;
             }
             return (
               <ContentEditor

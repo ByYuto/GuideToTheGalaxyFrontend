@@ -299,7 +299,10 @@ const CreateArticle = () => {
         textOk="Leave"
         okClick={onExitClick}
       >
-        <p style={{ textAlign: 'center' }}>Are you sure you want to exit this page? You’ll lose all your progress</p>
+        <p style={{ textAlign: 'center' }}>
+          Are you sure you want to exit this page?
+          <br /> You’ll lose all your progress
+        </p>
       </Modal>
     </ThemeProvider>
   );

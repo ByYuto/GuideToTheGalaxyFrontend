@@ -98,7 +98,24 @@ const Button = styled.button`
     css`
       padding: 0;
     `}
-
+    ${(props) =>
+    props.modalSecondary &&
+    props.theme.isDark &&
+    css`
+      background-color: #9695b7;
+      &:hover {
+        background-color: #7f7e9c;
+      }
+    `}
+        ${(props) =>
+    props.modalSecondary &&
+    !props.theme.isDark &&
+    css`
+      background-color: #bdbfdf;
+      &:hover {
+        background-color: #a1a2bf;
+      }
+    `}
   ${(props) =>
     props.disabled
       ? css`

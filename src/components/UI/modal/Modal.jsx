@@ -21,7 +21,7 @@ export default function Modal({
   const displayFooter =
     footer === undefined ? (
       <div className="modal-footer">
-        <Button span="24px" rounded secondary onClick={setVisibility}>
+        <Button span="24px" rounded modalSecondary onClick={setVisibility}>
           {textCancel ? textCancel : 'Cancel'}
         </Button>
         <Button span="24px" onClick={okClick} rounded>

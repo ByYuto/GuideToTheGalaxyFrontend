@@ -10,12 +10,12 @@ export const SearchBarLayout = styled.div`
   width: 50%;
 
   @media (max-width: 600px) {
-    width: 95%
+    width: 95%;
   } 
 
   & .close-btn {
       position: relative;
-      right: 1em;
+      margin-bottom: 10px;
   }
 
   & .icon-search {

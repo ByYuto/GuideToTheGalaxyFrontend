@@ -7,7 +7,7 @@ export const Loader = styled.div`
   height: 80px;
   & div {
     position: absolute;
-    border: 4px solid #fff;
+    border: 4px solid ${(props) => (props.color ? props.color : '#fff')};
     opacity: 1;
     border-radius: 50%;
     animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;

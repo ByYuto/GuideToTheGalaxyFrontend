@@ -63,6 +63,7 @@ const ARTICLE_ERROR = 'ARTICLE_ERROR';
 const PDF_INSERT = 'PDF_INSERT';
 const ACTIVATE_CONTRIBUTIONS = 'ACTIVATE_CONTRIBUTIONS';
 const ARTICLE_SUCCESS = 'ARTICLE_SUCCESS';
+const INSERT_EMBED_ARTICLE = 'INSERT_EMBED_ARTICLE';
 //Action Creators
 export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });
 export const setNewArticleStep = (step) => ({ type: SET_STEP, payload: { step } });
@@ -79,6 +80,11 @@ export const updateValidationTemplate = (articleValidations) => ({
 export const insertEmbed = (index, content) => ({
   type: INSERT_EMBED,
   payload: { index: index, content: { id: uid(), ...content, type: 'embed' } },
+});
+
+export const insertEmbedArticle = (index, articleId) => ({
+  type: INSERT_EMBED_ARTICLE,
+  payload: { index: index, content: { id: uid(), content: articleId, type: 'article' } },
 });
 
 export const removeEmbed = (id) => ({ type: REMOVE_EMBED, payload: id });
@@ -135,6 +141,7 @@ export const saveArticle = (article) => async (dispatch) => {
 export const successSavedArticle = (response) => ({ type: ARTICLE_SUCCESS, payload: response });
 export const insertPdf = (fileId) => ({ type: PDF_INSERT, payload: fileId });
 export const activateContributions = (value) => ({ type: ACTIVATE_CONTRIBUTIONS, payload: value });
+export const setArticleContent = (articleId) => ({ type: INSERT_EMBED_ARTICLE, payload: articleId });
 //Reducer
 export default (state = initialState, { type, payload }) => {
   switch (type) {
@@ -360,6 +367,19 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         success: payload,
+      };
+
+    case INSERT_EMBED_ARTICLE:
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          contents: [
+            ...state.newArticle.contents.slice(0, payload.index),
+            payload.content,
+            ...state.newArticle.contents.slice(payload.index),
+          ],
+        },
       };
     default:
       return state;
