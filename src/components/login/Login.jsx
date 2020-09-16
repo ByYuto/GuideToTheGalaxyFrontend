@@ -94,7 +94,7 @@ export default function Login({ handleCancel }) {
 
             {!loading ? (
               <FlexContainer span="0" padding="0" justify="center">
-                <Button span="24px" onClick={handleCancel} rounded secondary>
+                <Button span="24px" onClick={handleCancel} rounded modalSecondary>
                   Cancel
                 </Button>
                 <Button span="24px" type="submit" rounded>

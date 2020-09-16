@@ -5,7 +5,7 @@ const Card = styled.div`
   background-color: white;
   border-radius: 16px;
   filter: drop-shadow(0px 0px 6px rgba(120, 125, 238, 0.1));
-  max-width: 360px;
+  max-width: ${(props) => (props.fullWidth ? 'auto' : '360px')};
   & p {
     font-family: Lato;
     font-style: normal;

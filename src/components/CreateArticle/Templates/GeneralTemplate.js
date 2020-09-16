@@ -95,6 +95,27 @@ const FormRow = styled.div`
     }
   }
 
+  & .action-button-read-only {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #6670f0;
+    border: none;
+    outline: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    display: ${(props) => (props.disabled ? 'none' : 'flex')};
+    cursor: default;
+
+    & svg path,
+    svg rect {
+      fill: white;
+      stroke: white;
+    }
+  }
+
   & .close-btn {
     ${(props) => {
       if (props.field === 'URL') {
@@ -127,14 +148,18 @@ const InputRow = ({
       const isValid = validate(value, validationsUpdate);
       const fieldValidation = {};
       fieldValidation[field] = isValid.length > 0 ? isValid[0] : { valid: true, errorType: '' };
-      setValidUrl(fieldValidation[field].valid);
+      if (field === 'URL') {
+        const iconValidation = validateEmbed(value, true);
+        setValidUrl(iconValidation.valid);
+      }
+
       await dispatch(validateField(fieldValidation));
     }
     return onChangeData(field, value);
   };
   const actionUrl =
     field === 'URL' ? (
-      <button className="action-button" disabled={!validUrl}>
+      <button className="action-button-read-only" disabled={!validUrl} readOnly={true}>
         <CheckIcon />
       </button>
     ) : null;

@@ -71,8 +71,6 @@ export default function ContentEditor({ id, editorValue, focused, index }) {
   const handleInsertContent = () => {
     if (value.length > 0 && value[0].children[0].text !== '') {
       dispatch(insertArticleContent({ id: id, content: value, type: 'paragraph' }));
-    } else {
-      //dispatch(changeFocusEditor(999));
     }
   };
 

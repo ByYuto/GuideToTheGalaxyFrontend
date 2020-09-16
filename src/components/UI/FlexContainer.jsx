@@ -7,6 +7,7 @@ const FlexContainer = styled.div`
   align-items: ${(props) => (props.align ? props.align : 'flex-start')};
   flex-grow: ${(props) => (props.grow ? props.grow : 'flex-start')};
   width: ${(props) => (props.elmWidth ? props.elmWidth : 'auto')};
+  flex-wrap: ${(props) => (props.breakRow ? 'wrap' : 'nowrap')};
 `;
 
 export default FlexContainer;

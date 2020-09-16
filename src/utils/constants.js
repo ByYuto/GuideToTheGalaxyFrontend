@@ -43,7 +43,7 @@ export const generalTemplate = {
   },
   URL: {
     placeholder: 'Put in a URL to help us verify this post',
-    required: true,
+    required: false,
     tooltip: 'Put in a URL to help us verify this post',
   },
   location: {

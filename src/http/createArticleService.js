@@ -28,8 +28,8 @@ export const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append('file', file);
   try {
-    const dataImage = await uploadImageRequest(formData);
-    return { url: dataImage.data.content.content, fileId: dataImage.data._id };
+    const dataImage = await uploadFileRequest(formData);
+    return { url: dataImage.data.url, fileId: dataImage.data._id };
   } catch (e) {
     return e;
   }

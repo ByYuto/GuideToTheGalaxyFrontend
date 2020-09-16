@@ -71,7 +71,7 @@ const MediaToolbar = ({ editor, onInsert, index }) => {
         elmHeight="auto"
         className="modal-articles"
       >
-        <ShareArticle />
+        <ShareArticle contentIndex={index} closeModal={modal.handleClick} />
       </Modal>
     </>
   );

@@ -92,6 +92,15 @@ const setContentFormat = (contents) => {
       });
     }
 
+    if (content.type === 'article') {
+      const articleId = content.content;
+      const articleType = content.type;
+      contentFormated.push({
+        type: articleId,
+        content: articleType,
+      });
+    }
+
     if (content.type === 'paragraph') {
       const paragraphs = content.content;
       paragraphs.forEach((parag) => {
