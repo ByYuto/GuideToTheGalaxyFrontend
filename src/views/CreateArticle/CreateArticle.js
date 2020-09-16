@@ -36,6 +36,7 @@ import Modal from '../../components/UI/modal/Modal';
 import { useModal } from '../../components/UI/modal/useModal';
 import { getContentType, setArticleContent } from './helpers';
 import Notice from '../../components/UI/notice/Notice';
+import KeywordSelector from '../../components/CreateArticle/keywords/KeywordSelector';
 
 const nextDisabledSelector = (state) => {
   const { newArticle, step } = state.newArticle;
@@ -266,13 +267,20 @@ const CreateArticle = () => {
               ) : null}
             </StyledViewContent>
           </ThemeProvider>
+          <StyledViewContent>
+            {step >= 4 ? (
+              <MaxWidthContainer>
+                <KeywordSelector />
+              </MaxWidthContainer>
+            ) : null}
+          </StyledViewContent>
         </StyledView>
         <div style={{ zIndex: 50 }}>
-          <ThemeProvider theme={{ isDark: step <= 2 }}>
+          <ThemeProvider theme={{ isDark: step !== 3 }}>
             <StyledViewContent>
               <div
                 style={{
-                  backgroundColor: !newArticle.validStep1 ? 'rgba(21, 21, 49, 0.7)' : '#1F1F3D',
+                  backgroundColor: !newArticle.validStep1 ? 'rgba(21, 21, 49, 0.7)' : 'transparent',
                 }}
               >
                 <Stepper step={step} />
@@ -284,7 +292,7 @@ const CreateArticle = () => {
             onExitClick={step > 1 && arePersistingContent() ? modal.handleClick : onExitClick}
             nextDisabled={!newArticle.validStep2}
             onNextClick={onNextClick}
-            publish={step > 2 && newArticle.validStep1 && newArticle.validStep2}
+            publish={step > 3 && newArticle.validStep1 && newArticle.validStep2}
             publishDisabled={!newArticle.validStep3}
             onPublish={onPublishArticle}
           />

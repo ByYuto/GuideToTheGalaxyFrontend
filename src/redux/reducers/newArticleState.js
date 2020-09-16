@@ -18,6 +18,7 @@ const initialState = {
     date: new Date(),
     pdf: null,
     contributions: false,
+    keywords: [],
     contents: [
       {
         id: 0,
@@ -64,6 +65,8 @@ const PDF_INSERT = 'PDF_INSERT';
 const ACTIVATE_CONTRIBUTIONS = 'ACTIVATE_CONTRIBUTIONS';
 const ARTICLE_SUCCESS = 'ARTICLE_SUCCESS';
 const INSERT_EMBED_ARTICLE = 'INSERT_EMBED_ARTICLE';
+const INSERT_KEYWORD = 'INSERT_KEYWORD';
+const REMOVE_KEYWORD = 'REMOVE_KEYWORD';
 //Action Creators
 export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });
 export const setNewArticleStep = (step) => ({ type: SET_STEP, payload: { step } });
@@ -142,6 +145,8 @@ export const successSavedArticle = (response) => ({ type: ARTICLE_SUCCESS, paylo
 export const insertPdf = (fileId) => ({ type: PDF_INSERT, payload: fileId });
 export const activateContributions = (value) => ({ type: ACTIVATE_CONTRIBUTIONS, payload: value });
 export const setArticleContent = (articleId) => ({ type: INSERT_EMBED_ARTICLE, payload: articleId });
+export const setKeyword = (value) => ({ type: INSERT_KEYWORD, payload: value });
+export const removeKeyword = (value) => ({ type: REMOVE_KEYWORD, payload: value });
 //Reducer
 export default (state = initialState, { type, payload }) => {
   switch (type) {
@@ -379,6 +384,24 @@ export default (state = initialState, { type, payload }) => {
             payload.content,
             ...state.newArticle.contents.slice(payload.index),
           ],
+        },
+      };
+    case INSERT_KEYWORD: {
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          keywords: [...state.newArticle.keywords, payload.toLowerCase()],
+        },
+      };
+    }
+    case REMOVE_KEYWORD:
+      const keywords = state.newArticle.keywords.filter((k) => k !== payload);
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          keywords: keywords,
         },
       };
     default:

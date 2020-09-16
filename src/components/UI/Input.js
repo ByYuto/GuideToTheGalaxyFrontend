@@ -165,6 +165,7 @@ const Input = ({
   readOnly,
   contained,
   actionButton,
+  avoidSpecialCharacters,
   ...props
 }) => {
   const inputRef = useRef(null);
@@ -193,6 +194,24 @@ const Input = ({
     onBlur && onBlur(e);
   };
 
+  const avoidCharacters = (event) => {
+    const regex = new RegExp('^[a-zA-Z0-9\s\-]+$');
+    //const key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    return regex.test(event.key) || event.code === 'Space';
+  };
+  const handleKeyPress = (e) => {
+    if (avoidSpecialCharacters) {
+      const avoidC = avoidCharacters(e);
+      if (avoidC) {
+        return;
+      } else {
+        e.preventDefault();
+        return;
+      }
+    } else {
+      return;
+    }
+  };
   const onInputChange = (e) => {
     e.preventDefault();
     const value = e.target.value;
@@ -248,6 +267,7 @@ const Input = ({
           disabled={disabled}
           onChange={onInputChange}
           readOnly={readOnly}
+          onKeyPress={handleKeyPress}
         />
         {!disabled && !readOnly ? (
           <ClearButton

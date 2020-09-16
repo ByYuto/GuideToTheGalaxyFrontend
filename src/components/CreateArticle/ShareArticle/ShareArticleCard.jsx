@@ -59,7 +59,13 @@ export default function ShareArticleCard({
         <FlexContainer>
           <div style={{ width: '65%' }}>
             <FlexContainer justify="space-around" inline>
-              {keywords && keywords.length > 0 ? keywords.map((k, index) => <Tag key={index}>{k}</Tag>) : null}
+              {keywords && keywords.length > 0
+                ? keywords.map((k, index) => (
+                    <Tag tagType="primary" sm key={index}>
+                      {k}
+                    </Tag>
+                  ))
+                : null}
             </FlexContainer>
           </div>
           <div style={{ width: '32%' }}>

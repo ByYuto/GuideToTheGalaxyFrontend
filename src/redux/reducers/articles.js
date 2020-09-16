@@ -92,6 +92,7 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         filter: payload,
       };
+
     default:
       return state;
   }

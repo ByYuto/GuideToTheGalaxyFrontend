@@ -27,15 +27,21 @@ export default function ArticleEmbedView({
           </div>
         </FlexContainer>
 
-        <FlexContainer justify="space-between">
-          <FlexContainer className="post-content" column>
-            <div style={{ flexGrow: 1 }}>
+        <FlexContainer justify="space-between" align="stretch">
+          <FlexContainer className="post-content" column breakRow elmWidth="80%">
+            <div style={{ flexGrow: 3 }}>
               <h4>{title}</h4>
+              <p>{textContent}</p>
             </div>
-            <p style={{ flexGrow: 3 }}>{textContent}</p>
             <div style={{ flexGrow: 1 }}>
               <FlexContainer justify="space-around" inline>
-                {keywords && keywords.length > 0 ? keywords.map((k, index) => <Tag key={index}>{k}</Tag>) : null}
+                {keywords && keywords.length > 0
+                  ? keywords.map((k, index) => (
+                      <Tag tagType="primary" sm key={index}>
+                        {k}
+                      </Tag>
+                    ))
+                  : null}
               </FlexContainer>
             </div>
             <div style={{ flexGrow: 1 }}>
@@ -54,13 +60,13 @@ export default function ArticleEmbedView({
               </FlexContainer>
             </div>
           </FlexContainer>
-          <div>
+          <FlexContainer elmWidth="20%" column justify="flex-end">
             {image && image.content?.featured_sm ? (
               <figure>
                 <img src={image.content.featured_m} />
               </figure>
             ) : null}
-            <FlexContainer justify="space-around" align="center" className="reactions-toolbar">
+            <FlexContainer justify="space-evenly" align="center" className="reactions-toolbar" elmWidth="90%">
               <div>
                 <FlexContainer justify="space-around" align="center" inline>
                   <PunchIcon />
@@ -74,7 +80,7 @@ export default function ArticleEmbedView({
                 </FlexContainer>
               </div>
             </FlexContainer>
-          </div>
+          </FlexContainer>
         </FlexContainer>
       </Card>
     </ShareArticleCardView>

@@ -3,6 +3,7 @@ import auth from './authState';
 import counter from './counter';
 import newArticle from './newArticleState';
 import articles from './articles';
+import keywords from './keywords';
 
 export default {
   app,
@@ -10,4 +11,5 @@ export default {
   counter,
   newArticle,
   articles,
+  keywords,
 };
