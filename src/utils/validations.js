@@ -31,7 +31,7 @@ export const validateUrl = (url, requiredEmpty = false) => {
     const isValid = /^[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/.test(
       url
     );
-    return { valid: isValid, errorType: !isValid ? 'Invalid url' : '' };
+    return { valid: isValid, errorType: !isValid ? 'Invalid url (e.g: http(s)://example.com)' : '' };
   } else {
     return { valid: true, errorType: '' };
   }
@@ -42,7 +42,7 @@ export const validateEmbed = (url, requiredEmpty = false) => {
     const isValid = /^http(s)?:\/\/[(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/.test(
       url
     );
-    return { valid: isValid, errorType: !isValid ? 'Invalid url' : '' };
+    return { valid: isValid, errorType: !isValid ? 'Invalid url (e.g: http(s)://example.com)' : '' };
   } else {
     return { valid: true, errorType: '' };
   }

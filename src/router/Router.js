@@ -3,7 +3,8 @@ import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import Home from '../views/Home';
 import CreateArticle from '../views/CreateArticle/CreateArticle';
 import Layout from '../components/Layout/Layout';
-import ComponentsTestPage from '../views/ComponentsTestPage';
+import ArticleDetail from '../views/ArticleDetail/ArticleDetail';
+//import ComponentsTestPage from '../views/ComponentsTestPage';
 
 const Router = () => (
   <BrowserRouter>
@@ -17,9 +18,12 @@ const Router = () => (
         <Route path="/create" exact>
           <CreateArticle />
         </Route>
-        <Route path="/test-components" exact>
-          <ComponentsTestPage />
+        <Route path="/article/:id" exact>
+          <ArticleDetail />
         </Route>
+        {/*<Route path="/test-components" exact>
+          <ComponentsTestPage />
+          </Route>*/}
       </Switch>
     </Layout>
   </BrowserRouter>
