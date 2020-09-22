@@ -2,8 +2,9 @@ import styled from 'styled-components';
 
 export const AutocompleteLayout = styled.div`
   position: relative;
-  margin-left: 2px;
-  margin-right: 2px;
+  width: 100%;
+  margin-left: 1px;
+  margin-right: 1px;
   & .input-autocomplete-container {
     position: relative;
   }
@@ -12,7 +13,7 @@ export const AutocompleteLayout = styled.div`
     font-family: 'Open Sans';
     font-size: 14px;
     line-height: 22px;
-    width: auto;
+    width: 82%;
     padding: 9px 25px 9px 30px;
     background: #151531;
     display: flex;
@@ -34,7 +35,7 @@ export const AutocompleteLayout = styled.div`
     position: absolute;
     position: absolute;
     top: 15%;
-    left: 85%;
+    left: 90%;
     font-size: 19px;
     cursor: pointer;
     opacity: 0.7;
@@ -87,6 +88,7 @@ export const SuggestionLayout = styled.div`
 
 export const PlacesAutocompleteContainerLayout = styled.div`
   position: relative;
+  width: 100%;
   & validation-message {
     position: absolute;
     top: 100%;

@@ -14,7 +14,7 @@ export default function Autocomplete({
   handleKeydown,
   className,
   actionButton,
-  patternAllowed
+  patternAllowed,
 }) {
   const [focused, setFocus] = useState(false);
   const handleFocus = () => {
@@ -42,7 +42,7 @@ export default function Autocomplete({
     }
   };
   return (
-    <AutocompleteLayout className={className} actionButton={!!actionButton}>
+    <AutocompleteLayout className={className} actionButton={!!actionButton} leftIcon={!!icon}>
       <div className="input-autocomplete-container">
         {icon ? icon : null}
         <input

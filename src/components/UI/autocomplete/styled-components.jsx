@@ -13,8 +13,8 @@ export const AutocompleteLayout = styled.div`
     font-family: 'Open Sans';
     font-size: 14px;
     line-height: 22px;
-    width: 100%;
-    padding: 9px 25px 9px 10px;
+    width: ${(props) => (props.leftIcon ? '84.5%' : '100%')};
+    padding: 9px 25px 9px ${(props) => (props.leftIcon ? '30px' : '10px')};
     background: #151531;
     display: flex;
     margin: auto;
@@ -36,7 +36,7 @@ export const AutocompleteLayout = styled.div`
     position: absolute;
     position: absolute;
     top: 15%;
-    left: ${(props) => (props.actionButton ? '90%' : '100%')};
+    left: 90%;
     font-size: 19px;
     cursor: pointer;
     opacity: 0.7;

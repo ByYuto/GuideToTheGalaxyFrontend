@@ -42,6 +42,7 @@ export const customStyle = {
 };
 
 export const HeaderSearchBarLayout = styled.div`
+  width: 75%;
   & .search-autocomplete {
     margin: 0;
     & input {
