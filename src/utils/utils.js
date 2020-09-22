@@ -12,3 +12,8 @@ export const suggestionsFilter = (suggestions) => {
 };
 
 export const getPlaceHolderText = (field) => `${field.placeholder}${field.required ? '*' : ''}`;
+
+export const getCatId = (categories, catName) => {
+  const { _id } = categories.filter((cat) => cat.name === catName)[0];
+  return _id;
+};

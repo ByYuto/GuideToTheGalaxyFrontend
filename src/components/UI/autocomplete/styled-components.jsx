@@ -4,6 +4,7 @@ export const AutocompleteLayout = styled.div`
   position: relative;
   margin-left: 2px;
   margin-right: 2px;
+  width: 100%;
   & .input-autocomplete-container {
     position: relative;
   }
@@ -12,13 +13,14 @@ export const AutocompleteLayout = styled.div`
     font-family: 'Open Sans';
     font-size: 14px;
     line-height: 22px;
-    width: auto;
-    padding: 9px 25px 9px 30px;
+    width: 100%;
+    padding: 9px 25px 9px 10px;
     background: #151531;
     display: flex;
     margin: auto;
     border: 1px solid transparent;
     color: #f6f8ff;
+    border-radius: 8px;
     &:focus {
       border: 1px solid transparent;
       color: #f6f8ff;
@@ -34,7 +36,7 @@ export const AutocompleteLayout = styled.div`
     position: absolute;
     position: absolute;
     top: 15%;
-    left: 85%;
+    left: ${(props) => (props.actionButton ? '90%' : '100%')};
     font-size: 19px;
     cursor: pointer;
     opacity: 0.7;
@@ -64,6 +66,12 @@ export const AutocompleteLayout = styled.div`
     position: absolute;
     z-index: 99;
     width: 100%;
+  }
+
+  & .action-button {
+    position: absolute;
+    top: 20%;
+    left: 100%;
   }
 `;
 

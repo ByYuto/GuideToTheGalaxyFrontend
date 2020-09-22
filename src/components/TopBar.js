@@ -131,6 +131,8 @@ const StyledTopBar = styled.div`
   align-items: center;
   flex-direction: row;
   padding: 0 24px 0 24px;
+  box-shadow: 20px 0 #151531;
+  border-bottom: solid 1px #151531;
 
   .left {
     display: flex;

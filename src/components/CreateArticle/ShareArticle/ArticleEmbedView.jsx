@@ -4,7 +4,6 @@ import FlexContainer from '../../UI/FlexContainer';
 import Card from '../../UI/Card';
 import Tag from '../../UI/Tag';
 import { ShareArticleCardView } from './styled-components';
-import { useDispatch } from 'react-redux';
 import AvatarPlaceholder from '../../../assets/images/avatar-placeholder.png';
 
 export default function ArticleEmbedView({
