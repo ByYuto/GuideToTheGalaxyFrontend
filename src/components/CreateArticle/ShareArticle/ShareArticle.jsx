@@ -5,7 +5,7 @@ import FlexContainer from '../../UI/FlexContainer';
 import ShareArticleCard from './ShareArticleCard';
 //import { getArticles, getEmbedArticle, getEmbedArticles } from '../../../redux/reducers/articles';
 import { useSelector, useDispatch } from 'react-redux';
-import { Loader } from '../../UI/Loader';
+import Loader from '../../UI/Loader';
 import { getEmbedArticles } from '../../../redux/reducers/articles';
 export default function ShareArticle({ contentIndex, closeModal }) {
   const { embedArticles, loading, error, errorMessage } = useSelector((store) => store.articles);
@@ -16,7 +16,7 @@ export default function ShareArticle({ contentIndex, closeModal }) {
     }
   }, []);
   return (
-    <ShareArticleLayout loading={loading}>
+    <ShareArticleLayout loading={loading ? 'true' : null}>
       <SearchBar />
       <FlexContainer className="articles-container">
         {!loading ? (
@@ -28,10 +28,7 @@ export default function ShareArticle({ contentIndex, closeModal }) {
             <div>No data to display...</div>
           )
         ) : (
-          <Loader color="#6670F0">
-            <div></div>
-            <div></div>
-          </Loader>
+          <Loader color="#6670F0" />
         )}
       </FlexContainer>
     </ShareArticleLayout>

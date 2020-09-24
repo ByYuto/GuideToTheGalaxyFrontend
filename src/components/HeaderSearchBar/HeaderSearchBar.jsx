@@ -26,7 +26,7 @@ export default function HeaderSearchBar() {
   return (
     <ThemeProvider theme={{ isDark: true }}>
       <HeaderSearchBarLayout>
-        <FlexContainer justify="center" elmWidth="100%">
+        <FlexContainer className="search-inputs-container" justify="center" elmWidth="100%" smCol>
           <Autocomplete
             value={searchValue}
             onChange={handleSearchChange}

@@ -9,7 +9,6 @@ const initialState = {
 };
 
 const INSERT_INPUT_VALUE = 'INSERT_INPUT_VALUE';
-//const GET_SUGGESTED_KEYWORDS = 'GET_SUGGESTED_KEYWORDS';
 const SET_SUGGESTED_KEYWORDS = 'SET_SUGGESTED_KEYWORDS';
 const SET_RECOMMENDED = 'SET_RECOMMENDED';
 
@@ -20,7 +19,7 @@ export const getKeywordsSuggestions = (value) => async (dispatch) => {
     const response = await findKeywords(value);
     dispatch(setKeywordsSuggestions(response.data));
   } catch (e) {
-    console.log(e.response.data.error || e.response.errorMessage);
+    console.log(e.response?.data?.error || e.response?.errorMessage || 'Unexpected error');
   }
 };
 

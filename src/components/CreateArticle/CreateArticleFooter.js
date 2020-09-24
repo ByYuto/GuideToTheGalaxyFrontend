@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Button from '../UI/Button';
 import { useSelector } from 'react-redux';
-import { Loader } from '../UI/Loader';
+import Loader from '../UI/Loader';
 
 const StyledFooter = styled.div`
   display: flex;
@@ -50,10 +50,7 @@ const CreateArticleFooter = ({
           )}
         </>
       ) : (
-        <Loader>
-          <div></div>
-          <div></div>
-        </Loader>
+        <Loader />
       )}
     </StyledFooter>
   );

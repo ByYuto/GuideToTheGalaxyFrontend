@@ -3,8 +3,8 @@ import styled from 'styled-components';
 export const AutocompleteLayout = styled.div`
   position: relative;
   width: 100%;
-  margin-left: 1px;
-  margin-right: 1px;
+  margin-left: 0px;
+  margin-right: 0px;
   & .input-autocomplete-container {
     position: relative;
   }
@@ -13,7 +13,7 @@ export const AutocompleteLayout = styled.div`
     font-family: 'Open Sans';
     font-size: 14px;
     line-height: 22px;
-    width: 82%;
+    width: 82.5%;
     padding: 9px 25px 9px 30px;
     background: #151531;
     display: flex;

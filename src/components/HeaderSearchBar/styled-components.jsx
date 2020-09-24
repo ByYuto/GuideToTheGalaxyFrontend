@@ -80,4 +80,11 @@ export const HeaderSearchBarLayout = styled.div`
   & .category__control--is-focused .category__dropdown-indicator svg path {
     fill: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
   }
+
+  & .search-inputs-container {
+    @media (max-width: 600px) {
+      background-color: #151531;
+      padding: 10px;
+    }
+  }
 `;

@@ -183,7 +183,7 @@ const CreateArticle = () => {
           text="Your article has been Published"
           callBack={() => {
             dispatch(clearArticleData());
-            history.push('/');
+            history.push(`/article/${success}`);
             dispatch(successSavedArticle(false));
           }}
         />

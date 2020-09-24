@@ -96,8 +96,8 @@ const setContentFormat = (contents) => {
       const articleId = content.content;
       const articleType = content.type;
       contentFormated.push({
-        type: articleId,
-        content: articleType,
+        type: articleType,
+        content: articleId,
       });
     }
 

@@ -26,7 +26,7 @@ const Tag = styled.span`
       font-weight: normal;
       font-size: 14px;
       line-height: 22px;
-      display: flex;
+      display: inline-block;
       align-items: center;
       text-align: center;
       margin: 10px;
@@ -36,7 +36,7 @@ const Tag = styled.span`
     props.tagType === 'primary' &&
     css`
       background-color: #f6f8ff;
-      color: #6670f0;
+      color: #6670f0 !important;
     `}
 
   ${(props) =>

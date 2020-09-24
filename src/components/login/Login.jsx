@@ -12,7 +12,7 @@ import { BsLock } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { isRequired, validate, validateEmail } from '../../utils/validations';
 import { loginAction } from '../../redux/actions/authActions';
-import { Loader } from '../UI/Loader';
+import Loader from '../UI/Loader';
 
 export default function Login({ handleCancel }) {
   const [form, setFormState] = useState({ valid: false, loading: false, error: false, errorType: '', submit: false });
@@ -103,10 +103,7 @@ export default function Login({ handleCancel }) {
               </FlexContainer>
             ) : (
               <FlexContainer justify="center" align="center">
-                <Loader>
-                  <div></div>
-                  <div></div>
-                </Loader>
+                <Loader />
               </FlexContainer>
             )}
             {error && <div className="error-message">{errorMessage}</div>}

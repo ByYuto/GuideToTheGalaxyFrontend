@@ -17,3 +17,24 @@ export const getCatId = (categories, catName) => {
   const { _id } = categories.filter((cat) => cat.name === catName)[0];
   return _id;
 };
+
+export const getDateFormatted = (rawDate) => {
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const date = new Date(rawDate);
+  const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+  const dateFormatted = months[date.getMonth()] + ' ' + day + ', ' + date.getFullYear();
+  return dateFormatted;
+};

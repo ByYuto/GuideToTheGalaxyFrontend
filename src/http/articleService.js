@@ -15,6 +15,9 @@ export const getEmbedArticlesService = async (filter) => {
 };
 
 export const getEmbedArticleService = async (id) => {
-  const token = await localStorage.getItem('_token');
-  return axios.get(GET_EMBED_ARTICLES + `/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+  return axios.get(`${GET_EMBED_ARTICLES}/${id}`);
+};
+
+export const getArticleByIdService = async (id) => {
+  return axios.get(`${GET_ARTICLES}/${id}`);
 };
