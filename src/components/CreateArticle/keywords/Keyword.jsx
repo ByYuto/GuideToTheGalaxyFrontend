@@ -5,10 +5,10 @@ import Tag from '../../UI/Tag';
 import { removeKeyword } from '../../../redux/reducers/newArticleState';
 import { useDispatch } from 'react-redux';
 
-export default function Keyword({ name, tagType, readonlyTag }) {
+export default function Keyword({ name, tagType, readonlyTag, handleClick, cursorPointer }) {
   const dispatch = useDispatch();
   return (
-    <KeywordLayout readonlyTag={readonlyTag}>
+    <KeywordLayout readonlyTag={readonlyTag} onClick={handleClick} cursorPointer={cursorPointer}>
       <Tag tagType={tagType} md>
         {name}
         {!readonlyTag && <IoIosClose className="closable" size={24} onClick={() => dispatch(removeKeyword(name))} />}

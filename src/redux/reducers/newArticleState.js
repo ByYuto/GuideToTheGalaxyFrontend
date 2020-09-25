@@ -39,7 +39,7 @@ const initialState = {
   error: false,
   errorMessage: '',
   loading: false,
-  success: false,
+  success: null,
 };
 
 //Action Types
@@ -135,7 +135,7 @@ export const saveArticle = (article) => async (dispatch) => {
   const response = await createArticle(article);
   if (response.status === 200) {
     dispatch(loadingArticle(false));
-    dispatch(successSavedArticle(true));
+    dispatch(successSavedArticle(response.data._id));
   } else {
     dispatch(loadingArticle(false));
     dispatch(errorArticle({ error: true, message: response.message }));

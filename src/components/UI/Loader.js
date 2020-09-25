@@ -1,6 +1,7 @@
+import React from 'react';
 import styled from 'styled-components';
 
-export const Loader = styled.div`
+const LoaderLayout = styled.div`
   display: inline-block;
   position: relative;
   width: 80px;
@@ -32,3 +33,11 @@ export const Loader = styled.div`
     }
   }
 `;
+
+const Loader = ({ color }) => (
+  <LoaderLayout color={color}>
+    <div></div>
+    <div></div>
+  </LoaderLayout>
+);
+export default Loader;

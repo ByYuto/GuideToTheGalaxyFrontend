@@ -32,6 +32,7 @@ export const KeywordSelectorLayout = styled.div`
 
 export const KeywordLayout = styled.div`
   display: flex;
+  ${(props) => (props.cursorPointer ? 'cursor: pointer;' : '')}
   ${(props) =>
     !props.readonlyTag &&
     css`

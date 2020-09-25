@@ -4,6 +4,8 @@ import counter from './counter';
 import newArticle from './newArticleState';
 import articles from './articles';
 import keywords from './keywords';
+import topbarSearch from './topbarSearch';
+import articleDetail from './articleDetail';
 
 export default {
   app,
@@ -12,4 +14,6 @@ export default {
   newArticle,
   articles,
   keywords,
+  topbarSearch,
+  articleDetail,
 };

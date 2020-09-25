@@ -13,11 +13,14 @@ import { useModal } from './UI/modal/useModal';
 import Login from './login/Login';
 import WithAuth from './login/withAuth';
 import { ThemeProvider } from 'styled-components';
+import HeaderSearchBar from './HeaderSearchBar/HeaderSearchBar';
 
 const Separator = styled.div`
   display: block;
   border-left: 1px solid ${(props) => props.theme.baseColors.darker};
   height: 56px;
+  margin-left: 16px;
+  margin-right: 16px;
 `;
 
 const AddContentButton = styled(Button)`
@@ -30,6 +33,22 @@ const MenuButton = styled(Button)`
 
 const NotificationsButton = styled(Button)`
   font-size: 30px;
+`;
+
+const LoginButton = styled.button`
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  color: #6670f0;
+  background: none;
+  outline: 0;
+  border: none;
+  cursor: pointer;
 `;
 
 const TopBar = () => {
@@ -48,19 +67,38 @@ const TopBar = () => {
           <img src={logo} className="logo" alt="logo" />
           <img src={dontPanic} alt="dont panic" />
         </Link>
-        <Button primary onClick={onTestComponentsClick}>
-          Test Components
-        </Button>
       </div>
-      <div className="middle"></div>
+      <div className="middle">
+        <HeaderSearchBar />
+      </div>
       <div className="right">
         <WithAuth
-          component={null}
+          component={
+            <>
+              <AddContentButton secondary circle onClick={onAddContentClick} icon>
+                <GoPlus />
+              </AddContentButton>
+            </>
+          }
           componentReplacement={
             <>
-              <Button primary onClick={modal.handleClick}>
-                Log in
-              </Button>{' '}
+              <AddContentButton secondary circle onClick={modal.handleClick} icon>
+                <GoPlus />
+              </AddContentButton>
+            </>
+          }
+        />
+        <Separator />
+
+        <WithAuth
+          component={
+            <NotificationsButton transparent secondary icon>
+              <AiOutlineBell />
+            </NotificationsButton>
+          }
+          componentReplacement={
+            <>
+              <LoginButton onClick={modal.handleClick}>Log in</LoginButton>
               <ThemeProvider theme={{ isDark: true }}>
                 <Modal
                   title="Sign in"
@@ -76,41 +114,6 @@ const TopBar = () => {
             </>
           }
         />
-        <Button primary>PRIMARY</Button>
-        <Button primary rounded>
-          PRIMARY ROUNDED
-        </Button>
-        <Button secondary>SECONDARY</Button>
-        <Button secondary rounded>
-          SECONDARY ROUNDED
-        </Button>
-        <Button circle>X</Button>
-        <WithAuth
-          component={
-            <>
-              <Button secondary onClick={onAddContentClick} circle icon>
-                <GoPlus />
-              </Button>
-              <AddContentButton secondary circle onClick={onAddContentClick} icon>
-                <GoPlus />
-              </AddContentButton>
-            </>
-          }
-          componentReplacement={
-            <>
-              <Button secondary onClick={modal.handleClick} circle icon>
-                <GoPlus />
-              </Button>
-              <AddContentButton secondary circle onClick={modal.handleClick} icon>
-                <GoPlus />
-              </AddContentButton>
-            </>
-          }
-        />
-        <Separator />
-        <NotificationsButton transparent secondary icon>
-          <AiOutlineBell />
-        </NotificationsButton>
         <MenuButton transparent secondary icon>
           <MdMenu />
         </MenuButton>
@@ -128,6 +131,8 @@ const StyledTopBar = styled.div`
   align-items: center;
   flex-direction: row;
   padding: 0 24px 0 24px;
+  box-shadow: 20px 0 #151531;
+  border-bottom: solid 1px #151531;
 
   .left {
     display: flex;
@@ -145,8 +150,9 @@ const StyledTopBar = styled.div`
   }
   .middle {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     flex-grow: 1;
+    justify-content: center;
   }
   .right {
     display: flex;
