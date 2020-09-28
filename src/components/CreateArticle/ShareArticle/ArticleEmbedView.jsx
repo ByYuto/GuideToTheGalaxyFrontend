@@ -5,6 +5,7 @@ import Card from '../../UI/Card';
 import Tag from '../../UI/Tag';
 import { ShareArticleCardView } from './styled-components';
 import AvatarPlaceholder from '../../../assets/images/avatar-placeholder.png';
+import ToolbarReactions from '../../UI/reaction-toolbar/ToolbarReactions';
 
 export default function ArticleEmbedView({
   _id,
@@ -66,18 +67,7 @@ export default function ArticleEmbedView({
               </figure>
             ) : null}
             <FlexContainer justify="space-evenly" align="center" className="reactions-toolbar" elmWidth="90%">
-              <div>
-                <FlexContainer justify="space-around" align="center" inline>
-                  <PunchIcon />
-                  <span>0</span>
-                </FlexContainer>
-              </div>
-              <div>
-                <FlexContainer justify="space-around" align="center" inline>
-                  <CommentsIcon />
-                  <span>0</span>
-                </FlexContainer>
-              </div>
+              <ToolbarReactions articleId={_id} />
             </FlexContainer>
           </FlexContainer>
         </FlexContainer>
