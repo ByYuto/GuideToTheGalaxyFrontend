@@ -19,7 +19,7 @@ export default function ArticleEmbedView({
 }) {
   //const dispatch = useDispatch();
   return (
-    <ShareArticleCardView>
+    <ShareArticleCardView to={`/article/${_id}`}>
       <Card fullWidth>
         <FlexContainer justify="space-between" align="center">
           <div className="breadcrumb">
@@ -28,7 +28,7 @@ export default function ArticleEmbedView({
         </FlexContainer>
 
         <FlexContainer justify="space-between" align="stretch">
-          <FlexContainer className="post-content" column breakRow elmWidth="80%">
+          <FlexContainer className="post-content" column breakRow="wrap" elmWidth="80%">
             <div style={{ flexGrow: 3 }}>
               <h4>{title}</h4>
               <p>{textContent}</p>

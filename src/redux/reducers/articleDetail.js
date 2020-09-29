@@ -1,5 +1,5 @@
 import { getArticleByIdService } from '../../http/articleService';
-import { setLikeService, unsetLikeService } from '../../http/likeService';
+import { setAuthorization } from './authState';
 
 const initialState = {
   article: null,
@@ -21,6 +21,9 @@ export const getArticleDetail = (id) => async (dispatch) => {
     dispatch(setArticle(response.data));
   } catch (e) {
     dispatch(setLoading(false));
+    if (e.response.status === 401) {
+      dispatch(setAuthorization(false));
+    }
     dispatch(
       setError({
         error: true,

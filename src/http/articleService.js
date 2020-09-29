@@ -5,7 +5,11 @@ const GET_EMBED_ARTICLES = GET_ARTICLES + '/embeddables';
 
 export const getArticleService = async () => {
   const token = await localStorage.getItem('_token');
-  return axios.get(GET_ARTICLES, { headers: { Authorization: `Bearer ${token}` } });
+  if (token !== null) {
+    return axios.get(GET_ARTICLES, { headers: { Authorization: `Bearer ${token}` } });
+  } else {
+    return axios.get(GET_ARTICLES);
+  }
 };
 
 export const getEmbedArticlesService = async (filter) => {

@@ -11,12 +11,13 @@ import {
 import FlexContainer from '../FlexContainer';
 import { ReactionLayout } from './styled-components';
 import { setLikeService, unsetLikeService } from '../../../http/likeService';
-import { set } from 'lodash';
 
 export default function ToolbarReactions({ articleId, postDetail }) {
   const [reactions, setReactions] = useState({ like: false, numLikes: 0 });
   useEffect(() => {}, [reactions.like]);
-  const setLike = async () => {
+  const setLike = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     try {
       const response = await setLikeService(articleId);
       setReactions({ ...reactions, like: true, numLikes: response.data.likes });
@@ -25,7 +26,9 @@ export default function ToolbarReactions({ articleId, postDetail }) {
     }
   };
 
-  const unsetLike = async () => {
+  const unsetLike = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
     try {
       const response = await unsetLikeService(articleId);
       setReactions({ ...reactions, like: false, numLikes: response.data.likes });
@@ -34,8 +37,8 @@ export default function ToolbarReactions({ articleId, postDetail }) {
     }
   };
   return (
-    <ReactionLayout postDetail={postDetail}>
-      <FlexContainer justify="space-evenly" align="center" className="reactions-toolbar" elmWidth="100%">
+    <ReactionLayout postDetail={postDetail ? 1 : 0}>
+      <FlexContainer justify="flex-end" align="center" className="reactions-toolbar" elmWidth="100%">
         <FlexContainer elmWidth="100%">
           <FlexContainer align="center" elmWidth="100%">
             {reactions.like ? <PunchIconFilled onClick={unsetLike} /> : <PunchIcon onClick={setLike} />}
@@ -51,13 +54,13 @@ export default function ToolbarReactions({ articleId, postDetail }) {
         {postDetail && (
           <>
             <FlexContainer elmWidth="100%">
-              <FlexContainer align="center" elmWidth="100%">
+              <FlexContainer className="share-btn" align="center" elmWidth="100%">
                 <ShareIcon />
                 <span>SHARE</span>
               </FlexContainer>
             </FlexContainer>
             <FlexContainer elmWidth="100%">
-              <FlexContainer align="center" elmWidth="100%">
+              <FlexContainer className="report-btn" align="center" elmWidth="100%">
                 <FlagIcon />
                 <span>REPORT</span>
               </FlexContainer>

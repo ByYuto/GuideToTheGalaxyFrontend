@@ -1,4 +1,5 @@
 import { getArticleService, getEmbedArticlesService, getEmbedArticleService } from '../../http/articleService';
+import { setAuthorization } from './authState';
 const initialState = {
   articles: [],
   embedArticles: [],
@@ -24,6 +25,9 @@ export const getArticles = () => async (dispatch) => {
     dispatch(loadingArticles(false));
     dispatch(setArticles(response.data));
   } catch (e) {
+    if (e.response.status === 401) {
+      dispatch(setAuthorization(false));
+    }
     dispatch(loadingArticles(false));
     dispatch({ error: true, errorMessage: e.response.data?.error || e.response.statusText });
   }
@@ -36,6 +40,9 @@ export const getEmbedArticles = (value) => async (dispatch) => {
     dispatch(loadingArticles(false));
     dispatch(setFilteredArticles(response.data));
   } catch (e) {
+    if (e.response.status === 401) {
+      dispatch(setAuthorization(false));
+    }
     dispatch(loadingArticles(false));
     dispatch(setErrorArticles({ error: true, errorMessage: e.response.data?.error || e.response.statusText }));
   }
@@ -48,6 +55,9 @@ export const getEmbedArticle = (id) => async (dispatch) => {
     dispatch(loadingArticles(false));
     dispatch(setFilteredArticles(response.data));
   } catch (e) {
+    if (e.response.status === 401) {
+      dispatch(setAuthorization(false));
+    }
     dispatch(loadingArticles(false));
     dispatch(setErrorArticles({ error: true, errorMessage: e.response.data?.error || e.response.statusText }));
   }

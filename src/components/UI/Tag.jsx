@@ -16,6 +16,7 @@ const Tag = styled.span`
       line-height: 14px;
       display: inline-flex;
       padding: 6px;
+      margin-left: 5px;
     `}
   ${(props) =>
     props.md &&

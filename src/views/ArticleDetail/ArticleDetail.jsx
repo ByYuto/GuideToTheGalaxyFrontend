@@ -27,7 +27,7 @@ export default function ArticleDetail() {
       setPreviousId(articleExampleId);
       dispatch(getArticleDetail(articleExampleId));
     }
-  }, []);
+  }, [id]);
   return (
     <ArticleDetailContainer>
       {error && (
@@ -105,7 +105,7 @@ export default function ArticleDetail() {
           </ThemeProvider>
           <ThemeProvider theme={{ isDark: false }}>
             <StyledView>
-              <MaxWidthContainer>
+              <MaxWidthContainer className="content-container">
                 {article?.content && article.content.length > 0 && (
                   <ArticleContentBody articleContent={article.content} />
                 )}

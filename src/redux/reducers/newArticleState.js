@@ -1,5 +1,6 @@
 import uid from 'uid';
 import { uploadImage, createArticle } from '../../http/createArticleService';
+import { setAuthorization } from './authState';
 
 const initialState = {
   step: 1,
@@ -103,6 +104,9 @@ export const addImagesContent = (index, files) => async (dispatch) => {
     );
   } catch (error) {
     // TODO: show error
+    if (error.response.status === 401) {
+      dispatch(setAuthorization(false));
+    }
     console.log(error.message);
   }
 };
@@ -119,6 +123,9 @@ export const addImages = (contentId, files) => async (dispatch) => {
     );
   } catch (error) {
     // TODO: show error
+    if (error.response.status === 401) {
+      dispatch(setAuthorization(false));
+    }
     console.log(error.message);
   }
 };
@@ -137,6 +144,9 @@ export const saveArticle = (article) => async (dispatch) => {
     dispatch(loadingArticle(false));
     dispatch(successSavedArticle(response.data._id));
   } else {
+    if (response.status === 401) {
+      dispatch(setAuthorization(false));
+    }
     dispatch(loadingArticle(false));
     dispatch(errorArticle({ error: true, message: response.message }));
   }

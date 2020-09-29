@@ -1,4 +1,5 @@
 import { findKeywords, getRecommendedKeywordsService } from '../../http/keywordService';
+import { setAuthorization } from './authState';
 
 const initialState = {
   inputValue: '',
@@ -19,6 +20,9 @@ export const getKeywordsSuggestions = (value) => async (dispatch) => {
     const response = await findKeywords(value);
     dispatch(setKeywordsSuggestions(response.data));
   } catch (e) {
+    if (e.response.status === 401) {
+      dispatch(setAuthorization(false));
+    }
     console.log(e.response?.data?.error || e.response?.errorMessage || 'Unexpected error');
   }
 };
@@ -28,6 +32,9 @@ export const getRecommendedKeywords = (cat, cont) => async (dispatch) => {
     const response = await getRecommendedKeywordsService(cat, cont);
     dispatch(setKeywordsRecommended(response.data));
   } catch (e) {
+    if (e.response.status === 401) {
+      dispatch(setAuthorization(false));
+    }
     console.log(e.response?.data?.error || e);
   }
 };
