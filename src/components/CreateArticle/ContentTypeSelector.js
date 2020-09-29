@@ -143,6 +143,7 @@ const CustomContentType = ({
       //const value = (e.target.textContent || e.target.innerText).toUpperCase() || null;
       //onChange && onChange(value);
       //onBlur && onBlur(value);
+      e.preventDefault();
       setCurrentKey(e.keyCode);
     } else if (e.keyCode === 27) {
       onChange && onChange(null);

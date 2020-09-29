@@ -40,6 +40,9 @@ export const ShareArticleCardLayout = styled.div`
   & .article-card {
     height: 198px;
     overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
   }
   & h4 {
     margin: 0;

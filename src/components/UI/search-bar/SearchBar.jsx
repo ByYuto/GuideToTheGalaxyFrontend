@@ -17,6 +17,7 @@ export default function SearchBar() {
   useEffect(() => {
     if (filter.length > 2) {
       //setTimeout(() => dispatch(getEmbedArticles(filter)), 500);
+      dispatch(getEmbedArticles(filter));
     }
   }, [filter]);
   return (
@@ -34,7 +35,6 @@ export default function SearchBar() {
         readOnly={false}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        autoCompleteOptions={['option 1', 'option 2']}
         onKeyDown={(e) => {
           if (e.keyCode === 13) {
             dispatch(getEmbedArticles(filter));

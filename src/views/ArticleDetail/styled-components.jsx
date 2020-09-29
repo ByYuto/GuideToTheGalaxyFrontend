@@ -199,6 +199,10 @@ export const ArticleDetailContainer = styled.div`
       margin-top: 30px;
       margin-bottom: 30px;
     }
+
+    > p:first-child {
+      margin-top: 50px;
+    }
   }
 `;
 
