@@ -27,7 +27,7 @@ export default function ShareArticleCard({
   };
   return (
     <ShareArticleCardLayout existImage={!!image}>
-      <Card>
+      <Card className="article-card">
         <FlexContainer justify="space-between" align="center">
           <div className="breadcrumb">
             {categoryId} <Ellipse /> {contentTypeId} <Ellipse /> {location ? location : 'Worldwide'}
@@ -56,7 +56,7 @@ export default function ShareArticleCard({
             </figure>
           ) : null}
         </FlexContainer>
-        <FlexContainer>
+        <FlexContainer align="center">
           <div style={{ width: '65%' }}>
             <FlexContainer className="keywords-container" justify="flex-start" inline>
               {keywords && keywords.length > 0

@@ -68,7 +68,11 @@ const getContentType = (categories, categoryId, contentTypeId) => {
   ) {
     const category = categories.find((category) => category.name === categoryId);
     const subCategory = category.contentTypes.find((contentType) => contentType.name === contentTypeId);
-    return subCategory;
+    if (subCategory) {
+      return subCategory;
+    } else {
+      return generalTemplate;
+    }
   } else {
     return generalTemplate;
   }
