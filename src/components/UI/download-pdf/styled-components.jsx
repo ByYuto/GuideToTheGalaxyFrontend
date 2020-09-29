@@ -21,11 +21,11 @@ export const PDFUploaderLayout = styled.div`
     overflow: hidden;
     width: 158px;
   }
-  & .delete-pdf {
+  & a {
     border: none;
     padding: 0;
     margin-top: 10px;
-    color: #6670f0 !important;
+    color: #6670f0;
     font-family: Lato;
     font-style: normal;
     font-weight: normal;

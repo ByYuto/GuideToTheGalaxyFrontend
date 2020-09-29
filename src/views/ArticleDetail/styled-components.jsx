@@ -8,7 +8,7 @@ const View = styled.div`
 `;
 
 export const MaxWidthContainer = styled.div`
-  max-width: 1016px;
+  max-width: 900px;
   width: 100%;
   margin: auto;
   background-color: ${(props) => (props.theme.isDark ? props.theme.baseColors.dark : props.theme.baseColors.white)};
@@ -36,6 +36,7 @@ export const StyledView = styled(View)`
 `;
 
 export const ArticleDetailContainer = styled.div`
+  margin-bottom: 60px;
   & .discontinued-date-label {
     font-family: Lato;
     font-style: normal;
@@ -110,8 +111,12 @@ export const ArticleDetailContainer = styled.div`
     margin-top: 0;
   }
 
-  & span {
+  & .edit-lock {
     color: #bdbfdf;
+  }
+
+  & .delete-pdf {
+    color: #6670f0;
   }
 
   & .head-article-content-icon path,
@@ -184,6 +189,15 @@ export const ArticleDetailContainer = styled.div`
     & img {
       width: 32px;
       height: auto;
+    }
+  }
+
+  & .content-container {
+    > p,
+    > div,
+    iframe {
+      margin-top: 30px;
+      margin-bottom: 30px;
     }
   }
 `;

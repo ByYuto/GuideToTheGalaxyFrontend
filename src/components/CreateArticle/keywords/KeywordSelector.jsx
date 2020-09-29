@@ -26,7 +26,7 @@ export default function KeywordSelector() {
         <div>
           <SearchKeywords />
         </div>
-        <FlexContainer breakRow>
+        <FlexContainer breakRow="wrap">
           {keywords && keywords.length > 0 ? (
             keywords.map((k, index) => <Keyword key={index} name={k} tagType="primary" />)
           ) : (
@@ -36,7 +36,7 @@ export default function KeywordSelector() {
       </FlexContainer>
       <FlexContainer column elmWidth={'50%'} align="stretch" className="recommend-keyword-container">
         <h5>RECOMMENDED</h5>
-        <FlexContainer breakRow>
+        <FlexContainer breakRow="wrap">
           {recommendedKeywords && recommendedKeywords.length > 0 ? (
             recommendedKeywords.map((k, index) => (
               <Keyword

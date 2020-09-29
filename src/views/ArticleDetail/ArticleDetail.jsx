@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { StyledView, MaxWidthContainer, ArticleDetailContainer } from './styled-components';
 import FlexContainer from '../../components/UI/FlexContainer';
@@ -18,14 +18,16 @@ import Button from '../../components/UI/Button';
 
 export default function ArticleDetail() {
   const { id } = useParams();
+  const [previousId, setPreviousId] = useState(null);
   const articleExampleId = id;
   const dispatch = useDispatch();
   const { article, error, errorMessage, loading } = useSelector((store) => store.articleDetail);
   useEffect(() => {
-    if (!article) {
+    if (!article || previousId !== articleExampleId) {
+      setPreviousId(articleExampleId);
       dispatch(getArticleDetail(articleExampleId));
     }
-  }, []);
+  }, [id]);
   return (
     <ArticleDetailContainer>
       {error && (
@@ -96,14 +98,14 @@ export default function ArticleDetail() {
                   </div>
                 </FlexContainer>
                 <FlexContainer align="center">
-                  <ToolbarReactions />
+                  <ToolbarReactions articleId={article?._id} />
                 </FlexContainer>
               </MaxWidthContainer>
             </StyledView>
           </ThemeProvider>
           <ThemeProvider theme={{ isDark: false }}>
             <StyledView>
-              <MaxWidthContainer>
+              <MaxWidthContainer className="content-container">
                 {article?.content && article.content.length > 0 && (
                   <ArticleContentBody articleContent={article.content} />
                 )}
@@ -170,7 +172,7 @@ export default function ArticleDetail() {
                   )}
 
                   <FlexContainer align="center" elmWidth="30%" justify="flex-end">
-                    <ToolbarReactions postDetail />
+                    <ToolbarReactions postDetail articleId={article?._id} />
                   </FlexContainer>
                 </FlexContainer>
               </MaxWidthContainer>

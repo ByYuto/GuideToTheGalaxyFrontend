@@ -13,7 +13,7 @@ export const AutocompleteLayout = styled.div`
     font-family: 'Open Sans';
     font-size: 14px;
     line-height: 22px;
-    width: 82.5%;
+    width: 82.7%;
     padding: 9px 25px 9px 30px;
     background: #151531;
     display: flex;

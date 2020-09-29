@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const ShareArticleLayout = styled.div`
   padding: 16px;
@@ -34,6 +35,12 @@ export const ShareArticleLayout = styled.div`
 export const ShareArticleCardLayout = styled.div`
   margin-top: 15px;
   margin-left: 10px;
+  height: 198px;
+  overflow: hidden;
+  & .article-card {
+    height: 198px;
+    overflow: hidden;
+  }
   & h4 {
     margin: 0;
     ${(props) => (props.existImage ? 'width: 199px;' : '')}
@@ -52,7 +59,6 @@ export const ShareArticleCardLayout = styled.div`
 
   & p {
     ${(props) => (props.existImage ? 'width: 199px;' : '')}
-    height: 100px;
     overflow: hidden;
     color: #1f1f3d;
     margin-right: 10px;
@@ -101,11 +107,19 @@ export const ShareArticleCardLayout = styled.div`
   & .post-content {
     padding-top: 16px;
   }
+
+  & .keywords-container {
+    width: 100%;
+    overflow: hidden;
+  }
 `;
 
-export const ShareArticleCardView = styled.div`
-  margin-top: 15px;
-  margin-left: 10px;
+export const ShareArticleCardView = styled(Link)`
+  margin-top: 24px;
+  display: block;
+  color: inherit;
+  cursor: pointer;
+  outline: 0;
   & h4 {
     margin: 0;
     padding: 5px;
@@ -125,7 +139,7 @@ export const ShareArticleCardView = styled.div`
     color: #1f1f3d;
     margin-right: 10px;
     margin-top: 0;
-    font-size: 14px;
+    font-size: 15px;
     line-height: 22px;
     min-height: ;
   }

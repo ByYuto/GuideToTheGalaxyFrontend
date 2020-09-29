@@ -58,13 +58,18 @@ export default function ShareArticleCard({
         </FlexContainer>
         <FlexContainer>
           <div style={{ width: '65%' }}>
-            <FlexContainer justify="space-around" inline>
+            <FlexContainer className="keywords-container" justify="flex-start" inline>
               {keywords && keywords.length > 0
-                ? keywords.map((k, index) => (
-                    <Tag tagType="primary" sm key={index}>
-                      {k}
-                    </Tag>
-                  ))
+                ? keywords.map((k, index) => {
+                    if (index > 2) {
+                      return null;
+                    }
+                    return (
+                      <Tag tagType="primary" sm key={index}>
+                        {k}
+                      </Tag>
+                    );
+                  })
                 : null}
             </FlexContainer>
           </div>

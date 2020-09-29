@@ -5,6 +5,7 @@ import Card from '../../UI/Card';
 import Tag from '../../UI/Tag';
 import { ShareArticleCardView } from './styled-components';
 import AvatarPlaceholder from '../../../assets/images/avatar-placeholder.png';
+import ToolbarReactions from '../../UI/reaction-toolbar/ToolbarReactions';
 
 export default function ArticleEmbedView({
   _id,
@@ -18,7 +19,7 @@ export default function ArticleEmbedView({
 }) {
   //const dispatch = useDispatch();
   return (
-    <ShareArticleCardView>
+    <ShareArticleCardView to={`/article/${_id}`}>
       <Card fullWidth>
         <FlexContainer justify="space-between" align="center">
           <div className="breadcrumb">
@@ -27,7 +28,7 @@ export default function ArticleEmbedView({
         </FlexContainer>
 
         <FlexContainer justify="space-between" align="stretch">
-          <FlexContainer className="post-content" column breakRow elmWidth="80%">
+          <FlexContainer className="post-content" column breakRow="wrap" elmWidth="80%">
             <div style={{ flexGrow: 3 }}>
               <h4>{title}</h4>
               <p>{textContent}</p>
@@ -66,18 +67,7 @@ export default function ArticleEmbedView({
               </figure>
             ) : null}
             <FlexContainer justify="space-evenly" align="center" className="reactions-toolbar" elmWidth="90%">
-              <div>
-                <FlexContainer justify="space-around" align="center" inline>
-                  <PunchIcon />
-                  <span>0</span>
-                </FlexContainer>
-              </div>
-              <div>
-                <FlexContainer justify="space-around" align="center" inline>
-                  <CommentsIcon />
-                  <span>0</span>
-                </FlexContainer>
-              </div>
+              <ToolbarReactions articleId={_id} />
             </FlexContainer>
           </FlexContainer>
         </FlexContainer>
