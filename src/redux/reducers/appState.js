@@ -29,7 +29,7 @@ export const getArticlesHome = () => async (dispatch) => {
     const response = await getArticleService();
     dispatch(setArticlesHome(response.data));
   } catch (e) {
-    if (e.response.status === 401) {
+    if (e.response?.status === 401) {
       dispatch(setAuthorization(false));
     }
   }

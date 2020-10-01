@@ -4,16 +4,16 @@ import { ThemeProvider } from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { getArticlesHome } from '../../redux/reducers/appState';
 import ArticleEmbedView from '../../components/CreateArticle/ShareArticle/ArticleEmbedView';
-import FlexContainer from '../../components/UI/FlexContainer';
+import { useParams } from 'react-router-dom';
 
-export default function Home() {
+export default function SearchResults() {
   const { articles } = useSelector((store) => store.app);
+  const { searchValue, locationValue, categoryValue, keywordsSelected } = useSelector((store) => store.topbarSearch);
   const dispatch = useDispatch();
+  const {} = useParams();
   useEffect(() => {
-    if (articles.length < 1) {
-      dispatch(getArticlesHome());
-    }
-  }, []);
+    dispatch(getArticlesHome());
+  }, [searchValue, locationValue, categoryValue, keywordsSelected.length]);
   return (
     <ThemeProvider theme={{ isDark: false }}>
       <StyledView>

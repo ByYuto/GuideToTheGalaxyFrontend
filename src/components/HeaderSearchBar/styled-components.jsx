@@ -37,7 +37,12 @@ export const customStyle = {
     color: '#f6f8ff',
     width: '100%',
   }),
-  menu: (provided, state) => ({ ...provided, background: '#151531', color: '#f6f8ff' }),
+  menu: (provided, state) => ({
+    background: '#151531',
+    color: '#f6f8ff',
+    zIndex: 99,
+    position: 'absolute',
+  }),
   menuList: (provided, state) => ({ ...provided, color: '#BDBFDF', fontSize: '14px', background: state.isHover }),
 };
 
@@ -45,9 +50,32 @@ export const HeaderSearchBarLayout = styled.div`
   width: 915px;
   position: relative;
   left: 2%;
+
   @media (min-width: 1700px) {
     left: 1.5%;
   }
+  & .action-button {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #6670f0;
+    border: none;
+    outline: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    left: 90%;
+    cursor: pointer;
+    & svg path {
+      fill: white;
+    }
+  }
+
+  & .clear-element {
+    left: ${(props) => (props.actionButton ? '82%' : '90%')};
+  }
+
   & .search-autocomplete {
     margin: 0;
     & input {

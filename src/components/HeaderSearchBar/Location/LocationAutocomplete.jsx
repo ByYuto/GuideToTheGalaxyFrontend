@@ -8,7 +8,7 @@ import { BlueLocationIcon } from '../../../assets/icons/svg-icons';
 import { useDispatch } from 'react-redux';
 
 export default function LocationAutocomplete(props) {
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(props.value);
   const [placeId, setPlaceId] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const dispatch = useDispatch();
@@ -29,6 +29,7 @@ export default function LocationAutocomplete(props) {
 
   const handleChangeValidations = async (address, placeId) => {
     setAddress(address);
+    props.setPlaceId(placeId, address);
   };
   return (
     <PlacesAutocompleteContainerLayout>
