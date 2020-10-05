@@ -12,29 +12,38 @@ const Router = () => {
   const { authorization } = useSelector((store) => store.auth);
   return (
     <BrowserRouter>
-      <Layout>
-        {/* A <Switch> looks through its children <Route>s and
+      {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/" exact>
+      <Switch>
+        <Route path="/" exact>
+          <Layout home="home">
             <Home />
+          </Layout>
+        </Route>
+        <Route path="/search" exact>
+          <Layout home="search">
+            <Home />
+          </Layout>
+        </Route>
+        {authorization && (
+          <Route path="/create" exact>
+            <CreateArticle />
           </Route>
-          {authorization && (
-            <Route path="/create" exact>
-              <CreateArticle />
-            </Route>
-          )}
-          <Route path="/article/:id" exact>
+        )}
+        <Route path="/article/:id" exact>
+          <Layout>
             <ArticleDetail />
-          </Route>
-          {/*<Route path="/test-components" exact>
+          </Layout>
+        </Route>
+        {/*<Route path="/test-components" exact>
           <ComponentsTestPage />
           </Route>*/}
-          <Route path="**">
+        <Route path="**">
+          <Layout>
             <NotFound />
-          </Route>
-        </Switch>
-      </Layout>
+          </Layout>
+        </Route>
+      </Switch>
     </BrowserRouter>
   );
 };

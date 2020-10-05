@@ -262,7 +262,6 @@ const CreateArticle = () => {
                 <ArticleContent
                   article={newArticle}
                   onChangeArticle={onChangeArticle}
-                  //onKeyDown={(a, b) => console.log('PASO POR AQUI', a, b)}
                 />
               ) : null}
             </StyledViewContent>

@@ -10,7 +10,7 @@ import {
   onChangeArticleContent,
   changeFocusEditor,
 } from '../../../redux/reducers/newArticleState';
-import { insertUrl, withLinks, isLinkActive } from './link/linkHelpers';
+import { insertUrl, withLinks } from './link/linkHelpers';
 
 export default function ContentEditor({ id, editorValue, focused, index }) {
   const editor = useMemo(() => withLinks(withReact(createEditor())), []);
@@ -21,6 +21,7 @@ export default function ContentEditor({ id, editorValue, focused, index }) {
   const dispatch = useDispatch();
   const [value, setValue] = useState(editorValue);
   const [url, setUrl] = useState('');
+  const [lastSelection, setLastSelection] = useState({});
 
   const renderElement = useCallback((props) => {
     switch (props.element.type) {
@@ -38,16 +39,12 @@ export default function ContentEditor({ id, editorValue, focused, index }) {
   }, []);
 
   const handleLink = () => {
+    editor.selection = lastSelection;
     insertUrl(editor, url);
   };
 
   const renderLeaf = useCallback((props) => {
-    if (props.leaf.link) {
-      console.log(url);
-      return <Leaf {...props} url={url} />;
-    } else {
-      return <Leaf {...props} />;
-    }
+    return <Leaf {...props} />;
   }, []);
 
   const toggleBoldMark = (editor) => {
@@ -67,6 +64,15 @@ export default function ContentEditor({ id, editorValue, focused, index }) {
     setUnderlined(!underlined);
     Transforms.setNodes(editor, { underline: isActive ? null : true }, { match: (n) => Text.isText(n), split: true });
   };
+
+  const handleBlur = () => {
+    setLastSelection(editor.selection)
+  }
+  /*const toggleLink = (editor) => {
+    const isActive = link;
+    setUnderlined(!link);
+    Transforms.setNodes(editor, { link: isActive ? null : true }, { match: (n) => Text.isText(n), split: true });
+  };*/
 
   const handleInsertContent = () => {
     if (value.length > 0 && value[0].children[0].text !== '') {
@@ -124,6 +130,7 @@ export default function ContentEditor({ id, editorValue, focused, index }) {
             renderLeaf={renderLeaf}
             placeholder="Type text here..."
             autoFocus={focused}
+            onBlur={handleBlur}
             className={focused ? 'current-editor' : ''}
             onKeyDown={(event) => {
               if (event.shiftKey && event.keyCode === 13) {

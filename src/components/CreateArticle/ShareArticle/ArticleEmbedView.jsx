@@ -4,9 +4,9 @@ import FlexContainer from '../../UI/FlexContainer';
 import Card from '../../UI/Card';
 import Tag from '../../UI/Tag';
 import { ShareArticleCardView } from './styled-components';
-import AvatarPlaceholder from '../../../assets/images/avatar-placeholder.png';
 import ToolbarReactions from '../../UI/reaction-toolbar/ToolbarReactions';
-
+import AuthorMeta from '../../UI/author-post/AuthorMeta';
+import { getDateFormatted } from '../../../utils/utils';
 export default function ArticleEmbedView({
   _id,
   categoryId,
@@ -16,6 +16,10 @@ export default function ArticleEmbedView({
   location,
   keywords,
   textContent,
+  user,
+  created_at,
+  liked,
+  likes,
 }) {
   //const dispatch = useDispatch();
   return (
@@ -45,19 +49,13 @@ export default function ArticleEmbedView({
               </FlexContainer>
             </div>
             <div style={{ flexGrow: 1 }}>
-              <FlexContainer align="center">
-                <figure className="post-author-avatar">
-                  <img src={AvatarPlaceholder} />
-                </figure>
-                <div className="author-metadata">
-                  <div>
-                    <strong>Author name</strong>
-                  </div>
-                  <div>
-                    <span>June 12, 2019</span>
-                  </div>
-                </div>
-              </FlexContainer>
+              {user && (
+                <AuthorMeta
+                  authorName={user?.name}
+                  postDate={created_at && getDateFormatted(created_at)}
+                  avatarUrl={user?.avatar}
+                />
+              )}
             </div>
           </FlexContainer>
           <FlexContainer elmWidth="20%" column justify="flex-end">
@@ -67,7 +65,7 @@ export default function ArticleEmbedView({
               </figure>
             ) : null}
             <FlexContainer justify="space-evenly" align="center" className="reactions-toolbar" elmWidth="90%">
-              <ToolbarReactions articleId={_id} />
+              <ToolbarReactions articleId={_id} liked={liked} likes={likes} />
             </FlexContainer>
           </FlexContainer>
         </FlexContainer>

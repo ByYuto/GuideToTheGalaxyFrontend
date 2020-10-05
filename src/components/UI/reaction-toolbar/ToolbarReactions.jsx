@@ -12,8 +12,8 @@ import FlexContainer from '../FlexContainer';
 import { ReactionLayout } from './styled-components';
 import { setLikeService, unsetLikeService } from '../../../http/likeService';
 
-export default function ToolbarReactions({ articleId, postDetail }) {
-  const [reactions, setReactions] = useState({ like: false, numLikes: 0 });
+export default function ToolbarReactions({ articleId, postDetail, liked, likes }) {
+  const [reactions, setReactions] = useState({ like: liked, numLikes: likes });
   useEffect(() => {}, [reactions.like]);
   const setLike = async (e) => {
     e.preventDefault();
