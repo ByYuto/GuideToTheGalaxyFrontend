@@ -16,7 +16,7 @@ import {
   getSearchSuggestion,
 } from '../../redux/reducers/topbarSearch';
 import { SearchIcon, GoIcon } from '../../assets/icons/svg-icons';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 export default function HeaderSearchBar() {
   const {
@@ -30,7 +30,6 @@ export default function HeaderSearchBar() {
   } = useSelector((store) => store.topbarSearch);
   const dispatch = useDispatch();
   const history = useHistory();
-  const params = useParams();
   const handleSearchChange = (e) => {
     dispatch(onSearchValueChange(e.target.value));
   };
@@ -41,7 +40,6 @@ export default function HeaderSearchBar() {
     dispatch(onSearchValueChange(val));
   };
   const handleSearchArticles = () => {
-    saveLatestSearches(searchValue);
     dispatch(getArticlesFiltered(searchValue, locationValue, categoryValue, keywordsSelected.join(',')));
     let params = '';
     if (searchValue.length > 0) {
@@ -58,24 +56,15 @@ export default function HeaderSearchBar() {
     history.push('/search' + params);
   };
 
-  const saveLatestSearches = (value) => {
-    const currentSaved = window.localStorage.getItem('latestSearches');
-    const currentSavedArr = currentSaved ? JSON.parse(currentSaved) : [];
-    const filteredCurrentSaved = currentSavedArr.filter((v) => v.description !== value);
-    const newSavedArr =
-      currentSavedArr.length > 2
-        ? [{ active: false, description: value }, ...filteredCurrentSaved.slice(0, 2)]
-        : [{ active: false, description: value }, ...filteredCurrentSaved];
-    window.localStorage.setItem('latestSearches', JSON.stringify(newSavedArr));
-  };
-
   useEffect(() => {
-    console.log(params);
     if (categoriesList.length < 1) {
       dispatch(getCategories());
     }
     if (searchValue.length > 4) {
-      setTimeout(() => dispatch(getSearchSuggestion(searchValue)), 500);
+      setTimeout(
+        () => dispatch(getSearchSuggestion(searchValue, locationValue, categoryValue, keywordsSelected.join(','))),
+        500
+      );
     }
     if (locationValue.length > 0 || categoryValue.length > 0) {
       setTimeout(
@@ -85,11 +74,6 @@ export default function HeaderSearchBar() {
     }
   }, [searchValue, locationValue, categoryValue, keywordsSelected.length]);
 
-  const getAllSearchOptions = () => {
-    const recentSearches = JSON.parse(window.localStorage.getItem('latestSearches'));
-    const searches = recentSearches ? recentSearches : [];
-    return [...searches, ...searchSuggestions];
-  };
   return (
     <ThemeProvider theme={{ isDark: true }}>
       <HeaderSearchBarLayout actionButton={searchValue.length > 0 ? 1 : 0}>
@@ -99,7 +83,7 @@ export default function HeaderSearchBar() {
             onChange={handleSearchChange}
             onClearValue={handleClearSearch}
             icon={<SearchIcon className="location-icon" />}
-            suggestions={getAllSearchOptions()}
+            suggestions={searchSuggestions}
             onOptionSelect={handleSearchSelection}
             placeholder="Search the guide"
             className={'search-autocomplete'}

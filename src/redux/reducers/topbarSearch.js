@@ -1,5 +1,5 @@
 import { setArticlesHome } from './appState';
-import { getArticlesFilteredService, getCategoriesList, getSuggestedArticles } from '../../http/articleService';
+import { getArticlesFilteredService, getCategoriesList, getSuggestedSearches } from '../../http/articleService';
 import { getKeywordsSuggestions } from '../../http/keywordService';
 const initialState = {
   searchValue: '',
@@ -13,6 +13,9 @@ const initialState = {
   categoriesList: [],
   keywordSuggestions: [],
   keywordsSelected: [],
+  loading: false,
+  error: false,
+  errrorMessage: '',
 };
 
 const CHANGE_SEARCH_VALUE = 'CHANGE_SEARCH_VALUE';
@@ -52,13 +55,12 @@ export const getArticlesFiltered = (text, location, category, keywords) => async
   }
 };
 
-export const getSearchSuggestion = (value) => async (dispatch) => {
+export const getSearchSuggestion = (value, location, category, keywords) => async (dispatch) => {
   try {
-    const response = await getSuggestedArticles(value, '', '');
-    const titleSuggestions = response.data
-      .slice(0, 3)
-      .map((article) => ({ active: false, description: article.title }));
-    dispatch(setSearchSuggestion(titleSuggestions));
+    const response = await getSuggestedSearches(value, location, category, keywords);
+    const data = [...response.data.lastSearches, ...response.data.popularSearches];
+    const dataTitles = data.map((elm) => ({ active: false, description: elm.text }));
+    dispatch(setSearchSuggestion(dataTitles));
   } catch (e) {
     // TO DO handle unauthorized
     console.log(e.response);

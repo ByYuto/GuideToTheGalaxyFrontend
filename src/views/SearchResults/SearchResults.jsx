@@ -5,10 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getArticlesHome } from '../../redux/reducers/appState';
 import ArticleEmbedView from '../../components/CreateArticle/ShareArticle/ArticleEmbedView';
 import { useParams } from 'react-router-dom';
+import Loader from '../../components/UI/Loader';
 
 export default function SearchResults() {
   const { articles } = useSelector((store) => store.app);
-  const { searchValue, locationValue, categoryValue, keywordsSelected } = useSelector((store) => store.topbarSearch);
+  const { searchValue, locationValue, categoryValue, keywordsSelected, loading, error } = useSelector(
+    (store) => store.topbarSearch
+  );
   const dispatch = useDispatch();
   const {} = useParams();
   useEffect(() => {
@@ -27,6 +30,15 @@ export default function SearchResults() {
           )}
         </MaxWidthContainer>
       </StyledView>
+      {!error && loading && (
+        <StyledView>
+          <MaxWidthContainer>
+            <FlexContainer justify="center">
+              <Loader color="#6670F0" />
+            </FlexContainer>
+          </MaxWidthContainer>
+        </StyledView>
+      )}
     </ThemeProvider>
   );
 }

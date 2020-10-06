@@ -16,6 +16,7 @@ const APP_GET_CATEGORIES_REQUEST = 'APP_GET_CATEGORIES_REQUEST';
 const APP_GET_CATEGORIES_SUCCESS = 'APP_GET_CATEGORIES_SUCCESS';
 const APP_GET_CATEGORIES_ERROR = 'APP_GET_CATEGORIES_ERROR';
 const SET_ARTICLES_HOME = 'SET_ARTICLES_HOME';
+const LOADING = 'LOADING';
 
 //Action Creators
 export const changeAppTopbarDisplay = (visible) => ({ type: APP_SET_TOPBAR_DISPLAY, payload: { visible } });
@@ -25,10 +26,13 @@ export const getCategoriesSuccess = (categories) => ({ type: APP_GET_CATEGORIES_
 export const getCategoriesError = () => ({ type: APP_GET_CATEGORIES_ERROR });
 
 export const getArticlesHome = () => async (dispatch) => {
+  dispatch(setLoading(true));
   try {
     const response = await getArticleService();
     dispatch(setArticlesHome(response.data));
+    dispatch(setLoading(false));
   } catch (e) {
+    dispatch(setLoading(false));
     if (e.response?.status === 401) {
       dispatch(setAuthorization(false));
     }
@@ -36,6 +40,7 @@ export const getArticlesHome = () => async (dispatch) => {
 };
 
 export const setArticlesHome = (articles) => ({ type: SET_ARTICLES_HOME, payload: articles });
+export const setLoading = (val) => ({ type: LOADING, payload: val });
 
 //Thunk Actions
 export const getCategories = () => async (dispatch) => {
@@ -64,6 +69,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         articles: payload,
+      };
+    case LOADING:
+      return {
+        ...state,
+        loading: payload,
       };
 
     default:

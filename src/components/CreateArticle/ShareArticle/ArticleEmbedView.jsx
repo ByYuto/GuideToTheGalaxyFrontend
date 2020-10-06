@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlusIcon, CommentsIcon, PunchIcon, Ellipse } from '../../../assets/icons/svg-icons';
+import { Ellipse } from '../../../assets/icons/svg-icons';
 import FlexContainer from '../../UI/FlexContainer';
 import Card from '../../UI/Card';
 import Tag from '../../UI/Tag';
@@ -17,7 +17,8 @@ export default function ArticleEmbedView({
   keywords,
   textContent,
   user,
-  created_at,
+  create_at,
+  updated_at,
   liked,
   likes,
 }) {
@@ -52,7 +53,7 @@ export default function ArticleEmbedView({
               {user && (
                 <AuthorMeta
                   authorName={user?.name}
-                  postDate={created_at && getDateFormatted(created_at)}
+                  postDate={(updated_at && getDateFormatted(updated_at)) || (create_at && getDateFormatted(create_at))}
                   avatarUrl={user?.avatar}
                 />
               )}
