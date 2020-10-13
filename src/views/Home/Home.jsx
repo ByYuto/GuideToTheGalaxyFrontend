@@ -5,9 +5,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getArticlesHome } from '../../redux/reducers/appState';
 import ArticleEmbedView from '../../components/CreateArticle/ShareArticle/ArticleEmbedView';
 import FlexContainer from '../../components/UI/FlexContainer';
+import Loader from '../../components/UI/Loader';
 
 export default function Home() {
   const { articles } = useSelector((store) => store.app);
+  const { loading, error } = useSelector((store) => store.topbarSearch);
   const dispatch = useDispatch();
   useEffect(() => {
     if (articles.length < 1) {
@@ -27,6 +29,15 @@ export default function Home() {
           )}
         </MaxWidthContainer>
       </StyledView>
+      {!error && loading && (
+        <StyledView>
+          <MaxWidthContainer>
+            <FlexContainer justify="center">
+              <Loader color="#6670F0" />
+            </FlexContainer>
+          </MaxWidthContainer>
+        </StyledView>
+      )}
     </ThemeProvider>
   );
 }
