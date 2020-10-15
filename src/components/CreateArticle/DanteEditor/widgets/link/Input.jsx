@@ -1,19 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import PropTypes from 'prop-types';
-import Button from './Button';
+import Button from '../../../../UI/Button';
 import { IoIosClose } from 'react-icons/io';
-import Menu from './Menu';
-
-/*
-const AutocompleteMenu = styled(Menu)`
-  position: absolute;
-  top: calc(100% - 1px);
-  left: ${props => props.Icon ? 32 : 10}px;
-  right: 0;
-  z-index: 100;
-`
-*/
+import Menu from '../../../../UI/Menu';
 
 const StyledInputContainer = styled.div`
   display: ${(props) => (props.block ? 'flex' : 'inline-block')};
@@ -153,7 +143,6 @@ const Input = ({
   children,
   value,
   onChange,
-  fref,
   onClear,
   disabled,
   leftIcon,
@@ -186,6 +175,7 @@ const Input = ({
   }, [focused]);
 
   const _onFocus = (e) => {
+    e.stopPropagation();
     setFocused(true);
     onFocus && onFocus(e);
   };
@@ -196,8 +186,7 @@ const Input = ({
   };
 
   const avoidCharacters = (event) => {
-    const regex = new RegExp('^[a-zA-Z0-9\s\-]+$');
-    //const key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    const regex = new RegExp('^[a-zA-Z0-9s-]+$');
     return regex.test(event.key) || event.code === 'Space';
   };
   const handleKeyPress = (e) => {
@@ -249,6 +238,11 @@ const Input = ({
       optionsOpened={optionsOpened}
       Icon={leftIcon}
       block={block}
+      onMouseDown={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        inputRef.current.focus();
+      }}
     >
       <StyledInput
         tabIndex={-1}
@@ -259,10 +253,20 @@ const Input = ({
         optionsOpened={optionsOpened}
         actionButton
         leftIcon={leftIcon ? true : false}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          inputRef.current.focus();
+        }}
       >
         {leftIcon ? leftIcon : null}
         <input
           ref={inputRef}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            inputRef.current.focus();
+          }}
           {...props}
           value={value}
           disabled={disabled}

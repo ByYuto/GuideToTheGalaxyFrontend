@@ -1,14 +1,18 @@
 import React, { useState, useRef } from 'react';
 import Caption from '../UI/Caption';
 import styled, { css } from 'styled-components';
-import ContentEditor from '../UI/editor/ContentEditor';
+//import ContentEditor from '../UI/editor/ContentEditor';
 import { useSelector, useDispatch } from 'react-redux';
 import Divider from '../UI/Divider';
 import UploadPdf from '../UI/forms/UploadPdf';
 import ToggleContributor from '../UI/ToggleContributor';
-import ImageEditorComponent from './ImageEditor/ImageEditorComponent';
-import EmbedPreview from './ShareEmbed/EmbedPreview';
-import ArticleEmbed from './ShareArticle/ArticleEmbed';
+//import ImageEditorComponent from './ImageEditor/ImageEditorComponent';
+//import EmbedPreview from './ShareEmbed/EmbedPreview';
+//import ArticleEmbed from './ShareArticle/ArticleEmbed';
+
+//dante editor
+
+import ContentEditor from './DanteEditor/ContentEditor';
 
 const StyledArticleImage = styled.div`
   padding: 0 10px;
@@ -45,6 +49,9 @@ export const MaxWidthContainer = styled.div`
   max-width: 1016px;
   width: 100%;
   margin: auto;
+  .dante-editor-container {
+    position: relative;
+  }
 `;
 
 const AddContentContainer = styled.div`
@@ -125,51 +132,7 @@ const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
         </p>
       </MaxWidthContainer>
       <MaxWidthContainer>
-        {contents.length > 0 ? (
-          contents.map((contentObj, index) => {
-            if (contentObj.type === 'image') {
-              return (
-                <ImageEditorComponent
-                  key={contentObj.id}
-                  contentId={contentObj.id}
-                  images={contentObj.content[0].children}
-                />
-              );
-            }
-            if (contentObj.type === 'embed') {
-              return (
-                <EmbedPreview
-                  key={contentObj.id}
-                  id={contentObj.id}
-                  embedSource={contentObj.content[0].children[0].source}
-                />
-              );
-            }
-
-            if (contentObj.type === 'article') {
-              return <ArticleEmbed key={contentObj.id} id={contentObj.id} articleId={contentObj.content} />;
-            }
-            return (
-              <ContentEditor
-                index={index}
-                key={contentObj.id}
-                id={contentObj.id}
-                editorValue={contentObj.content}
-                focused={currentIndex === contentObj.id}
-              />
-            );
-          })
-        ) : (
-          <ContentEditor
-            key={0}
-            editorValue={[
-              {
-                type: 'paragraph',
-                children: [{ text: '' }],
-              },
-            ]}
-          />
-        )}
+        <ContentEditor  />
       </MaxWidthContainer>
       <MaxWidthContainer>
         <Divider />

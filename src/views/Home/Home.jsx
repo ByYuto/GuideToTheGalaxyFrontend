@@ -10,12 +10,13 @@ import Loader from '../../components/UI/Loader';
 export default function Home() {
   const { articles } = useSelector((store) => store.app);
   const { loading, error } = useSelector((store) => store.topbarSearch);
+  const { authorization } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   useEffect(() => {
     if (articles.length < 1) {
       dispatch(getArticlesHome());
     }
-  }, []);
+  }, [authorization]);
   return (
     <ThemeProvider theme={{ isDark: false }}>
       <StyledView>
@@ -23,7 +24,7 @@ export default function Home() {
           {articles?.length > 0 ? (
             articles.map((a, index) => <ArticleEmbedView key={index} {...a} />)
           ) : (
-            <FlexContainer align="center" justify="center">
+            <FlexContainer align="center" justify="center" className="no-posts-container">
               <div>No posts related on your search...</div>
             </FlexContainer>
           )}

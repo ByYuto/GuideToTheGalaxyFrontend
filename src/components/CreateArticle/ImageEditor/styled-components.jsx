@@ -74,11 +74,12 @@ export const CloseButton = styled.div.attrs(() => ({
   }
 `;
 
-export const AddButton = styled.div.attrs(() => ({
+export const AddButton = styled.div.attrs((props) => ({
   role: 'button',
   dataFocusable: true,
   tabIndex: 0,
   ariaLabel: 'Add image',
+  ...props,
 }))`
   position: absolute;
   display: flex;

@@ -19,11 +19,14 @@ export default function ShareArticleCard({
   textContent,
   contentIndex,
   closeModal,
+  confirmArticle,
+  editorState,
 }) {
   const dispatch = useDispatch();
-  const handleAddArticle = () => {
+  const handleAddArticle = (e, editorState, _id) => {
     closeModal(false);
-    dispatch(insertEmbedArticle(contentIndex, _id));
+    //dispatch(insertEmbedArticle(contentIndex, _id));
+    confirmArticle(e, editorState, _id);
   };
   return (
     <ShareArticleCardLayout existImage={!!image}>
@@ -34,8 +37,8 @@ export default function ShareArticleCard({
           </div>
           <Button
             className="card-add-button"
-            onClick={() => {
-              handleAddArticle();
+            onClick={(e) => {
+              handleAddArticle(e, editorState, _id);
             }}
           >
             <PlusIcon />
