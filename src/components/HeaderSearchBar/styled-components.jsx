@@ -51,9 +51,14 @@ export const HeaderSearchBarLayout = styled.div`
   position: relative;
   left: 2%;
 
+  @media (max-width: 1300px) {
+    width: 800px;
+  }
+
   @media (min-width: 1700px) {
     left: 1.5%;
   }
+
   & .action-button {
     width: 25px;
     height: 25px;

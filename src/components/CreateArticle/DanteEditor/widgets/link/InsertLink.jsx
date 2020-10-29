@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import Input from './Input';
 import { CheckIcon, LinkIcon } from '../../../../../assets/icons/svg-icons';
-import { InputLinkLayout } from './styled-components';
+import { InputLinkLayout, ClearButton } from './styled-components';
 import { validateEmbed } from '../../../../../utils/validations';
-
-export default function InsertLink({ onKeyDown, fref, url, onClickBtn, editorState, onChangeInput }) {
+import { IoIosClose } from 'react-icons/io';
+import FlexContainer from '../../../../UI/FlexContainer';
+export default function InsertLink({
+  onKeyDown,
+  url,
+  onClickBtn,
+  editorState,
+  onChangeInput,
+  onClear,
+  setLinkInputActive,
+}) {
   const [validEmbed, setValidEmbed] = useState(false);
 
   useEffect(() => {
@@ -19,37 +27,40 @@ export default function InsertLink({ onKeyDown, fref, url, onClickBtn, editorSta
   };
 
   const handleEnterSubmit = (e) => {
-    onKeyDown(e, editorState);
+    if (validEmbed) {
+      onKeyDown(e, editorState);
+    }
   };
 
   return (
-    <InputLinkLayout disabled={!validEmbed} onKeyDown={handleEnterSubmit}>
-      <Input
-        leftIcon={
-          <>
-            <LinkIcon className="icon-search" />
-          </>
-        }
-        placeholder={'Paste your link'}
+    <InputLinkLayout disabled={!validEmbed} onKeyDown={handleEnterSubmit} onBlur={() => setLinkInputActive('inactive')}>
+      <>
+        <LinkIcon className="icon-search" />
+      </>
+      <input
         value={url}
-        ref={fref}
-        block
-        onChange={(value) => onChangeInput(value)}
-        readOnly={false}
-        onBlur={null}
-        onFocus={null}
-        actionButton={
-          <button
-            className="action-button"
-            disabled={!validEmbed}
-            onClick={(e) => {
-              handleSubmitValue(e, editorState);
-            }}
-          >
-            <CheckIcon />
-          </button>
-        }
+        onChange={(e) => onChangeInput(e.target.value)}
+        placeholder={'Paste your link'}
+        onKeyDown={(e) => {
+          handleEnterSubmit(e);
+        }}
       />
+      <FlexContainer align="center">
+        {url && (
+          <ClearButton className="close-btn" onMouseDown={onClear} color="#9695B7">
+            <IoIosClose />
+          </ClearButton>
+        )}
+        <button
+          className="action-button"
+          disabled={!validEmbed}
+          onMouseDown={(e) => {
+            handleSubmitValue(e, editorState);
+          }}
+        >
+          <CheckIcon />
+        </button>
+      </FlexContainer>
     </InputLinkLayout>
   );
 }

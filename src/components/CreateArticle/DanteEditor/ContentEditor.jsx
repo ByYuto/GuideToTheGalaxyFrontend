@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { EditorLayout } from './styled-components';
-import { Editor, EditorState, CompositeDecorator, RichUtils, convertToRaw } from 'draft-js';
+import { Editor, EditorState, CompositeDecorator, RichUtils } from 'draft-js';
 import TextFormat from './style-toolbar/TextFormat';
 import 'draft-js/dist/Draft.css';
 import InsertLink from './widgets/link/InsertLink';
@@ -79,6 +79,7 @@ function ContentEditor({}) {
   const makeFocus = () => editorRef.current.focus();
   const styledToolbarRef = useRef(null);
   const mediaToolbarRef = useRef(null);
+  const [topDistance, setTopDistance] = useState(0);
   const [embedActive, setEmbedActivation] = useState(false);
   const Media = (props) => {
     const entity = props.contentState.getEntity(props.block.getEntityAt(0));
@@ -188,15 +189,20 @@ function ContentEditor({}) {
     });
     setBlockKey(null);
     setImagesGallery([]);
+    const newEditorState = EditorState.createWithContent(contentState);
+    onChangeEditor(newEditorState);
   };
 
   useEffect(() => {
     if (editorContainer && editorContainer.current) {
-      const editorHeight = editorContainer.current.offsetHeight;
-      const screenEditorFraction = window.innerHeight * 0.6;
-      if (editorHeight > screenEditorFraction) {
+      //const editorHeight = editorContainer.current.offsetHeight;
+      //const screenEditorFraction = window.innerHeight * 0.6;
+
+      if (topDistance > 133) {
         setEditorOut(true);
-      } else {
+      }
+
+      if (topDistance < 133) {
         setEditorOut(false);
       }
     }
@@ -233,8 +239,18 @@ function ContentEditor({}) {
       observer.observe(styledToolbarRef.current);
       //observer.observe(editorRef.current);
     });
-    return () => {};
-  }, [urlValue, editorState, linkInputActive, newLinkEntityKey]);
+
+    document.querySelector('.article-body-container').addEventListener('scroll', () => {
+      const scrollElm = document.querySelector('.article-body-container');
+      setTopDistance(scrollElm.scrollTop);
+    });
+    return () => {
+      document.querySelector('.article-body-container').removeEventListener('scroll', () => {
+        const scrollElm = document.querySelector('.article-body-container');
+        setTopDistance(scrollElm.scrollTop);
+      });
+    };
+  }, [urlValue, editorState, linkInputActive, newLinkEntityKey, topDistance]);
 
   const observerHandler = (entries, observer) => {
     entries.forEach((elm) => {
@@ -262,6 +278,10 @@ function ContentEditor({}) {
           onClickBtn={_confirmLink}
           editorState={editorState}
           onChangeInput={onURLChange}
+          onClear={() => {
+            setUrlValue('');
+          }}
+          setLinkInputActive={setLinkInputActive}
         />
       </div>
     </Popover>
@@ -273,18 +293,20 @@ function ContentEditor({}) {
       className="editor-parent-container"
       linkInputActive={linkInputActive === 'active' ? 1 : 0}
     >
-      <div style={{ width: '180px' }} ref={styledToolbarRef} className="styled-toolbar-container">
-        {isFocusEditor && (
-          <TextFormat
-            editorState={editorState}
-            setEditorState={setEditorState}
-            promptLink={_promptForLink}
-            imageInputRef={imageInputRef}
-            linkInputActive={linkInputActive}
-            setLinkInputActive={setLinkInputActive}
-            setSelectionState={setSelectionState}
-          />
-        )}
+      <div
+        style={{ width: '180px', opacity: isFocusEditor ? 1 : 0 }}
+        ref={styledToolbarRef}
+        className="styled-toolbar-container"
+      >
+        <TextFormat
+          editorState={editorState}
+          setEditorState={setEditorState}
+          promptLink={_promptForLink}
+          imageInputRef={imageInputRef}
+          linkInputActive={linkInputActive}
+          setLinkInputActive={setLinkInputActive}
+          setSelectionState={setSelectionState}
+        />
       </div>
       <div
         className="fixed-styled-toolbar-container"
@@ -295,18 +317,17 @@ function ContentEditor({}) {
           left: editorOut && !styledToolbarOut ? '20%' : '0',
           display: editorOut && !styledToolbarOut ? 'block' : 'none',
           zIndex: 5,
+          opacity: isFocusEditor ? 1 : 0,
         }}
       >
-        {isFocusEditor && (
-          <TextFormat
-            editorState={editorState}
-            setEditorState={setEditorState}
-            promptLink={_promptForLink}
-            linkInputActive={linkInputActive}
-            setLinkInputActive={setLinkInputActive}
-            setSelectionState={setSelectionState}
-          />
-        )}
+        <TextFormat
+          editorState={editorState}
+          setEditorState={setEditorState}
+          promptLink={_promptForLink}
+          linkInputActive={linkInputActive}
+          setLinkInputActive={setLinkInputActive}
+          setSelectionState={setSelectionState}
+        />
       </div>
       <div>
         {urlInput}
@@ -324,13 +345,9 @@ function ContentEditor({}) {
             placeholder="Enter some text..."
             blockRendererFn={mediaBlockRenderer}
             handleKeyCommand={handleKeyCommand}
-            onFocus={() => {
-              setFocusEditor(true);
-            }}
-            onBlur={() => {
-              setFocusEditor(false);
-            }}
             readOnly={linkInputActive === 'active'}
+            onFocus={() => setFocusEditor(true)}
+            onBlur={() => setFocusEditor(false)}
           />
         </div>
       </div>
@@ -343,29 +360,26 @@ function ContentEditor({}) {
             left: editorOut && !mediaToolbarOut ? '40%' : '0',
             display: editorOut && !mediaToolbarOut ? 'block' : 'none',
             zIndex: 5,
+            opacity: isFocusEditor ? 1 : 0,
           }}
           className="fixed-media-toolbar-container"
         >
-          {isFocusEditor || embedActive ? (
-            <MediaToolbar
-              editorState={editorState}
-              onChangeEditor={setEditorState}
-              imageInputRef={imageInputRef}
-              embedActive={embedActive}
-              setEmbedActivation={setEmbedActivation}
-            />
-          ) : null}
+          <MediaToolbar
+            editorState={editorState}
+            onChangeEditor={setEditorState}
+            imageInputRef={imageInputRef}
+            embedActive={embedActive}
+            setEmbedActivation={setEmbedActivation}
+          />
         </div>
-        <div ref={mediaToolbarRef} className="media-toolbar-container">
-          {isFocusEditor || embedActive ? (
-            <MediaToolbar
-              editorState={editorState}
-              onChangeEditor={setEditorState}
-              imageInputRef={imageInputRef}
-              embedActive={embedActive}
-              setEmbedActivation={setEmbedActivation}
-            />
-          ) : null}
+        <div ref={mediaToolbarRef} className="media-toolbar-container" style={{ opacity: isFocusEditor ? 1 : 0 }}>
+          <MediaToolbar
+            editorState={editorState}
+            onChangeEditor={setEditorState}
+            imageInputRef={imageInputRef}
+            embedActive={embedActive}
+            setEmbedActivation={setEmbedActivation}
+          />
         </div>
       </FlexContainer>
       <input

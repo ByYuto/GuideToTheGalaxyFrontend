@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Button from '../UI/Button';
 import HeaderBackground from '../../assets/images/home-bg.jpg';
 
+const os = navigator.userAgent.match(/Mac/);
 export const customStyle = {
   indicatorsContainer: (provided, state) => ({ color: state.isFocused ? 'white' : '#BDBFDF' }),
   indicatorSeparator: () => ({ display: 'none' }),
@@ -210,9 +211,11 @@ export const FullHeaderLayout = styled.div`
     height: ${(props) => (props.home === 'home' ? '76px' : '110px')};
     justify-content: space-evenly;
     overflow: visible;
-    width: 98.5vw;
+    width: 100%;
+    position: relative;
 
     & .keywords-container {
+      position: relative;
       & > div:first-child {
         padding-right: 15px;
         margin-right: 15px;
@@ -224,14 +227,14 @@ export const FullHeaderLayout = styled.div`
         overflow: hidden;
         overflow-x: auto;
         align-items: center;
-        margin-bottom: -30px;
+        margin-bottom: ${os ? '-10px' : '-30px'};
       }
       & .keywords {
         width: auto;
         white-space: nowrap;
         overflow-y: hidden;
         padding-bottom: 20px;
-        padding-top: 20px;
+        padding-top: 10px;
         position: relative;
         /* box-shadow: inset 0 20px 20px rgba(21, 21, 49, 0.7);*/
         & > span {
@@ -281,6 +284,7 @@ export const FullHeaderLayout = styled.div`
     height: 100%;
     display: flex;
     z-index: 34;
+    bottom: 10px;
     align-items: center;
     & button {
       background-color: transparent;
@@ -331,6 +335,7 @@ export const FullHeaderLayout = styled.div`
     display: flex;
     z-index: 34;
     align-items: center;
+    bottom: 10px;
     & button {
       background-color: transparent;
       outline: 0;
