@@ -29,6 +29,10 @@ export const AutocompleteLayout = styled.div`
     &::placeholder {
       color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
     }
+
+    @media (max-width:1300px ){
+      width: 79%;
+    }
   }
 
   & .clear-element {

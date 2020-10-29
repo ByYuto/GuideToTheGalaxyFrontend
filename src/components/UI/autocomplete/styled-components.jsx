@@ -14,6 +14,7 @@ export const AutocompleteLayout = styled.div`
     font-size: 14px;
     line-height: 22px;
     width: ${(props) => (props.leftIcon ? '84.5%' : '100%')};
+
     padding: 9px 25px 9px ${(props) => (props.leftIcon ? '30px' : '10px')};
     background: #151531;
     display: flex;
@@ -29,6 +30,10 @@ export const AutocompleteLayout = styled.div`
     }
     &::placeholder {
       color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
+    }
+
+    @media (max-width: 1300px) {
+      width: ${(props) => (props.leftIcon ? '81.5%' : '100%')};
     }
   }
 
