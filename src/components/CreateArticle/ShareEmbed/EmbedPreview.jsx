@@ -2,13 +2,13 @@ import React from 'react';
 import { EmbedLayout } from './styled-components';
 import { MdClose } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import { removeEmbed } from '../../../redux/reducers/newArticleState';
+///import { removeEmbed } from '../../../redux/reducers/newArticleState';
 import { validateEmbed } from '../../../utils/validations';
 
 export default function EmbedPreview({ id, embedSource }) {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
   const handleRemoveEmbed = () => {
-    dispatch(removeEmbed(id));
+    //dispatch(removeEmbed(id));
   };
   const validUri = validateEmbed(embedSource).valid;
   let videoUri = embedSource;
@@ -24,11 +24,11 @@ export default function EmbedPreview({ id, embedSource }) {
   }
 
   return (
-    <EmbedLayout key={id}>
+    <EmbedLayout>
       <div>
         <MdClose onClick={handleRemoveEmbed} />
       </div>
-      <iframe title={id} src={videoUri} frameBorder="0" samesite="false"></iframe>
+      <iframe title={videoUri} src={videoUri} frameBorder="0" samesite="false"></iframe>
     </EmbedLayout>
   );
 }

@@ -7,7 +7,7 @@ import ShareArticleCard from './ShareArticleCard';
 import { useSelector, useDispatch } from 'react-redux';
 import Loader from '../../UI/Loader';
 import { getEmbedArticles } from '../../../redux/reducers/articles';
-export default function ShareArticle({ contentIndex, closeModal }) {
+export default function ShareArticle({ contentIndex, closeModal, confirmArticle, editorState }) {
   const { embedArticles, loading, error, errorMessage } = useSelector((store) => store.articles);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -22,7 +22,14 @@ export default function ShareArticle({ contentIndex, closeModal }) {
         {!loading ? (
           embedArticles.length > 0 ? (
             embedArticles.map((article, index) => (
-              <ShareArticleCard closeModal={closeModal} contentIndex={contentIndex} key={index} {...article} />
+              <ShareArticleCard
+                confirmArticle={confirmArticle}
+                closeModal={closeModal}
+                contentIndex={contentIndex}
+                key={index}
+                {...article}
+                editorState={editorState}
+              />
             ))
           ) : (
             <div>No data to display...</div>

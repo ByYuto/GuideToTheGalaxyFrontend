@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ArticleEmbedView from './ArticleEmbedView';
 import { getEmbedArticleService } from '../../../http/articleService';
-export default function ArticleEmbed({ id, articleId }) {
+export default function ArticleEmbed({ articleId }) {
   const [article, setArticle] = useState(null);
   const [error, setError] = useState({ status: false, message: '' });
   useEffect(() => {

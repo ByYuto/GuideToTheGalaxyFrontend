@@ -21,7 +21,13 @@ export default function Dropdown({
     setCurrentValue(option);
   };
   return (
-    <DropdownLayout focused={focused ? 1 : 0} className={className} actionButton={!!actionButton} leftIcon={!!icon}>
+    <DropdownLayout
+      focused={focused ? 1 : 0}
+      className={className}
+      actionButton={!!actionButton}
+      leftIcon={!!icon}
+      onMouseDown={handleFocus}
+    >
       <div className="input-autocomplete-container">
         {icon ? icon : null}
         <input

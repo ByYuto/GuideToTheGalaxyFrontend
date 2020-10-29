@@ -1,6 +1,6 @@
-import React, { useMemo, useState, useCallback, useRef, useEffect } from 'react';
+import React, { useMemo, useState, useCallback,  useEffect } from 'react';
 import { createEditor, Transforms, Text, Editor } from 'slate';
-import { Slate, Editable, withReact, useFocused, useSelected, ReactEditor } from 'slate-react';
+import { Slate, Editable, withReact,  ReactEditor } from 'slate-react';
 import { LayoutEditor, EditorContainer } from './styledComponents';
 import MediaToolbar from './MediaToolbar';
 import TextFormat from './TextFormat';

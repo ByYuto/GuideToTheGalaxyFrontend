@@ -30,6 +30,12 @@ export const StyledView = styled(View)`
     flex: 0;
   }
 
+  & .no-posts-container {
+    background-color: white;
+    min-height: 100px;
+    padding-top: 30px;
+  }
+
   ${MaxWidthContainer} {
     flex-grow: 1;
   }

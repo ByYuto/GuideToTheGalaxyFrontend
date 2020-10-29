@@ -3,16 +3,13 @@ import Input from '../../UI/Input';
 import { CheckIcon, VideoMediaIcon } from '../../../assets/icons/svg-icons';
 import { ShareEmbedLayout } from './styled-components';
 import { validateEmbed } from '../../../utils/validations';
-import { insertEmbed } from '../../../redux/reducers/newArticleState';
-import { useDispatch } from 'react-redux';
 
-export default function ShareEmbed({ index, showEmbed }) {
+export default function ShareEmbed({ index, showEmbed, confirmVideo, editorState }) {
   const [embed, setEmbed] = useState('');
   const [validEmbed, setValidEmbed] = useState(false);
   const handleEmbedValue = (value) => {
     setEmbed(value);
   };
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const isValid = validateEmbed(embed, true);
@@ -40,7 +37,7 @@ export default function ShareEmbed({ index, showEmbed }) {
         videoId = embed;
       }
       const embedType = getEmbedType(isYoutube, isVimeo);
-      const data = {
+      /*const data = {
         content: [
           {
             type: 'embed',
@@ -50,7 +47,8 @@ export default function ShareEmbed({ index, showEmbed }) {
         ],
       };
 
-      dispatch(insertEmbed(index, data));
+      dispatch(insertEmbed(index, data));*/
+      confirmVideo(editorState, videoId, embedType);
     }
   };
 

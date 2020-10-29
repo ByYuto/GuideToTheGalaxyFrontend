@@ -6,6 +6,7 @@ import Layout from '../components/Layout/Layout';
 import ArticleDetail from '../views/ArticleDetail/ArticleDetail';
 import { useSelector } from 'react-redux';
 import NotFound from '../views/NotFound/NotFound';
+import ContentEditor from '../components/CreateArticle/DanteEditor/ContentEditor'
 //import ComponentsTestPage from '../views/ComponentsTestPage';
 
 const Router = () => {
@@ -30,6 +31,12 @@ const Router = () => {
             <CreateArticle />
           </Route>
         )}
+        <Route path="/testeditor" exact>
+          <div style={{padding: "50px"}}>
+          <ContentEditor />
+          </div>
+          
+        </Route>
         <Route path="/article/:id" exact>
           <Layout>
             <ArticleDetail />

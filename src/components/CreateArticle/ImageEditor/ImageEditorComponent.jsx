@@ -4,46 +4,64 @@ import { BsImages } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import { CloseButton, AddButton, ImageWrapper, ImageItem, ImagesContainer, ButtonLabel } from './styled-components';
 import messages from './messages.json';
-import { deleteImage, deleteContent, addImages } from '../../../redux/reducers/newArticleState';
-
+//import { deleteImage, deleteContent, addImages } from '../../../redux/reducers/newArticleState';
+import { EditorState, AtomicBlockUtils, Entity } from 'draft-js';
+import { uploadImage } from '../../../http/createArticleService';
 const MAX_FILES = 4;
 
-const ImageEditorComponent = ({ contentId, images }) => {
-  const dispatch = useDispatch();
+const ImageEditorComponent = (props) => {
+  //const dispatch = useDispatch();
   const fileInputRef = useRef(null);
 
-  const handleUploadImage = async (event) => {
+  const handleUploadImage = async (event, editorState, onChangeEditor, blockKey) => {
     event.preventDefault();
     const files = Array.from(event.target.files);
-    if (files && files.length && MAX_FILES - (images.length + files.length) >= 0) {
-      dispatch(addImages(contentId, files));
+    debugger;
+    if (files && files.length && MAX_FILES - (props.images.length + files.length) >= 0) {
+      const imageResponse = await Promise.all(files.map(uploadImage));
+      confirmMedia(editorState, onChangeEditor, imageResponse, blockKey);
     }
   };
 
-  const onAddImage = () => {
-    fileInputRef.current.click();
+  const confirmMedia = (editorState, onChangeEditor, imageInfo, blockKey) => {
+    const contentState = editorState.getCurrentContent();
+    const imageBlock = contentState.getBlockForKey(blockKey);
+    const imageEntity = imageBlock.getEntityAt(0);
+    const imageEntityF = contentState.getEntity(imageEntity);
+    const { images } = imageEntityF.getData();
+    const contentStateWithEntity = contentState.replaceEntityData(imageEntity, {
+      images: [...images, ...imageInfo],
+    });
+    const newEditorState = EditorState.set(props.editorState, { currentContent: contentStateWithEntity });
+    debugger;
+    onChangeEditor(AtomicBlockUtils.insertAtomicBlock(newEditorState, imageEntity, ' '));
+
+    //focus on editor
+  };
+
+  const onAddImage = (e) => {
+    e.preventDefault();
+    props.setBlockKey(props.blockKey);
+    props.setImagesGallery(props.images);
+    props.imageInputRef.current.click();
   };
 
   return (
     <ImagesContainer aria-label="Photos" role="group">
-      {images.map((item, imgIndex) => (
-        <ImageWrapper position={imgIndex} length={images.length} key={imgIndex}>
-          <CloseButton
+      {props.images.map((item, imgIndex) => (
+        <ImageWrapper position={imgIndex} length={props.images.length} key={imgIndex}>
+          {/* <CloseButton
             onClick={() => {
-              if (images.length === 1) {
-                return dispatch(deleteContent(contentId));
-              }
-              dispatch(deleteImage(contentId, imgIndex));
             }}
           >
             <RiCloseLine color="#FFFFFF" size={22} />
-          </CloseButton>
+          </CloseButton> */}
           <ImageItem src={item.url} />
         </ImageWrapper>
       ))}
       <>
-        {images.length < 4 && fileInputRef ? (
-          <AddButton onClick={onAddImage}>
+        {props.images.length < 4 && fileInputRef ? (
+          <AddButton onMouseDown={(e) => onAddImage(e)}>
             <BsImages color="#FFFFFF" size={26} />
             <ButtonLabel>{messages.add}</ButtonLabel>
           </AddButton>
@@ -53,7 +71,10 @@ const ImageEditorComponent = ({ contentId, images }) => {
           type="file"
           accept="image/*"
           ref={fileInputRef}
-          onChange={handleUploadImage}
+          onChange={(e) => {
+            e.preventDefault();
+            handleUploadImage(e, props.editorState, props.onChangeEditor, props.blockKey);
+          }}
           multiple
         />
       </>
