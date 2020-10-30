@@ -85,32 +85,35 @@ function ContentEditor({}) {
     const entity = props.contentState.getEntity(props.block.getEntityAt(0));
     const blockKey = props.block.key;
     const type = entity.getType();
-    switch (type) {
-      case 'ARTICLE':
-        const { articleId } = entity.getData();
-        return <ArticleEmbed articleId={articleId} />;
-      case 'IMAGE':
-        const { images } = entity.getData();
 
-        return (
-          <ImageEditorComponent
-            blockKey={blockKey}
-            images={images}
-            {...props}
-            onChangeEditor={setEditorState}
-            editorState={editorState}
-            imageInputRef={imageInputRef}
-            setBlockKey={setBlockKey}
-            setImagesGallery={setImagesGallery}
-          />
-        );
-
-      case 'VIDEO':
-        const { videoId, type } = entity.getData();
-        return <EmbedPreview embedSource={videoId} />;
-      default:
-        return null;
+    if (type === 'ARTICLE') {
+      const { articleId } = entity.getData();
+      return <ArticleEmbed articleId={articleId} />;
     }
+
+    if (type === 'IMAGE') {
+      const { images } = entity.getData();
+
+      return (
+        <ImageEditorComponent
+          blockKey={blockKey}
+          images={images}
+          {...props}
+          onChangeEditor={setEditorState}
+          editorState={editorState}
+          imageInputRef={imageInputRef}
+          setBlockKey={setBlockKey}
+          setImagesGallery={setImagesGallery}
+        />
+      );
+    }
+
+    if (type === 'VIDEO') {
+      const { videoId, type } = entity.getData();
+      return <EmbedPreview embedSource={videoId} />;
+    }
+
+    return null;
   };
   const mediaBlockRenderer = (block) => {
     if (block.getType() === 'atomic') {
@@ -244,6 +247,7 @@ function ContentEditor({}) {
       const scrollElm = document.querySelector('.article-body-container');
       setTopDistance(scrollElm.scrollTop);
     });
+    
     return () => {
       document.querySelector('.article-body-container').removeEventListener('scroll', () => {
         const scrollElm = document.querySelector('.article-body-container');
@@ -294,7 +298,7 @@ function ContentEditor({}) {
       linkInputActive={linkInputActive === 'active' ? 1 : 0}
     >
       <div
-        style={{ width: '180px', opacity: isFocusEditor ? 1 : 0 }}
+        style={{ width: '180px', opacity: isFocusEditor || embedActive ? 1 : 0 }}
         ref={styledToolbarRef}
         className="styled-toolbar-container"
       >
@@ -317,7 +321,7 @@ function ContentEditor({}) {
           left: editorOut && !styledToolbarOut ? '20%' : '0',
           display: editorOut && !styledToolbarOut ? 'block' : 'none',
           zIndex: 5,
-          opacity: isFocusEditor ? 1 : 0,
+          opacity: isFocusEditor || embedActive ? 1 : 0,
         }}
       >
         <TextFormat
@@ -360,7 +364,7 @@ function ContentEditor({}) {
             left: editorOut && !mediaToolbarOut ? '40%' : '0',
             display: editorOut && !mediaToolbarOut ? 'block' : 'none',
             zIndex: 5,
-            opacity: isFocusEditor ? 1 : 0,
+            opacity: isFocusEditor || embedActive ? 1 : 0,
           }}
           className="fixed-media-toolbar-container"
         >
@@ -372,7 +376,11 @@ function ContentEditor({}) {
             setEmbedActivation={setEmbedActivation}
           />
         </div>
-        <div ref={mediaToolbarRef} className="media-toolbar-container" style={{ opacity: isFocusEditor ? 1 : 0 }}>
+        <div
+          ref={mediaToolbarRef}
+          className="media-toolbar-container"
+          style={{ opacity: isFocusEditor || embedActive ? 1 : 0 }}
+        >
           <MediaToolbar
             editorState={editorState}
             onChangeEditor={setEditorState}

@@ -8,7 +8,7 @@ import { useModal } from '../../../UI/modal/useModal';
 import ShareArticle from '../../../CreateArticle/ShareArticle/ShareArticle';
 import ShareEmbed from '../../../CreateArticle/ShareEmbed/ShareEmbed';
 import FlexContainer from '../../../UI/FlexContainer';
-import { EditorState, AtomicBlockUtils } from 'draft-js';
+import { EditorState, AtomicBlockUtils, convertToRaw } from 'draft-js';
 import { uploadImage } from '../../../../http/createArticleService';
 import { useImageWidget } from '../widgets/images/Image';
 
