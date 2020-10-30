@@ -8,11 +8,12 @@ import Input from '../UI/forms/Input';
 import { ThemeProvider } from 'styled-components';
 import { FlexContainer } from '../UI/Helpers';
 import { Link } from 'react-router-dom';
-import { BsLock } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { isRequired, validate, validateEmail } from '../../utils/validations';
-import { loginAction } from '../../redux/actions/authActions';
+import { loginAction, facebookLoginAction, googleLoginAction } from '../../redux/actions/authActions';
 import Loader from '../UI/Loader';
+import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 
 export default function Login({ handleCancel }) {
   const [form, setFormState] = useState({ valid: false, loading: false, error: false, errorType: '', submit: false });
@@ -51,17 +52,49 @@ export default function Login({ handleCancel }) {
     }
   };
 
+  const responseGoogle = (response) => {
+    if (response && response.accessToken) {
+      dispatch(googleLoginAction(response.accessToken));
+    }
+  };
+
+  const responseFacebook = (response) => {
+    if (response && response.accessToken) {
+      dispatch(facebookLoginAction(response.accessToken));
+    }
+  };
+
   return (
     <ThemeProvider theme={{ isDark: true }}>
       <LoginLayout>
-        <Button span="24px" darker elmWidth="232px" elmHeight="40px">
-          <img src={GoogleLogo} />
-          Sign up with Google
-        </Button>
-        <Button span="24px" darker elmWidth="232px" elmHeight="40px">
-          <img src={FacebookLogo} />
-          Sign up with Facebook
-        </Button>
+        <div>
+          <GoogleLogin
+            clientId="643337274039-1mc3ifs771s0r39l4tmj7d3719aj79l9.apps.googleusercontent.com"
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            cookiePolicy={'single_host_origin'}
+            render={(renderProps) => (
+              <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
+                <img src={GoogleLogo} />
+                Sign up with Google
+              </Button>
+            )}
+          />
+        </div>
+
+        <div>
+          <FacebookLogin
+            appId="646987882647026"
+            fields="name,email,picture"
+            render={(renderProps) => (
+              <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
+                <img src={FacebookLogo} />
+                Sign up with Facebook
+              </Button>
+            )}
+            callback={responseFacebook}
+          />
+        </div>
         <Divider />
         <FlexContainer className="form-container" direction="column" align="center" justify="space-between" span="0">
           <p className="form-title">Sign in with an email</p>
