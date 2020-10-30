@@ -1,31 +1,45 @@
 import styled from 'styled-components';
 
 export const InputLinkLayout = styled.div`
-width: 230px;
-margin-left: 8px;
-position: relative;
-background-color: white;
-z-index: 100;
-@media (max-width: 600px) {
-    width: 95%
-  } 
+  width: 270px;
+  margin-left: 8px;
+  position: relative;
+  background-color: white;
+  z-index: 100;
+  font-family: 'Open Sans';
+  font-size: 14px;
+  border: 1px solid #bdbfdf;
+  color: #1f1f3d;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 3px 5px 3px 3px;
+  overflow: hidden;
+
+  @media (max-width: 600px) {
+    width: 95%;
+  }
 
   & .close-btn {
-    margin-right: ${(props) => (props.disabled ? '0.5em' : '1.3em')};
     z-index: 101;
   }
 
   & .icon-search {
-    margin-left: 10px;
+    width: 15px;
+    height: auto;
   }
 
   & input {
-      padding-left: 10px:
-  }
-
-  & input:focus {
-    border: none;
-    outline: 0;
+    border: none !important;
+    outline: 0 !important;
+    padding: 7px 1px 7px 1px;
+    font-family: 'Open Sans';
+    font-size: 14px;
+    line-height: 22px;
+    background: white;
+    width: 150px;
+    overflow: hidden;
   }
 
   & .action-button {
@@ -35,17 +49,20 @@ z-index: 100;
     background-color: #6670f0;
     border: none;
     outline: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-right: 10px;
-    display: ${(props) => (props.disabled ? 'none' : 'flex')};
+    display: ${(props) => (props.disabled ? 'none' : 'inline-block')};
     cursor: pointer;
     z-index: 102;
 
-    & svg path, svg rect {
+    & svg path,
+    svg rect {
       fill: white;
       stroke: white;
     }
   }
+`;
+export const ClearButton = styled.div`
+  font-size: 30px;
+  cursor: pointer;
+  padding: 3px;
+  color: ${(props) => props.theme.baseColors.middle};
 `;

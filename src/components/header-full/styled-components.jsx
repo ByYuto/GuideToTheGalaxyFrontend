@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import Button from '../UI/Button';
 import HeaderBackground from '../../assets/images/home-bg.jpg';
 
+const os = navigator.userAgent.match(/Mac/);
 export const customStyle = {
   indicatorsContainer: (provided, state) => ({ color: state.isFocused ? 'white' : '#BDBFDF' }),
   indicatorSeparator: () => ({ display: 'none' }),
@@ -226,7 +227,7 @@ export const FullHeaderLayout = styled.div`
         overflow: hidden;
         overflow-x: auto;
         align-items: center;
-        margin-bottom: -30px;
+        margin-bottom: ${os ? '-10px' : '-30px'};
       }
       & .keywords {
         width: auto;

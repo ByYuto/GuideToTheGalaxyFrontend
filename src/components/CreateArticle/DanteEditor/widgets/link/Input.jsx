@@ -152,7 +152,7 @@ const Input = ({
   block,
   onFocus,
   onBlur,
-  readOnly,
+  readOnly = false,
   contained,
   actionButton,
   avoidSpecialCharacters,
@@ -275,13 +275,7 @@ const Input = ({
           onKeyPress={handleKeyPress}
         />
         {!disabled && !readOnly ? (
-          <ClearButton
-            className="close-btn"
-            icon
-            transparent
-            onClick={onClearClick}
-            show={!!(value ? value.trim() : false)}
-          >
+          <ClearButton className="close-btn" icon transparent onClick={onClear} show={!!(value ? value.trim() : false)}>
             <IoIosClose />
           </ClearButton>
         ) : null}
