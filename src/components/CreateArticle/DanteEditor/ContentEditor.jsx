@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { EditorLayout } from './styled-components';
-import { Editor, EditorState, CompositeDecorator, RichUtils, convertToRaw } from 'draft-js';
+import { Editor, EditorState, CompositeDecorator, RichUtils } from 'draft-js';
 import TextFormat from './style-toolbar/TextFormat';
 import 'draft-js/dist/Draft.css';
 import InsertLink from './widgets/link/InsertLink';
@@ -247,7 +247,7 @@ function ContentEditor({}) {
       const scrollElm = document.querySelector('.article-body-container');
       setTopDistance(scrollElm.scrollTop);
     });
-
+    
     return () => {
       document.querySelector('.article-body-container').removeEventListener('scroll', () => {
         const scrollElm = document.querySelector('.article-body-container');
