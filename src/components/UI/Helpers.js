@@ -14,4 +14,9 @@ export const FlexContainer = styled.div`
     margin-top: 20px;
     text-align: center;
   }
+
+  & .validation {
+    color: #f5374e;
+    font-size: 12px;
+  }
 `;

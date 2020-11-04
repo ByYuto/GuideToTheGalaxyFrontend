@@ -1,7 +1,8 @@
-import { login, facebookLogin, googleLogin  } from '../../http/authService';
+import { login, facebookLogin, googleLogin, registerUser  } from '../../http/authService';
 export const USER_LOGIN = 'USER_LOGIN';
 export const CHECK_LOGIN = 'CHECK_LOGIN';
 export const FACEBOOK_LOGIN = 'FACEBOOK_LOGIN';
+export const USER_REGISTRATION = 'USER_REGISTRATION';
 
 
 export const loginAction = (user) => async (dispatch) => {
@@ -87,6 +88,36 @@ export const googleLoginAction = (token) => async (dispatch) => {
     const errorMessage = e.response?.data?.error || e.message;
     dispatch({
       type: FACEBOOK_LOGIN,
+      payload: {
+        error: true,
+        errorMessage: errorMessage,
+        loading: false,
+      },
+    });
+  }
+};
+export const registerUserAction = (userData) => async (dispatch) => {
+  dispatch({
+    type: USER_REGISTRATION,
+    payload: {
+      loading: true,
+      error: false,
+    },
+  });
+  try {
+    const response = await registerUser(userData);
+    window.localStorage.setItem('_token', response.data.token);
+    dispatch({
+      type: USER_REGISTRATION,
+      payload: {
+        authorization: true,
+        loading: false,
+      },
+    });
+  } catch (e) {
+    const errorMessage = e.response?.data?.error || e.message;
+    dispatch({
+      type: USER_REGISTRATION,
       payload: {
         error: true,
         errorMessage: errorMessage,
