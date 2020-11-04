@@ -65,16 +65,7 @@ const ArrowButton = styled.button`
   height: 42px;
 `;
 
-const ContentTypesList = styled.div`
-  overflow: auto;
-  display: flex;
-  flex-direction: row;
-  margin: 0;
-  padding: 0 0 10px 0;
-  flex-wrap: nowrap;
-  flex-grow: 1;
-  align-items: center;
-`;
+
 
 const StyledContentTypeSelector = styled.div`
   display: flex;

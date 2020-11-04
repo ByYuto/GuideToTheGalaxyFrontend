@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import Input from '../../UI/Input';
+import React, { useEffect } from 'react';
 import Autocomplete from '../../UI/autocomplete/Autocomplete';
 import { SearchKeywordLayout } from './styled-components';
 import { GoIcon } from '../../../assets/icons/svg-icons';
@@ -8,9 +7,6 @@ import { setKeyword } from '../../../redux/reducers/newArticleState';
 import { setInputValue, getKeywordsSuggestions } from '../../../redux/reducers/keywords';
 
 export default function SearchKeywords() {
-  const [focus, setFocus] = useState(false);
-  const handleFocus = () => setFocus(true);
-  const handleBlur = () => setFocus(false);
   const { inputValue, keywordsSuggestions } = useSelector((store) => store.keywords);
   const {
     newArticle: { keywords },
@@ -37,7 +33,7 @@ export default function SearchKeywords() {
   }, [inputValue]);
   const formattedSuggestions = keywordsSuggestions.map((k) => ({ active: inputValue === k, description: k }));
   return (
-    <SearchKeywordLayout focused={focus}>
+    <SearchKeywordLayout>
       <Autocomplete
         placeholder={'Write your own keyword...'}
         value={inputValue}
@@ -45,7 +41,7 @@ export default function SearchKeywords() {
         onClearValue={onClearInputVal}
         onOptionSelect={onOptionSelect}
         suggestions={formattedSuggestions}
-        patternAllowed={'^[a-zA-Z0-9\s\-]+$'}
+        patternAllowed={'^[a-zA-Z0-9s-]+$'}
         handleKeydown={(e) => {
           if (e.keyCode === 13) {
             setKeywordValue(inputValue);

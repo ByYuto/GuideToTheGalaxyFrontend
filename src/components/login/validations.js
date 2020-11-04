@@ -3,6 +3,11 @@ export const validateUppercase = (value) => /[A-Z]+/.test(value);
 
 export const matchStringValidate = (str1, str2) => str1 === str2;
 
+export const validateWorstPassword = (str) => {
+    const lowerCasePassword = str.toLowerCase();
+    return worstPasswords.includes(lowerCasePassword);
+};
+
 const worstPasswords = [
     "12345",
     "123456",

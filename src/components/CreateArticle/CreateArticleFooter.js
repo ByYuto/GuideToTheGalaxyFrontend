@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, {  useRef } from 'react';
 import styled from 'styled-components';
 import Button from '../UI/Button';
 import { useSelector } from 'react-redux';
@@ -30,7 +30,7 @@ const CreateArticleFooter = ({
   onPublish,
 }) => {
   const nextRef = useRef(null);
-  const { loading, error, errorMessage } = useSelector((store) => store.newArticle);
+  const { loading } = useSelector((store) => store.newArticle);
   return (
     <StyledFooter>
       {!loading ? (

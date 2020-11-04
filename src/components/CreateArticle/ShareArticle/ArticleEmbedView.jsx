@@ -62,7 +62,7 @@ export default function ArticleEmbedView({
           <FlexContainer elmWidth="20%" column justify="flex-end">
             {image && image.content?.featured_sm ? (
               <figure>
-                <img src={image.content.featured_m} />
+                <img src={image.content.featured_m} alt={title} />
               </figure>
             ) : null}
             <FlexContainer justify="space-evenly" align="center" className="reactions-toolbar" elmWidth="90%">

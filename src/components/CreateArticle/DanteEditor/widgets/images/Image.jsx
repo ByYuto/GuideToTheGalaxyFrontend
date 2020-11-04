@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { AtomicBlockUtils, EditorState, convertToRaw } from 'draft-js';
+import { useState, useRef } from 'react';
+import { AtomicBlockUtils, EditorState } from 'draft-js';
 
 export const useImageWidget = () => {
   const [imageUrl, setImageUrl] = useState('');

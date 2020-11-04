@@ -45,7 +45,7 @@ export const getArticlesFilteredService = async (text, location, category, keywo
 
 export const getSuggestedArticles = async (filter) => {
   const token = await localStorage.getItem('_token');
-  const params = filter == '' ? '' : `?text=${filter}`;
+  const params = filter === '' ? '' : `?text=${filter}`;
 
   if (token !== null) {
     return axios.get(GET_SUGGESTED_ARTICLES + params, { headers: { Authorization: `Bearer ${token}` } });
@@ -85,7 +85,7 @@ export const getSuggestedSearches = async (text, location, category, keywords) =
 
 export const getEmbedArticlesService = async (filter) => {
   const token = await localStorage.getItem('_token');
-  const param = filter == '' ? '' : `?text=${filter}`;
+  const param = filter === '' ? '' : `?text=${filter}`;
   return axios.get(GET_EMBED_ARTICLES + param, { headers: { Authorization: `Bearer ${token}` } });
 };
 

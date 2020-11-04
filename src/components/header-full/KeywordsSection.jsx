@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import FlexContainer from '../UI/FlexContainer';
-import Select from 'react-select';
-import { customStyle } from './styled-components';
 import Tag from '../UI/Tag';
 import Dropdown from '../UI/dropdown/Dropdown';
 import { useDispatch, useSelector } from 'react-redux';
@@ -70,11 +68,12 @@ export default function KeywordsSection() {
       handleShowLeftArrow();
       handleShowRightArrow();
     });
+    const keywordContainerRef = keywordContainer.current;
     return () => {
-      keywordContainer.current.removeEventListener('scroll', () => {
+      keywordContainerRef.removeEventListener('scroll', () => {
         handleShowLeftArrow();
         handleShowRightArrow();
-        keywordContainer.current.scrollLeft = 0;
+        keywordContainerRef.scrollLeft = 0;
       });
     };
   }, [categoryValue, locationValue, visibleRight, visibleLeft, currentPosition]);

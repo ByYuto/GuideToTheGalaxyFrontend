@@ -5,8 +5,6 @@ import Card from '../../UI/Card';
 import Button from '../../UI/Button';
 import Tag from '../../UI/Tag';
 import { ShareArticleCardLayout } from './styled-components';
-import { insertEmbedArticle } from '../../../redux/reducers/newArticleState';
-import { useDispatch } from 'react-redux';
 
 export default function ShareArticleCard({
   _id,
@@ -17,12 +15,10 @@ export default function ShareArticleCard({
   location,
   keywords,
   textContent,
-  contentIndex,
   closeModal,
   confirmArticle,
   editorState,
 }) {
-  const dispatch = useDispatch();
   const handleAddArticle = (e, editorState, _id) => {
     closeModal(false);
     //dispatch(insertEmbedArticle(contentIndex, _id));
@@ -55,7 +51,7 @@ export default function ShareArticleCard({
           </div>
           {image && image.content?.featured_sm ? (
             <figure>
-              <img src={image.content.featured_sm} />
+              <img src={image.content.featured_sm} alt={title} />
             </figure>
           ) : null}
         </FlexContainer>

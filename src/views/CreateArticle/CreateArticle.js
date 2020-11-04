@@ -9,7 +9,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   updateNewArticle,
   setNewArticleStep,
-  makeFormDraft,
   clearArticleData,
   saveArticle,
   successSavedArticle,
@@ -38,16 +37,7 @@ import { getContentType, setArticleContent } from './helpers';
 import Notice from '../../components/UI/notice/Notice';
 import KeywordSelector from '../../components/CreateArticle/keywords/KeywordSelector';
 
-const nextDisabledSelector = (state) => {
-  const { newArticle, step } = state.newArticle;
-  if (step === 1) {
-    return !newArticle.validStep1;
-  } else if (step === 2) {
-    return !newArticle.validStep2;
-  } else if (step === 3) {
-  } else {
-  }
-};
+
 
 const categoriesSelector = (state) => state.app.categories;
 const getContentTypes = (categories, selectedCategory) => {
@@ -65,7 +55,6 @@ const CreateArticle = () => {
     (state) => state.newArticle
   );
   const [customContent, setCustomContent] = useState(null);
-  const nextDisabled = useSelector(nextDisabledSelector);
   const categories = useSelector(categoriesSelector);
   const contentTypesAvailableForSelectedCategory =
     categories && newArticle.categoryId ? getContentTypes(categories, newArticle.categoryId) : null;

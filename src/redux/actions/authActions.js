@@ -128,7 +128,7 @@ export const registerUserAction = (userData) => async (dispatch) => {
 };
 
 export const checkLogin = () => (dispatch) => {
-  const token = window.localStorage.setItem('_token', token);
+  const token = window.localStorage.getItem('_token');
   const auth = token !== null;
   dispatch({ type: CHECK_LOGIN, payload: { authorization: auth } });
 };

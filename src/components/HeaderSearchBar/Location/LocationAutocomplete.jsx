@@ -5,27 +5,19 @@ import SuggestionOptions from './SuggestionsOptions';
 import { AutocompleteLayout, PlacesAutocompleteContainerLayout } from './styled-components';
 import { IoIosClose } from 'react-icons/io';
 import { BlueLocationIcon } from '../../../assets/icons/svg-icons';
-import { useDispatch } from 'react-redux';
 
 export default function LocationAutocomplete(props) {
   const [address, setAddress] = useState(props.value);
-  const [placeId, setPlaceId] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  const dispatch = useDispatch();
 
   const handleChange = async (address) => {
     setAddress(address);
   };
 
-  const handleSelect = (address, placeId) => {
-    setAddress(address);
-    setPlaceId(placeId);
-  };
-
   const clearValue = (address) => {
     setAddress('');
   };
-  const { placeholderText = 'Select a location', validations } = props;
+  const { placeholderText = 'Select a location' } = props;
 
   const handleChangeValidations = async (address, placeId) => {
     setAddress(address);

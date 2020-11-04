@@ -5,17 +5,16 @@ import Checkbox from './components/Checkbox';
 import { useForm, Controller } from 'react-hook-form';
 import Loader from '../UI/Loader';
 import Button from '../UI/Button';
-import { validateUppercase, matchStringValidate } from './validations';
+import { validateUppercase, matchStringValidate, validateWorstPassword } from './validations';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUserAction } from '../../redux/actions/authActions';
 
 export default function RegisterForm({ setDisplayRegister }) {
-  const { register, handleSubmit, setValue, errors, getValues, control, formState } = useForm();
+  const { register, handleSubmit, setValue, errors, control, formState } = useForm();
   const { isSubmitted } = formState;
   const dispatch = useDispatch();
   const { error, errorMessage, loading } = useSelector((store) => store.auth);
   const [passwordValue, setPasswordValue] = useState('');
-  const [termsAccepted, setTermsAccepted] = useState(false);
   const onSubmit = (data) => {
     const user = {
       name: data.name,
@@ -31,11 +30,11 @@ export default function RegisterForm({ setDisplayRegister }) {
     setValue('confirm_password', '');
   };
 
-  const onChangeCheckTerms = (val) => {
-    setValue('accept_terms', val);
-  };
+  const passwordErrorMessage =
+    (errors?.password?.type === 'upperCase' && 'Password need at least one uppercase') ||
+    (errors?.password?.type === 'worstPassword' && 'Worst password ever, please try a better one') ||
+    errors?.password?.message;
 
-  const isChecked = getValues('accept_terms');
   return (
     <FlexContainer className="form-container" direction="column" align="center" justify="space-between" span="0">
       <p className="form-title">Sign up with an email</p>
@@ -77,9 +76,7 @@ export default function RegisterForm({ setDisplayRegister }) {
           noMargin
           valid={!errors?.password}
           handleChange={(e) => setPasswordValue(e.target.value)}
-          errorMessage={
-            errors?.password?.type === 'upperCase' ? 'Password need at least one uppercase' : errors?.password?.message
-          }
+          errorMessage={passwordErrorMessage}
           registerField={register({
             required: 'Field required',
             minLength: {
@@ -88,6 +85,7 @@ export default function RegisterForm({ setDisplayRegister }) {
             },
             validate: {
               upperCase: validateUppercase,
+              worstPassword: validateWorstPassword,
             },
           })}
         />
@@ -110,6 +108,7 @@ export default function RegisterForm({ setDisplayRegister }) {
         <div style={{ width: '100%' }}>
           <Controller
             control={control}
+            defaultValue={false}
             name="accept_terms"
             rules={{ required: 'This is required' }}
             render={({ onChange, onBlur, value, name, ref }) => (
@@ -123,7 +122,10 @@ export default function RegisterForm({ setDisplayRegister }) {
             )}
           />{' '}
           <span>
-            I accept the <a href="#">Terms and Conditions</a>
+            I accept the{' '}
+            <a href="/terms-conditions" target="_blank">
+              Terms and Conditions
+            </a>
           </span>
         </div>
         {errors?.accept_terms && (

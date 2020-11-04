@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { LoginLayout } from './styledComponent';
 import Button from '../UI/Button';
 import GoogleLogo from '../../assets/icons/Google.svg';
@@ -15,6 +15,9 @@ import Loader from '../UI/Loader';
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import RegisterForm from './RegisterForm';
+
+const GOOGLE_CLIENT_KEY = process.env.REACT_APP_GOOGLE_CLIENT_KEY;
+const FACEBOOK_CLIENT_KEY = process.env.REACT_APP_FACEBOOK_CLIENT_KEY;
 
 export default function Login({ handleCancel }) {
   const [form, setFormState] = useState({ valid: false, loading: false, error: false, errorType: '', submit: false });
@@ -50,7 +53,6 @@ export default function Login({ handleCancel }) {
     if (email.valid && password.valid) {
       setFormState({ ...form, valid: true, loading: true });
       dispatch(loginAction({ email: email.value, password: password.value }));
-      //setFormState({ ...form, valid: true, loading: false });
     }
   };
 
@@ -71,13 +73,13 @@ export default function Login({ handleCancel }) {
       <LoginLayout>
         <div>
           <GoogleLogin
-            clientId="643337274039-1mc3ifs771s0r39l4tmj7d3719aj79l9.apps.googleusercontent.com"
+            clientId={GOOGLE_CLIENT_KEY}
             onSuccess={responseGoogle}
             onFailure={responseGoogle}
             cookiePolicy={'single_host_origin'}
             render={(renderProps) => (
               <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
-                <img src={GoogleLogo} />
+                <img src={GoogleLogo} alt="Sign up with google" />
                 Sign up with Google
               </Button>
             )}
@@ -86,11 +88,11 @@ export default function Login({ handleCancel }) {
 
         <div>
           <FacebookLogin
-            appId="646987882647026"
+            appId={FACEBOOK_CLIENT_KEY}
             fields="name,email,picture"
             render={(renderProps) => (
               <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
-                <img src={FacebookLogo} />
+                <img src={FacebookLogo} alt="Sign up with Facebook" />
                 Sign up with Facebook
               </Button>
             )}

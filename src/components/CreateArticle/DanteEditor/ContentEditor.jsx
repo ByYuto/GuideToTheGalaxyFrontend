@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { EditorLayout } from './styled-components';
-import { Editor, EditorState, CompositeDecorator, RichUtils, convertToRaw } from 'draft-js';
+import { Editor, EditorState, CompositeDecorator, RichUtils } from 'draft-js';
 import TextFormat from './style-toolbar/TextFormat';
 import 'draft-js/dist/Draft.css';
 import InsertLink from './widgets/link/InsertLink';
@@ -54,7 +54,7 @@ function findLinkEntities(contentBlock, callback, contentState) {
   }, callback);
 }
 
-function ContentEditor({}) {
+function ContentEditor() {
   const decorator = new CompositeDecorator([
     {
       strategy: findLinkEntities,
@@ -75,7 +75,6 @@ function ContentEditor({}) {
   const [urlValue, setUrlValue] = useState('');
   const [selectionState, setSelectionState] = useState(null);
   const editorRef = useRef(null);
-  const inputRef = useRef(null);
   const makeFocus = () => editorRef.current.focus();
   const styledToolbarRef = useRef(null);
   const mediaToolbarRef = useRef(null);
@@ -109,7 +108,7 @@ function ContentEditor({}) {
     }
 
     if (type === 'VIDEO') {
-      const { videoId, type } = entity.getData();
+      const { videoId } = entity.getData();
       return <EmbedPreview embedSource={videoId} />;
     }
 
@@ -129,17 +128,6 @@ function ContentEditor({}) {
   const _promptForLink = () => {
     const selection = editorState.getSelection();
     if (!selection.isCollapsed()) {
-      const contentState = editorState.getCurrentContent();
-      const startKey = editorState.getSelection().getStartKey();
-      const startOffset = editorState.getSelection().getStartOffset();
-      const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
-      const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
-
-      let url = '';
-      if (linkKey) {
-        const linkInstance = contentState.getEntity(linkKey);
-        url = linkInstance.getData().url;
-      }
       setLinkInputActive('inactive');
     }
   };
@@ -187,7 +175,7 @@ function ContentEditor({}) {
     const imageEntity = imageBlock.getEntityAt(0);
     const imageEntityF = contentState.getEntity(imageEntity);
     const { images } = imageEntityF.getData();
-    const contentStateWithEntity = contentState.replaceEntityData(imageEntity, {
+    contentState.replaceEntityData(imageEntity, {
       images: [...images, ...imageInfo],
     });
     setBlockKey(null);
@@ -265,11 +253,6 @@ function ContentEditor({}) {
       if (elm.target.classList.contains('media-toolbar-container')) {
         const isIntersected = elm.isIntersecting;
         setMediaToolbarOut(isIntersected);
-      }
-
-      if (elm.target.classList.contains('editor-container')) {
-        const isIntersected = elm.isVisible;
-        //setEditorOut(isIntersected);
       }
     });
   };

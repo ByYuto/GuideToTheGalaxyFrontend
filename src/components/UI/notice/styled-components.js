@@ -32,6 +32,8 @@ export const NotifyLayout = styled.div`
           return '#F2F537';
         case 'info':
           return '#6670F0';
+        default: 
+          return '#BEF95C';
       }
     }};
   }
