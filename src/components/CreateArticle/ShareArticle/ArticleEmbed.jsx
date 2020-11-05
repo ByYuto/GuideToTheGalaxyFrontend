@@ -6,7 +6,7 @@ export default function ArticleEmbed({ articleId }) {
   const [error, setError] = useState({ status: false, message: '' });
   useEffect(() => {
     getArticle(articleId);
-  }, []);
+  }, [articleId]);
   const getArticle = async (artid) => {
     try {
       const resp = await getEmbedArticleService(artid);

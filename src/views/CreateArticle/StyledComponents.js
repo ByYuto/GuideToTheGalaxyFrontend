@@ -2,7 +2,7 @@ import View from '../../components/View';
 import styled from 'styled-components';
 import CreateArticleTooltip from '../../components/CreateArticle/CreateArticleTooltip';
 
-const screenHeight = window.innerHeight + 'px';
+
 
 export const Fields = styled.div`
   max-width: 70%;

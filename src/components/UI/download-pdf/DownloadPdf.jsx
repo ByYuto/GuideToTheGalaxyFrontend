@@ -8,7 +8,7 @@ export default function DownloadPdf({ fileName, pdfUrl }) {
     <PDFUploaderLayout>
       <FlexContainer className="pdf-selected-container" align="center">
         <figure>
-          <img src={PdfMountedImage} />
+          <img src={PdfMountedImage} alt={fileName || ''} />
         </figure>
         <FlexContainer column>
           <h4 alt={fileName} title={fileName}>

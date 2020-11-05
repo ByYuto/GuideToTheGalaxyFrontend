@@ -13,7 +13,7 @@ import { validateField } from '../../../redux/reducers/newArticleState';
 
 export default function LocationAutocomplete(props) {
   const [address, setAddress] = useState('');
-  const [placeId, setPlaceId] = useState('');
+  const [placeId] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const dispatch = useDispatch();
 
@@ -26,11 +26,6 @@ export default function LocationAutocomplete(props) {
       await dispatch(validateField(fieldValidation));
     }
     setAddress(address);
-  };
-
-  const handleSelect = (address, placeId) => {
-    setAddress(address);
-    setPlaceId(placeId);
   };
 
   const clearValue = (address) => {

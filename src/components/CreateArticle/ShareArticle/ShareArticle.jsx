@@ -8,13 +8,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import Loader from '../../UI/Loader';
 import { getEmbedArticles } from '../../../redux/reducers/articles';
 export default function ShareArticle({ contentIndex, closeModal, confirmArticle, editorState }) {
-  const { embedArticles, loading, error, errorMessage } = useSelector((store) => store.articles);
+  const { embedArticles, loading } = useSelector((store) => store.articles);
   const dispatch = useDispatch();
   useEffect(() => {
     if (embedArticles.length < 1) {
       dispatch(getEmbedArticles(''));
     }
-  }, []);
+  }, [dispatch, embedArticles]);
   return (
     <ShareArticleLayout loading={loading ? 'true' : null}>
       <SearchBar />

@@ -24,10 +24,8 @@ import {
   StyledView,
   MaxWidthContainer,
   FullHeaderLayout,
-  customStyle,
 } from './styled-components';
 import DontPanic from '../../assets/images/dont-panic-lg.svg';
-import { SortIcon } from '../../assets/icons/svg-icons';
 const Header = ({ home = 'home' }) => {
   const history = useHistory();
   const onAddContentClick = () => {

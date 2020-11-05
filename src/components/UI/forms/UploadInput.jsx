@@ -134,7 +134,12 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
   return (
     <>
       <UploadInputLayout onClick={handleImgSelect} isRequired={contentType.image.required}>
-        <img src={imgToPlace} onFocus={() => setTooltipVisible(true)} onBlur={() => setTooltipVisible(false)} />
+        <img
+          alt={'featured img'}
+          src={imgToPlace}
+          onFocus={() => setTooltipVisible(true)}
+          onBlur={() => setTooltipVisible(false)}
+        />
         <button onFocus={() => setTooltipVisible(true)} onBlur={() => setTooltipVisible(false)}>
           <CameraIcon />
           Upload

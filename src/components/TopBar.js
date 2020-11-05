@@ -56,9 +56,6 @@ const TopBar = () => {
   const onAddContentClick = () => {
     history.push('/create');
   };
-  const onTestComponentsClick = () => {
-    history.push('/test-components');
-  };
   const modal = useModal();
   return (
     <StyledTopBar>

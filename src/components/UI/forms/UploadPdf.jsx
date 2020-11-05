@@ -45,7 +45,7 @@ export default function UploadPdf() {
       ) : (
         <FlexContainer className="pdf-selected-container" align="center">
           <figure>
-            <img src={PdfMountedImage} />
+            <img src={PdfMountedImage} alt={fileName} />
           </figure>
           <FlexContainer column>
             <h4>{fileName}</h4>

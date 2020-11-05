@@ -9,7 +9,7 @@ export default function AuthorMeta({ authorName, postDate, avatarUrl }) {
     <AuthorMetaLayout>
       <FlexContainer align="center">
         <figure className="post-author-avatar">
-          <img src={avatarUrl ? avatarUrl : AvatarPlaceholder} />
+          <img src={avatarUrl ? avatarUrl : AvatarPlaceholder} alt={authorName} />
         </figure>
         <div className="author-metadata">
           <div>

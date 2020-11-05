@@ -1,16 +1,12 @@
 import React, { useRef } from 'react';
-import { RiCloseLine } from 'react-icons/ri';
 import { BsImages } from 'react-icons/bs';
-import { useDispatch } from 'react-redux';
-import { CloseButton, AddButton, ImageWrapper, ImageItem, ImagesContainer, ButtonLabel } from './styled-components';
+import { AddButton, ImageWrapper, ImageItem, ImagesContainer, ButtonLabel } from './styled-components';
 import messages from './messages.json';
-//import { deleteImage, deleteContent, addImages } from '../../../redux/reducers/newArticleState';
-import { EditorState, AtomicBlockUtils, Entity } from 'draft-js';
+import { EditorState, AtomicBlockUtils } from 'draft-js';
 import { uploadImage } from '../../../http/createArticleService';
 const MAX_FILES = 4;
 
 const ImageEditorComponent = (props) => {
-  //const dispatch = useDispatch();
   const fileInputRef = useRef(null);
 
   const handleUploadImage = async (event, editorState, onChangeEditor, blockKey) => {
@@ -50,12 +46,6 @@ const ImageEditorComponent = (props) => {
     <ImagesContainer aria-label="Photos" role="group">
       {props.images.map((item, imgIndex) => (
         <ImageWrapper position={imgIndex} length={props.images.length} key={imgIndex}>
-          {/* <CloseButton
-            onClick={() => {
-            }}
-          >
-            <RiCloseLine color="#FFFFFF" size={22} />
-          </CloseButton> */}
           <ImageItem src={item.url} />
         </ImageWrapper>
       ))}

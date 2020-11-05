@@ -58,14 +58,14 @@ export default function ArticleDetail() {
                     )}
                     <div className="metadata-url">
                       {article && article.URL && article.categoryId !== 'TOOLS' && (
-                        <a href={article.URL} target="_blank">
+                        <a href={article.URL} target="_blank" rel="noopener noreferrer">
                           <OpenlinkIcon className="head-article-content-icon-link" />
                           {article.URL}
                         </a>
                       )}
                       {article && article.URL && article.categoryId === 'TOOLS' && (
                         <Button primary className="button-buy">
-                          <a href={article.URL} target="_blank">
+                          <a href={article.URL} target="_blank" rel="noopener noreferrer">
                             Buy here
                           </a>
                         </Button>
@@ -75,7 +75,7 @@ export default function ArticleDetail() {
                   <FlexContainer elmWidth="20%" align="center">
                     {article?.image?.content?.featured_m && (
                       <figure className="featured-img">
-                        <img src={article.image.content.featured_m} />
+                        <img src={article.image.content.featured_m} alt={article?.title || ''} />
                       </figure>
                     )}
                   </FlexContainer>
@@ -86,7 +86,7 @@ export default function ArticleDetail() {
               <MaxWidthContainer>
                 <FlexContainer align="center">
                   <figure className="post-author-avatar">
-                    <img src={AvatarPlaceholder} />
+                    <img src={AvatarPlaceholder} alt={article?.user?.name || ''} />
                   </figure>
                   <div className="author-metadata">
                     <div>
@@ -118,7 +118,7 @@ export default function ArticleDetail() {
                 )}
                 {article && article.URL && article.categoryId === 'TOOLS' && (
                   <Button primary className="button-buy">
-                    <a href={article.URL} target="_blank">
+                    <a href={article.URL} target="_blank" rel="noopener noreferrer">
                       Buy here
                     </a>
                   </Button>

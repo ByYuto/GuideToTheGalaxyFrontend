@@ -1,14 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import Caption from '../UI/Caption';
-import styled, { css } from 'styled-components';
-//import ContentEditor from '../UI/editor/ContentEditor';
-import { useSelector, useDispatch } from 'react-redux';
+import styled from 'styled-components';
 import Divider from '../UI/Divider';
 import UploadPdf from '../UI/forms/UploadPdf';
 import ToggleContributor from '../UI/ToggleContributor';
-//import ImageEditorComponent from './ImageEditor/ImageEditorComponent';
-//import EmbedPreview from './ShareEmbed/EmbedPreview';
-//import ArticleEmbed from './ShareArticle/ArticleEmbed';
 
 //dante editor
 
@@ -54,75 +49,14 @@ export const MaxWidthContainer = styled.div`
   }
 `;
 
-const AddContentContainer = styled.div`
-  position: absolute;
-  top: 100%;
-  box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
-`;
 
-const FormatContentContainer = styled.div`
-  position: absolute;
-  bottom: 100%;
-  box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
-  font-size: 1.5em;
-  border-radius: 5px;
-`;
 
-const ArticleContentPartContainer = styled.div`
-  position: relative;
-  margin: 20px 0px;
-  box-shadow: 0px 0px 12px rgba(97, 124, 255, 0.1);
-  border-radius: 8px;
-  border: 1px solid transparent;
 
-  & .light-tooltip {
-    color: white;
-  }
-  ${(props) =>
-    props.focused
-      ? css`
-          outline: 0;
-          border-color: ${(props) => props.theme.accentColors.primary.color};
 
-          .mce-content-body:focus {
-            outline: 0;
-          }
-        `
-      : null}
-`;
 
-const EditorButton = styled.button`
-  border: none;
-  background-color: transparent;
-  outline: 0;
-  box-shadow: none;
-  padding: 5px;
-  font-size: 24px;
-  cursor: pointer;
-  &:hover {
-    color: #6670f0;
-  }
-`;
 
-const ArticleContent = ({ article, onChangeArticle, onKeyDown }) => {
-  const { newArticle, currentIndex } = useSelector((store) => store.newArticle);
-  const { contents } = newArticle;
-  const onAddContentPart = (index, type, data) => {
-    //console.log('trying to add a ' + type + ' content at index ' + index);
-    const newArticle = { ...article };
-    newArticle.content.splice(index + 1, 0, {
-      content: 'hello world',
-      type,
-    });
-    onChangeArticle(newArticle);
-  };
 
-  const onContentPartChange = (index, content) => {
-    //console.log('trying to add a ' + type + ' content at index ' + index);
-    const newArticle = JSON.parse(JSON.stringify(article));
-    newArticle.content[index].content = content;
-    onChangeArticle && onChangeArticle(newArticle);
-  };
+const ArticleContent = () => {
 
   return (
     <StyledArticleContent>

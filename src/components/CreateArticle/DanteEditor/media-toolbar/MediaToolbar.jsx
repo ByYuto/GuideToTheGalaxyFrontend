@@ -1,28 +1,18 @@
-import React, { useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useRef } from 'react';
 import { MediaToolbarLayout } from './styled-components';
 import { ImageMediaIcon, VideoMediaIcon, ArticleIcon, PlusIcon } from '../../../../assets/icons/svg-icons';
-import { addImagesContent } from '../../../../redux/reducers/newArticleState';
 import Modal from '../../../UI/modal/Modal';
 import { useModal } from '../../../UI/modal/useModal';
 import ShareArticle from '../../../CreateArticle/ShareArticle/ShareArticle';
 import ShareEmbed from '../../../CreateArticle/ShareEmbed/ShareEmbed';
 import FlexContainer from '../../../UI/FlexContainer';
-import { EditorState, AtomicBlockUtils, convertToRaw } from 'draft-js';
+import { EditorState, AtomicBlockUtils } from 'draft-js';
 import { uploadImage } from '../../../../http/createArticleService';
 import { useImageWidget } from '../widgets/images/Image';
 
 const MAX_IMAGES = 4;
 
-const MediaToolbar = ({
-  editorState,
-  index = 0,
-  onChangeEditor,
-  imageInputRef,
-  isFixed,
-  embedActive,
-  setEmbedActivation,
-}) => {
+const MediaToolbar = ({ editorState, index = 0, onChangeEditor, isFixed, embedActive, setEmbedActivation }) => {
   const fileInputRef = useRef(null);
   const modal = useModal();
   const imageWidget = useImageWidget();

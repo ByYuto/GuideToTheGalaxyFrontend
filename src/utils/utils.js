@@ -6,6 +6,8 @@ export const suggestionsFilter = (suggestions) => {
     const existInArray = _.intersectionBy(optionsLocationsAllowed, locationTypes);
     if (existInArray.length > 0) {
       return suggestion;
+    } else {
+      return false
     }
   });
   return filteredSuggestion;

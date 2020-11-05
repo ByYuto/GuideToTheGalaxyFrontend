@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { LoginLayout } from './styledComponent';
 import Button from '../UI/Button';
 import GoogleLogo from '../../assets/icons/Google.svg';
@@ -8,16 +8,22 @@ import Input from '../UI/forms/Input';
 import { ThemeProvider } from 'styled-components';
 import { FlexContainer } from '../UI/Helpers';
 import { Link } from 'react-router-dom';
-import { BsLock } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import { isRequired, validate, validateEmail } from '../../utils/validations';
-import { loginAction } from '../../redux/actions/authActions';
+import { loginAction, facebookLoginAction, googleLoginAction } from '../../redux/actions/authActions';
 import Loader from '../UI/Loader';
+import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import RegisterForm from './RegisterForm';
+
+const GOOGLE_CLIENT_KEY = process.env.REACT_APP_GOOGLE_CLIENT_KEY;
+const FACEBOOK_CLIENT_KEY = process.env.REACT_APP_FACEBOOK_CLIENT_KEY;
 
 export default function Login({ handleCancel }) {
   const [form, setFormState] = useState({ valid: false, loading: false, error: false, errorType: '', submit: false });
   const [email, setEmail] = useState({ value: '', valid: false, errorType: '' });
   const [password, setPassword] = useState({ value: '', valid: false, errorType: '' });
+  const [displayRegister, setDisplayRegister] = useState(false);
   const dispatch = useDispatch();
   const { error, errorMessage, loading } = useSelector((store) => store.auth);
   const handleEmailChange = (value) => {
@@ -47,68 +53,108 @@ export default function Login({ handleCancel }) {
     if (email.valid && password.valid) {
       setFormState({ ...form, valid: true, loading: true });
       dispatch(loginAction({ email: email.value, password: password.value }));
-      //setFormState({ ...form, valid: true, loading: false });
+    }
+  };
+
+  const responseGoogle = (response) => {
+    if (response && response.accessToken) {
+      dispatch(googleLoginAction(response.accessToken));
+    }
+  };
+
+  const responseFacebook = (response) => {
+    if (response && response.accessToken) {
+      dispatch(facebookLoginAction(response.accessToken));
     }
   };
 
   return (
     <ThemeProvider theme={{ isDark: true }}>
       <LoginLayout>
-        <Button span="24px" darker elmWidth="232px" elmHeight="40px">
-          <img src={GoogleLogo} />
-          Sign up with Google
-        </Button>
-        <Button span="24px" darker elmWidth="232px" elmHeight="40px">
-          <img src={FacebookLogo} />
-          Sign up with Facebook
-        </Button>
-        <Divider />
-        <FlexContainer className="form-container" direction="column" align="center" justify="space-between" span="0">
-          <p className="form-title">Sign in with an email</p>
-          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-            <Input
-              type="email"
-              placeholder="Email"
-              value={email.value}
-              handleChange={(e) => handleEmailChange(e.target.value)}
-              valid={email.valid}
-              errorMessage={email.errorType}
-              isSubmitted={form.submit}
-            />
-
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password.value}
-              handleChange={(e) => handlePasswordChange(e.target.value)}
-              noMargin
-              valid={password.valid}
-              errorMessage={password.errorType}
-              isSubmitted={form.submit}
-            />
-            <div style={{ width: '100%' }}>
-              <p>
-                Forgot your password? <Link to="/forget-password">Recover it</Link>
-              </p>
-            </div>
-
-            {!loading ? (
-              <FlexContainer span="0" padding="0" justify="center">
-                <Button span="24px" onClick={handleCancel} rounded modalSecondary>
-                  Cancel
-                </Button>
-                <Button span="24px" type="submit" rounded>
-                  Log in
-                </Button>
-              </FlexContainer>
-            ) : (
-              <FlexContainer justify="center" align="center">
-                <Loader />
-              </FlexContainer>
+        <div>
+          <GoogleLogin
+            clientId={GOOGLE_CLIENT_KEY}
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            cookiePolicy={'single_host_origin'}
+            render={(renderProps) => (
+              <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
+                <img src={GoogleLogo} alt="Sign up with google" />
+                Sign up with Google
+              </Button>
             )}
-            {error && <div className="error-message">{errorMessage}</div>}
-          </form>
-        </FlexContainer>
+          />
+        </div>
+
+        <div>
+          <FacebookLogin
+            appId={FACEBOOK_CLIENT_KEY}
+            fields="name,email,picture"
+            render={(renderProps) => (
+              <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
+                <img src={FacebookLogo} alt="Sign up with Facebook" />
+                Sign up with Facebook
+              </Button>
+            )}
+            callback={responseFacebook}
+          />
+        </div>
+        <Divider />
+        {!displayRegister ? (
+          <FlexContainer className="form-container" direction="column" align="center" justify="space-between" span="0">
+            <p className="form-title">Sign in with an email</p>
+            <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email.value}
+                handleChange={(e) => handleEmailChange(e.target.value)}
+                valid={email.valid}
+                errorMessage={email.errorType}
+                isSubmitted={form.submit}
+              />
+
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password.value}
+                handleChange={(e) => handlePasswordChange(e.target.value)}
+                noMargin
+                valid={password.valid}
+                errorMessage={password.errorType}
+                isSubmitted={form.submit}
+              />
+              <div style={{ width: '100%' }}>
+                <p>
+                  Forgot your password? <Link to="/forget-password">Recover it</Link>
+                </p>
+              </div>
+              <div style={{ width: '100%' }}>
+                <p>
+                  <button onClick={(e) => setDisplayRegister(true)}>Register</button>
+                </p>
+              </div>
+
+              {!loading ? (
+                <FlexContainer span="0" padding="0" justify="center">
+                  <Button span="24px" onClick={handleCancel} rounded modalSecondary>
+                    Cancel
+                  </Button>
+                  <Button span="24px" type="submit" rounded>
+                    Log in
+                  </Button>
+                </FlexContainer>
+              ) : (
+                <FlexContainer justify="center" align="center">
+                  <Loader />
+                </FlexContainer>
+              )}
+              {error && <div className="error-message">{errorMessage}</div>}
+            </form>
+          </FlexContainer>
+        ) : (
+          <RegisterForm setDisplayRegister={setDisplayRegister} />
+        )}
       </LoginLayout>
     </ThemeProvider>
   );

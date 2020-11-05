@@ -1,7 +1,6 @@
 import React from 'react';
 import { EmbedLayout } from './styled-components';
 import { MdClose } from 'react-icons/md';
-import { useDispatch } from 'react-redux';
 ///import { removeEmbed } from '../../../redux/reducers/newArticleState';
 import { validateEmbed } from '../../../utils/validations';
 

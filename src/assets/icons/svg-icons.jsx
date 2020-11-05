@@ -1,20 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const SVGIcon = styled(React.Fragment)`
-    & svg {
-        & path, clipPath {
-            fill: #1F1F3D;
-        }
-    }
-
-    &:hover {
-        & svg:hover {
-            & path, clipPath {
-                fill: #9695B7;
-            }
-    }
-`;
 
 export const ImageMediaIcon = ({ color = '#1F1F3D', hover = '#9695B7', size }) => (
   <>

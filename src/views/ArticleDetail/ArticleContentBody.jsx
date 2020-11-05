@@ -16,7 +16,7 @@ export default function ArticleContentBody({ articleContent }) {
             let currentText = cv.text;
             if (cv.link) {
               currentText = (
-                <a target="_blank" href={cv.url}>
+                <a target="_blank" href={cv.url} rel="noopener noreferrer">
                   {currentText}
                 </a>
               );
@@ -55,6 +55,8 @@ export default function ArticleContentBody({ articleContent }) {
           }
         } else if (elm.type === 'video') {
           return <VideoContent key={index} content={elm.content} />;
+        } else {
+          return <p key={index}>{elm.content}</p>;
         }
       })}
     </>
