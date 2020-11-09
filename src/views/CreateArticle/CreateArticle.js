@@ -36,7 +36,7 @@ import { useModal } from '../../components/UI/modal/useModal';
 import { getContentType, setArticleContent } from './helpers';
 import Notice from '../../components/UI/notice/Notice';
 import KeywordSelector from '../../components/CreateArticle/keywords/KeywordSelector';
-
+import {convertToRaw} from 'draft-js';
 
 
 const categoriesSelector = (state) => state.app.categories;
@@ -54,6 +54,7 @@ const CreateArticle = () => {
   const { newArticle, step, articleValidations, error, errorMessage, success, loading } = useSelector(
     (state) => state.newArticle
   );
+  const contentRaw = convertToRaw(newArticle.content.getCurrentContent());
   const [customContent, setCustomContent] = useState(null);
   const categories = useSelector(categoriesSelector);
   const contentTypesAvailableForSelectedCategory =
@@ -66,6 +67,7 @@ const CreateArticle = () => {
       fieldsInvalids = true;
     }
   }
+  const rawContent = convertToRaw(newArticle.content.getCurrentContent());
   useEffect(() => {
     if (categories === null || !(categories.length > 0)) {
       dispatch(getCategories());
@@ -73,12 +75,14 @@ const CreateArticle = () => {
     if (fields.length > 0) {
       dispatch(updateNewArticle({ validStep2: !fieldsInvalids }));
     }
-    if (
+    /*if (
       (newArticle.contents[0].type === 'paragraph' && newArticle.contents[0].content[0].children[0].text.length > 0) ||
       newArticle.contents[0].type === 'image' ||
       newArticle.contents[0].type === 'image' ||
       newArticle.contents[0].type === 'article'
-    ) {
+    )*/
+    
+     if(rawContent && (rawContent?.blocks[0]?.text !== "" || rawContent?.blocks?.length > 1)){
       dispatch(updateNewArticle({ validStep3: true }));
     } else {
       dispatch(updateNewArticle({ validStep3: false }));
@@ -100,7 +104,7 @@ const CreateArticle = () => {
     return () => {
       window.removeEventListener('resize', resizeLayer);
     };
-  }, [dispatch, articleValidations, newArticle.validStep2, newArticle.contents[0].content[0].children]);
+  }, [dispatch, articleValidations, newArticle.validStep2, JSON.stringify(rawContent)]);
 
   const resizeLayer = () => {
     const refContentSize = refParentContainer.current.offsetHeight - refHeaderContainer.current.offsetHeight;
