@@ -21,7 +21,7 @@ export const getArticleDetail = (id) => async (dispatch) => {
     dispatch(setArticle(response.data));
   } catch (e) {
     dispatch(setLoading(false));
-    if (e.response.status === 401) {
+    if (e.response?.status === 401) {
       dispatch(setAuthorization(false));
     }
     dispatch(

@@ -4,7 +4,7 @@ import { setAuthorization } from './authState';
 import {EditorState, CompositeDecorator} from 'draft-js';
 import {Link, findLinkEntities} from '../../components/CreateArticle/DanteEditor/ContentEditor';
 
-const decorator = new CompositeDecorator([
+export const decorator = new CompositeDecorator([
   {
     strategy: findLinkEntities,
     component: Link,
