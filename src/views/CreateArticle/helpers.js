@@ -1,3 +1,5 @@
+import {convertToRaw} from 'draft-js';
+
 export const getContentType = (categories, categoryId, contentId) => {
   const { contentTypes } = categories.filter((cat) => cat.name === categoryId)[0];
   const contentType = contentTypes.filter((content) => content.name === contentId)[0];
@@ -22,7 +24,7 @@ export const setArticleContent = (articleContent, contentType, categories) => {
   }
 
   if (contentType.image && (contentType.image.required || articleContent.photo.url !== '')) {
-    article.image = 'image:' + articleContent.photo.imageId;
+    article.imageId = articleContent.photo.imageId;
   }
 
   if (contentType.date && (contentType.date.required || articleContent.date !== null || articleContent.date !== '')) {
@@ -53,15 +55,16 @@ export const setArticleContent = (articleContent, contentType, categories) => {
     articleContent.pdf &&
     (articleContent.pdf !== null || articleContent.pdf !== '' || articleContent.pdf !== undefined)
   ) {
-    article.pdf = articleContent.pdf;
+    article.pdfId = articleContent.pdf;
   }
 
   if (articleContent.keywords && articleContent.keywords.length > 0) {
     article.keywords = [...articleContent.keywords];
   }
 
-  if (articleContent.contents && articleContent.contents.length > 0) {
-    article.content = setContentFormat(articleContent.contents);
+  const rawContent = articleContent.content && convertToRaw(articleContent.content.getCurrentContent());
+  if (rawContent && rawContent.blocks.length > 0) {
+    article.content = rawContent;
   }
 
   article.communityEditsAllowed = articleContent.contributions;

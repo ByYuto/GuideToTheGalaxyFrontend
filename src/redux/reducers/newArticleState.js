@@ -1,6 +1,15 @@
 import uid from 'uid';
 import { uploadImage, createArticle } from '../../http/createArticleService';
 import { setAuthorization } from './authState';
+import {EditorState, CompositeDecorator} from 'draft-js';
+import {Link, findLinkEntities} from '../../components/CreateArticle/DanteEditor/ContentEditor';
+
+export const decorator = new CompositeDecorator([
+  {
+    strategy: findLinkEntities,
+    component: Link,
+  },
+]);
 
 const initialState = {
   step: 1,
@@ -20,18 +29,7 @@ const initialState = {
     pdf: null,
     contributions: false,
     keywords: [],
-    contents: [
-      {
-        id: 0,
-        content: [
-          {
-            type: 'paragraph',
-            children: [{ text: '' }],
-          },
-        ],
-        type: 'paragraph',
-      },
-    ],
+    content: EditorState.createEmpty(decorator)
   },
   articleValidations: {},
   currentValueEditor: [],
@@ -212,16 +210,13 @@ export default (state = initialState, { type, payload }) => {
         currentIndex: index,
       };
     case ON_CHANGE_CONTENT:
-      const conteents = state.newArticle.contents.map((content) =>
-        content.id === payload.id ? { ...payload } : content
-      );
+     
       return {
         ...state,
         newArticle: {
           ...state.newArticle,
-          contents: [...conteents],
+          content: payload,
         },
-        currentIndex: state.currentIndex,
       };
     case CHANGE_EDITOR_FOCUS:
       return {

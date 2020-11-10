@@ -20,7 +20,7 @@ export default function UploadPdf() {
     setFileName(e.target.files[0].name);
     const dataSrc = e.target.files[0];
     const fileData = await uploadFile(dataSrc);
-    await dispatch(insertPdf('file:' + fileData.fileId));
+    await dispatch(insertPdf(fileData.fileId));
   };
 
   const handleLoadPdf = () => {

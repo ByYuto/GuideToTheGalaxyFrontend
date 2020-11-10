@@ -11,6 +11,8 @@ import ImageEditorComponent from '../ImageEditor/ImageEditorComponent';
 import { uploadImage } from '../../../http/createArticleService';
 import FlexContainer from '../../UI/FlexContainer';
 import Popover from 'react-text-selection-popover';
+import { useDispatch, useSelector } from 'react-redux';
+import { onChangeArticleContent } from '../../../redux/reducers/newArticleState';
 
 const styles = {
   root: {
@@ -47,7 +49,7 @@ const styles = {
 
 const MAX_FILES = 4;
 
-function findLinkEntities(contentBlock, callback, contentState) {
+export function findLinkEntities(contentBlock, callback, contentState) {
   contentBlock.findEntityRanges((character) => {
     const entityKey = character.getEntity();
     return entityKey !== null && contentState.getEntity(entityKey).getType() === 'LINK';
@@ -55,13 +57,10 @@ function findLinkEntities(contentBlock, callback, contentState) {
 }
 
 function ContentEditor() {
-  const decorator = new CompositeDecorator([
-    {
-      strategy: findLinkEntities,
-      component: Link,
-    },
-  ]);
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty(decorator));
+  const dispatch = useDispatch();
+  const { newArticle } = useSelector((store) => store.newArticle);
+  const editorState = newArticle.content;
+  const setEditorState = (editorData) => dispatch(onChangeArticleContent(editorData));
   const [isFocusEditor, setFocusEditor] = useState(false);
   const [styledToolbarOut, setStyledToolbarOut] = useState(false);
   const [mediaToolbarOut, setMediaToolbarOut] = useState(false);
@@ -388,7 +387,7 @@ function ContentEditor() {
   );
 }
 
-const Link = (props) => {
+export const Link = (props) => {
   const { url } = props.contentState.getEntity(props.entityKey).getData();
   return (
     <a href={url} style={styles.link}>
