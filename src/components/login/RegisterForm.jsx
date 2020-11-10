@@ -31,7 +31,6 @@ export default function RegisterForm({ setDisplayRegister }) {
   };
 
   const passwordErrorMessage =
-    (errors?.password?.type === 'upperCase' && 'Password need at least one uppercase') ||
     (errors?.password?.type === 'worstPassword' && 'Worst password ever, please try a better one') ||
     errors?.password?.message;
 
@@ -83,8 +82,11 @@ export default function RegisterForm({ setDisplayRegister }) {
               value: 8,
               message: 'Password need at least 8 characters',
             },
+            pattern: {
+              value: /[A-Z]+/,
+              message: 'Password need at least one uppercase',
+            },
             validate: {
-              upperCase: validateUppercase,
               worstPassword: validateWorstPassword,
             },
           })}

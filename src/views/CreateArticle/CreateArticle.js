@@ -283,6 +283,9 @@ const CreateArticle = () => {
             exitDisabled={false}
             onExitClick={step > 1 && arePersistingContent() ? modal.handleClick : onExitClick}
             nextDisabled={!newArticle.validStep2}
+            nexDisabledStep2={newArticle.validStep2 && !newArticle.validStep3}
+            showNextStep2={step === 3}
+            showNextStep1={step < 3}
             onNextClick={onNextClick}
             publish={step > 3 && newArticle.validStep1 && newArticle.validStep2}
             publishDisabled={!newArticle.validStep3}
