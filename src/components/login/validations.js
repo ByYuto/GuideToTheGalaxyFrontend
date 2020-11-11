@@ -5,7 +5,8 @@ export const matchStringValidate = (str1, str2) => str1 === str2;
 
 export const validateWorstPassword = (str) => {
     const lowerCasePassword = str.toLowerCase();
-    return worstPasswords.includes(lowerCasePassword);
+    const isValid = worstPasswords.includes(lowerCasePassword);
+    return !isValid;
 };
 
 const worstPasswords = [
