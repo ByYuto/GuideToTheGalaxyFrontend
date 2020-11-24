@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Toggle from '../../UI/Toggle';
 import { DivInputColumn, DivInputRow } from '../styledComponents';
-import { validate, isRequired, validateMaxLength, validateEmbed, requiredDate } from '../../../utils/validations';
+import { validate, isRequired, validateMaxLength, validateUrl, requiredDate } from '../../../utils/validations';
 import { validateField } from '../../../redux/reducers/newArticleState';
 import { TextValidation } from '../../UI/forms/styledComponents';
 import { CheckIcon } from '../../../assets/icons/svg-icons';
@@ -142,18 +142,18 @@ const InputRow = ({
   const tooltip = contentType ? contentType[field]?.tooltip : `${field} tooltip`;
   const textPlaceholder = contentType ? getPlaceHolderText(contentType[field]) : placeholderText;
   const dataType = contentType[field];
-  const handleChangeValidations = async (value) => {
+  const handleChangeValidations =  (value) => {
     if (validate && validations) {
       const validationsUpdate = dataType.required ? [isRequired, ...validations] : validations;
       const isValid = validate(value, validationsUpdate);
       const fieldValidation = {};
       fieldValidation[field] = isValid.length > 0 ? isValid[0] : { valid: true, errorType: '' };
       if (field === 'URL') {
-        const iconValidation = validateEmbed(value, true);
+        const iconValidation = validateUrl(value, true);
         setValidUrl(iconValidation.valid);
       }
 
-      await dispatch(validateField(fieldValidation));
+       dispatch(validateField(fieldValidation));
     }
     return onChangeData(field, value);
   };
@@ -231,7 +231,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData, readOnly }) => {
           newArticle={newArticle}
           onChangeData={onChangeData}
           validate={validate}
-          validations={[validateEmbed]}
+          validations={[validateUrl]}
           validateError={articleValidations.URL}
           readOnly={readOnly}
         />

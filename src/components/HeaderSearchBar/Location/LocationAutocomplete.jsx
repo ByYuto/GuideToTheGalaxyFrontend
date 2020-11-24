@@ -16,6 +16,7 @@ export default function LocationAutocomplete(props) {
 
   const clearValue = (address) => {
     setAddress('');
+    props.clearValueAction();
   };
   const { placeholderText = 'Select a location' } = props;
 

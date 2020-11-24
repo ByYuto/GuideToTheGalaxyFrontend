@@ -6,12 +6,12 @@ const GET_EMBED_ARTICLES = GET_ARTICLES + '/embeddables';
 const GET_CATEGORY_LIST = api + '/categories/list';
 const GET_SUGGESTED_ARTICLES = api + '/articles/suggestions';
 const GET_SEARCH_SUGGESTIONS = api + '/search/suggestions';
-export const getArticleService = async () => {
+export const getArticleService = async (keywords) => {
   const token = await localStorage.getItem('_token');
   if (token !== null) {
-    return axios.get(GET_ARTICLES, { headers: { Authorization: `Bearer ${token}` } });
+    return axios.get(`${GET_ARTICLES}${keywords ? '?keywords=' + keywords : '' }`, { headers: { Authorization: `Bearer ${token}` } });
   } else {
-    return axios.get(GET_ARTICLES);
+    return axios.get(`${GET_ARTICLES}${keywords ? '?keywords=' + keywords : '' }`);
   }
 };
 

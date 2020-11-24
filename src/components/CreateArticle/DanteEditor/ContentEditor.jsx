@@ -86,7 +86,7 @@ function ContentEditor() {
 
     if (type === 'ARTICLE') {
       const { articleId } = entity.getData();
-      return <ArticleEmbed articleId={articleId} />;
+      return <ArticleEmbed isPreview={true} articleId={articleId} />;
     }
 
     if (type === 'IMAGE') {

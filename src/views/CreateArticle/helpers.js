@@ -20,7 +20,7 @@ export const setArticleContent = (articleContent, contentType, categories) => {
   }
 
   if (contentType.URL && (contentType.URL.required || articleContent.URL !== '')) {
-    article.URL = articleContent.URL;
+    article.URL = "http://" + articleContent.URL;
   }
 
   if (contentType.image && (contentType.image.required || articleContent.photo.url !== '')) {

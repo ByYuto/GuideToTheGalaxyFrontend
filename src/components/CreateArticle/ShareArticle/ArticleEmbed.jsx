@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ArticleEmbedView from './ArticleEmbedView';
 import { getEmbedArticleService } from '../../../http/articleService';
-export default function ArticleEmbed({ articleId }) {
+export default function ArticleEmbed({ articleId, isPreview = false }) {
   const [article, setArticle] = useState(null);
   const [error, setError] = useState({ status: false, message: '' });
   useEffect(() => {
@@ -15,5 +15,9 @@ export default function ArticleEmbed({ articleId }) {
       setError({ status: true, message: e.response.data?.error || e.response.message });
     }
   };
-  return <>{!error.status ? article && <ArticleEmbedView {...article} /> : <div>{error.message}</div>}</>;
+  return (
+    <>
+      {!error.status ? article && <ArticleEmbedView {...article} isPreview={isPreview} /> : <div>{error.message}</div>}
+    </>
+  );
 }
