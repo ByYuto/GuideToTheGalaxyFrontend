@@ -107,11 +107,23 @@ const CustomContentType = ({
   onBlur,
 }) => {
   const [currentKey, setCurrentKey] = useState(null);
+  const [isFocus, setFocus] = useState(false);
+  const [previousLetter, setPreviousLetter] = useState(null);
+  const [inputVal, setInputVal] = useState(value);
+  const [escapePressed, setEscapePressed] = useState(false);
   const _onClick = () => {
+    if(value === "NEW CONTENT TYPE") {
+      return;
+    }
+    setInputVal(value);
     !readOnly && onClick && onClick(value);
   };
   const _onBlur = (e) => {
     const value = (e.target.textContent || e.target.innerText).toUpperCase() || null;
+    if(value === "NEW CONTENT TYPE") {
+      return;
+    }
+    setFocus(false);  
     onChange && onChange(value);
     onBlur && onBlur(value);
   };
@@ -129,7 +141,17 @@ const CustomContentType = ({
       e.key === '&' //Ampersand
     ) {
       //Valid
+      if(e.target.textContent.length > 21 && e.keyCode !== 8 && e.keyCode !== 46) {
+        e.preventDefault();
+        return;
+      }
+      if(previousLetter === 32 && e.keyCode === 32){
+        e.preventDefault();
+        return;
+      }
+      setPreviousLetter(e.keyCode);
       return;
+      
     } else if (e.keyCode === 13) {
       //const value = (e.target.textContent || e.target.innerText).toUpperCase() || null;
       //onChange && onChange(value);
@@ -137,8 +159,15 @@ const CustomContentType = ({
       e.preventDefault();
       setCurrentKey(e.keyCode);
     } else if (e.keyCode === 27) {
-      onChange && onChange(null);
-      onBlur && onBlur(null);
+      setEscapePressed(true);
+      if(inputVal === "" || value === "New Content Type") {
+        onChange && onChange(null);
+         onBlur && onBlur(null);
+      } else {
+        onChange && onChange(inputVal);
+         onBlur && onBlur(inputVal);
+      }
+      
     } else {
       e.preventDefault();
     }
@@ -156,8 +185,14 @@ const CustomContentType = ({
   useEffect(() => {
     if (currentKey === 13) {
       editableRef.current.blur();
+      setFocus(false);
     }
-  }, [currentKey]);
+
+    if(escapePressed) {
+      editableRef.current.textContent = inputVal;
+      setEscapePressed(false);
+    }
+  }, [currentKey, escapePressed]);
 
   return (
     <StyledContentType className={className} active={active} readOnly={readOnly} onClick={_onClick}>
@@ -168,10 +203,11 @@ const CustomContentType = ({
         onKeyDown={_onKeyDown}
         ref={editableRef}
         onPaste={_onPaste}
+        onFocus={()=>setFocus(true)}
       >
         {value}
       </h6>
-      {!readOnly ? (
+      {!isFocus ? (
         <Button className="close-custom-cat" onClick={onClearContentType} transparent secondary icon>
           <IoIosClose size={28} />
         </Button>

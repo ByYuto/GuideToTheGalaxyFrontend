@@ -43,6 +43,17 @@ const categoriesSelector = (state) => state.app.categories;
 const getContentTypes = (categories, selectedCategory) => {
   return categories.find((category) => category.name === selectedCategory).contentTypes;
 };
+const hasFieldsErrors = (articleValidations) => {
+  const fields = Object.values(articleValidations);
+
+  return fields.reduce((acc, curr) => {
+    if (!curr.valid && !acc) {
+      return true;
+    } else {
+      return acc;
+    }
+  }, false);
+}
 const CreateArticle = () => {
   const modal = useModal();
   const history = useHistory();
@@ -54,63 +65,56 @@ const CreateArticle = () => {
   const { newArticle, step, articleValidations, error, errorMessage, success, loading } = useSelector(
     (state) => state.newArticle
   );
-  const contentRaw = convertToRaw(newArticle.content.getCurrentContent());
   const [customContent, setCustomContent] = useState(null);
   const categories = useSelector(categoriesSelector);
   const contentTypesAvailableForSelectedCategory =
     categories && newArticle.categoryId ? getContentTypes(categories, newArticle.categoryId) : null;
   useHiddenTopbar(); //hideTopbar
-  const fields = Object.keys(articleValidations);
-  let fieldsInvalids = false;
-  for (const prop in articleValidations) {
-    if (!articleValidations[prop].valid) {
-      fieldsInvalids = true;
-    }
-  }
   const rawContent = convertToRaw(newArticle.content.getCurrentContent());
-  useEffect(() => {
-    if (categories === null || !(categories.length > 0)) {
-      dispatch(getCategories());
-    }
-    if (fields.length > 0) {
-      dispatch(updateNewArticle({ validStep2: !fieldsInvalids }));
-    }
-    /*if (
-      (newArticle.contents[0].type === 'paragraph' && newArticle.contents[0].content[0].children[0].text.length > 0) ||
-      newArticle.contents[0].type === 'image' ||
-      newArticle.contents[0].type === 'image' ||
-      newArticle.contents[0].type === 'article'
-    )*/
-    
+  
+  useEffect(()=> {
+
+    resizeLayer();
+  window.addEventListener('resize', () => resizeLayer());
+
+  return () => {
+    window.removeEventListener('resize', () => resizeLayer());
+  };
+}, [newArticle.contentTypeId, contentHeight, newArticle]);
+
+const resizeLayer = () => {
+  if(refContentContainer &&
+    refContentContainer.current &&
+    refHeaderContainer &&
+    refHeaderContainer.current &&
+    refParentContainer &&
+    refParentContainer.current) {
+  
+  const refContentSize = refParentContainer.current.offsetHeight - refHeaderContainer.current.offsetHeight;
+  const newSize = window.innerHeight < 723 ? refContentSize + 60 : refContentSize;
+  setContentHeight(newSize);
+  }
+};
+
+  useEffect(() => {     
+   
      if(rawContent && (rawContent?.blocks[0]?.text !== "" || rawContent?.blocks?.length > 1)){
       dispatch(updateNewArticle({ validStep3: true }));
     } else {
       dispatch(updateNewArticle({ validStep3: false }));
-    }
+    }    
+  }, [dispatch,   JSON.stringify(rawContent)]);
 
-    if (
-      refContentContainer &&
-      refContentContainer.current &&
-      refHeaderContainer &&
-      refHeaderContainer.current &&
-      refParentContainer &&
-      refParentContainer.current
-    ) {
-      resizeLayer();
-    }
+  useEffect(() => {
+    const hasArticleDataError = hasFieldsErrors(articleValidations);
+    dispatch(updateNewArticle({ validStep2: !hasArticleDataError && newArticle.contentTypeId }));
+  }, [articleValidations, newArticle.contentTypeId, hasFieldsErrors, dispatch]);  
 
-    window.addEventListener('resize', resizeLayer);
+  useEffect(()=> {
+      dispatch(getCategories());
+  }, [])
 
-    return () => {
-      window.removeEventListener('resize', resizeLayer);
-    };
-  }, [dispatch, articleValidations, newArticle.validStep2, JSON.stringify(rawContent)]);
 
-  const resizeLayer = () => {
-    const refContentSize = refParentContainer.current.offsetHeight - refHeaderContainer.current.offsetHeight;
-    const newSize = window.innerHeight < 723 ? refContentSize + 30 : refContentSize;
-    setContentHeight(newSize);
-  };
 
   const onCategoryChange = (category) => {
     dispatch(updateNewArticle({ categoryId: category, contentTypeId: null, validStep1: false }));
@@ -235,7 +239,7 @@ const CreateArticle = () => {
                   </StyledContentTypeSelectorContainer>
                 </MaxWidthContainer>
               </CreateArticleHeader>
-              <div>
+              <div height={contentHeight}>
                 {!newArticle.validStep1 && (
                   <Layer layerHeight={contentHeight} className="layer-blocker" ref={refContentContainer} />
                 )}
@@ -301,8 +305,9 @@ const CreateArticle = () => {
         elmWidth="496px"
         textOk="Leave"
         okClick={onExitClick}
+        header={undefined}
       >
-        <p style={{ textAlign: 'center' }}>
+        <p style={{ textAlign: 'center', marginTop: "16px" }}>
           Are you sure you want to exit this page?
           <br /> You’ll lose all your progress
         </p>

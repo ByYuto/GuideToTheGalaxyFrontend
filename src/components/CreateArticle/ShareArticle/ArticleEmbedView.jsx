@@ -98,12 +98,12 @@ export default function ArticleEmbedView({
     history.push('/search');
   };
   return (
-    <>
+    <div key={_id}>
       {!isPreview ? (
         <ShareArticleCardView to={`/article/${_id}`}>{cardContent}</ShareArticleCardView>
       ) : (
         <ShareArticleCardPreview>{cardContent}</ShareArticleCardPreview>
       )}
-    </>
+    </div>
   );
 }

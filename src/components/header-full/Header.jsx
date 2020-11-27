@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../../assets/images/logo.png';
 import dontPanic from '../../assets/images/dont-panic.png';
 import { GoPlus } from 'react-icons/go';
@@ -7,6 +7,7 @@ import { MdMenu } from 'react-icons/md';
 import { AiOutlineBell } from 'react-icons/ai';
 import { useHistory } from 'react-router-dom';
 import Modal from '../UI/modal/Modal';
+import Sidebar from '../UI/Sidebar';
 import { useModal } from '../UI/modal/useModal';
 import Login from '../login/Login';
 import WithAuth from '../login/withAuth';
@@ -26,14 +27,27 @@ import {
   FullHeaderLayout,
 } from './styled-components';
 import DontPanic from '../../assets/images/dont-panic-lg.svg';
-const Header = ({ home = 'home' }) => {
+const Header = ({ home = 'home', noKeywords }) => {
   const history = useHistory();
+  const [menuOpen, setMenuOpen] = useState(false);
   const onAddContentClick = () => {
     history.push('/create');
   };
+  const [stickyNav, setStickyNav] = useState(false);
   const modal = useModal();
+  useEffect(() => {
+    window.addEventListener('scroll', () => {
+      setStickyNav(window.scrollY > 331);
+    });
+
+    return () => {
+      window.removeEventListener('scroll', () => {
+        setStickyNav(window.scrollY > 331);
+      });
+    };
+  }, [window.scrollY]);
   return (
-    <FullHeaderLayout home={home}>
+    <FullHeaderLayout home={home} isSticky={stickyNav ? 1 : 0}>
       <StyledTopBar home={home ? 'home' : 'search'}>
         <div className="left">
           <Link to="/">
@@ -41,7 +55,7 @@ const Header = ({ home = 'home' }) => {
             {home === 'search' && <img src={dontPanic} alt="dont panic" />}
           </Link>
         </div>
-        <div className="middle">{home === 'search' && <HeaderSearchBar />}</div>
+        <div className="middle">{home === 'search' || stickyNav ? <HeaderSearchBar /> : null}</div>
         <div className="right">
           <WithAuth
             component={
@@ -72,7 +86,6 @@ const Header = ({ home = 'home' }) => {
                 <LoginButton onClick={modal.handleClick}>Log in</LoginButton>
                 <ThemeProvider theme={{ isDark: true }}>
                   <Modal
-                    title="Sign in"
                     setVisibility={modal.handleClick}
                     visible={modal.visible}
                     elmHeight="auto"
@@ -85,13 +98,14 @@ const Header = ({ home = 'home' }) => {
               </>
             }
           />
-          <MenuButton transparent secondary icon>
+          <MenuButton transparent secondary icon onClick={() => setMenuOpen(true)}>
             <MdMenu />
           </MenuButton>
+          <Sidebar shown={menuOpen} isShown={setMenuOpen} />
         </div>
       </StyledTopBar>
       <ThemeProvider theme={{ isDark: true }}>
-        {home === 'home' && (
+        {home === 'home' && !stickyNav && (
           <StyledView>
             <MaxWidthContainer className="main-hero-content">
               <FlexContainer column justify="center" align="center">
@@ -107,9 +121,11 @@ const Header = ({ home = 'home' }) => {
             </MaxWidthContainer>
           </StyledView>
         )}
-        <StyledView className="header-keywords">
-          <KeywordsSection />
-        </StyledView>
+        {!noKeywords && (
+          <StyledView className="header-keywords">
+            <KeywordsSection />
+          </StyledView>
+        )}
       </ThemeProvider>
     </FullHeaderLayout>
   );

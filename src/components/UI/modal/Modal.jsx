@@ -9,6 +9,7 @@ export default function Modal({
   children,
   title,
   footer,
+  header,
   visible = false,
   setVisibility,
   elmWidth,
@@ -31,14 +32,26 @@ export default function Modal({
     ) : (
       footer
     );
-
+  const displayHeader = title ? (
+    <div className="modal-header">
+      <h4>{title}</h4>
+      <MdClose size={24} onClick={setVisibility} />
+    </div>
+  ) : (
+    header
+  );
   const content = visible ? (
     <ModalLayout elmHeight={elmHeight} elmWidth={elmWidth} className={className}>
-      <div className="modal-body">
-        <div className="modal-header">
-          <h4>{title}</h4>
-          <MdClose size={24} onClick={setVisibility} />
-        </div>
+      <div
+        className="modal-body"
+        onKeyDown={(e) => {
+          if (e.keyCode === 27) {
+            console.log('hola');
+            setVisibility();
+          }
+        }}
+      >
+        {displayHeader}
         <div className="modal-content">{children}</div>
         {displayFooter}
       </div>

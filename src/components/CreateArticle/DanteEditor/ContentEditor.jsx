@@ -79,45 +79,18 @@ function ContentEditor() {
   const mediaToolbarRef = useRef(null);
   const [topDistance, setTopDistance] = useState(0);
   const [embedActive, setEmbedActivation] = useState(false);
-  const Media = (props) => {
-    const entity = props.contentState.getEntity(props.block.getEntityAt(0));
-    const blockKey = props.block.key;
-    const type = entity.getType();
 
-    if (type === 'ARTICLE') {
-      const { articleId } = entity.getData();
-      return <ArticleEmbed isPreview={true} articleId={articleId} />;
-    }
-
-    if (type === 'IMAGE') {
-      const { images } = entity.getData();
-
-      return (
-        <ImageEditorComponent
-          blockKey={blockKey}
-          images={images}
-          {...props}
-          onChangeEditor={setEditorState}
-          editorState={editorState}
-          imageInputRef={imageInputRef}
-          setBlockKey={setBlockKey}
-          setImagesGallery={setImagesGallery}
-        />
-      );
-    }
-
-    if (type === 'VIDEO') {
-      const { videoId } = entity.getData();
-      return <EmbedPreview embedSource={videoId} />;
-    }
-
-    return null;
-  };
   const mediaBlockRenderer = (block) => {
     if (block.getType() === 'atomic') {
       return {
         component: Media,
         editable: false,
+        props: {
+          onChangeEditor: setEditorState,
+          imageInputRef: imageInputRef,
+          setBlockKey: setBlockKey,
+          setImagesGallery: setImagesGallery,
+        },
       };
     }
 
@@ -188,11 +161,11 @@ function ContentEditor() {
       //const editorHeight = editorContainer.current.offsetHeight;
       //const screenEditorFraction = window.innerHeight * 0.6;
 
-      if (topDistance > 133) {
+      if (topDistance > 153) {
         setEditorOut(true);
       }
 
-      if (topDistance < 133) {
+      if (topDistance < 153) {
         setEditorOut(false);
       }
     }
@@ -219,7 +192,7 @@ function ContentEditor() {
       const options = {
         root: document,
         rootMargin: '0px',
-        threshold: 0.7,
+        threshold: 0,
         trackVisibility: true,
         delay: 100,
       };
@@ -394,6 +367,43 @@ export const Link = (props) => {
       {props.children}
     </a>
   );
+};
+
+const Media = (props) => {
+  const { setEditorState, imageInputRef, setBlockKey, setImagesGallery } = props.blockProps;
+  debugger;
+  const entity = props.contentState.getEntity(props.block.getEntityAt(0));
+  const blockKey = props.block.key;
+  const type = entity.getType();
+
+  if (type === 'ARTICLE') {
+    const { articleId } = entity.getData();
+    return <ArticleEmbed isPreview={true} articleId={articleId} />;
+  }
+
+  if (type === 'IMAGE') {
+    const { images } = entity.getData();
+
+    return (
+      <ImageEditorComponent
+        blockKey={blockKey}
+        images={images}
+        {...props}
+        onChangeEditor={setEditorState}
+        contentState={props.contentState}
+        imageInputRef={imageInputRef}
+        setBlockKey={setBlockKey}
+        setImagesGallery={setImagesGallery}
+      />
+    );
+  }
+
+  if (type === 'VIDEO') {
+    const { videoId } = entity.getData();
+    return <EmbedPreview embedSource={videoId} />;
+  }
+
+  return null;
 };
 
 export default ContentEditor;

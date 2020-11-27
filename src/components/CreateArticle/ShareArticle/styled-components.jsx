@@ -122,7 +122,17 @@ export const ShareArticleCardView = styled(Link)`
   display: block;
   color: inherit;
   cursor: pointer;
+  color: inherit;
+  text-decoration: none;
   outline: 0;
+
+  &:hover {
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+    outline: 0;
+  }
+
   & h4 {
     margin: 0;
     padding: 5px;
@@ -305,5 +315,11 @@ export const ShareArticleCardPreview = styled.div`
   & .post-content {
     min-height: 165px;
     margin-top: 16px;
+  }
+
+  & a {
+    color: inherit;
+    text-decoration: none;
+    outline: 0;
   }
 `;

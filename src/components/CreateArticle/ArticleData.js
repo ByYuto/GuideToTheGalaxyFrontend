@@ -92,8 +92,6 @@ const ArticleData = ({ article, showImage, onChange, readOnly }) => {
   };
 
   useEffect(() => {
-    const existTemplate = Object.keys(articleValidations);
-    if (existTemplate.length <= 0) {
       const validationTemplate = {};
       for (const key in contentType) {
         if (key !== 'name' && key !== 'template') {
@@ -106,9 +104,15 @@ const ArticleData = ({ article, showImage, onChange, readOnly }) => {
           }
         }
       }
-      dispatch(updateValidationTemplate({ ...validationTemplate, ...articleValidations }));
-    }
-  }, [articleValidations]);
+      const fieldsAlreadyValidated = {};
+      for(const key in articleValidations) {
+        if (articleValidations[key].valid) {
+          fieldsAlreadyValidated[key] = articleValidations[key];
+        }
+      }
+      dispatch(updateValidationTemplate({ ...validationTemplate, ...fieldsAlreadyValidated }));
+    
+  }, [article.contentTypeId]);
 
   return (
     <StyledArticleData>

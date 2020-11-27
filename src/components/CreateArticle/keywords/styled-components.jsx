@@ -27,6 +27,7 @@ export const KeywordSelectorLayout = styled.div`
     align-items: center;
     color: #6670f0;
     margin-bottom: 16px;
+    margin-top: 16px;
   }
 `;
 

@@ -6,9 +6,9 @@ import Header from '../header-full/Header';
 
 const topBarVisibleSelector = (state) => state.app?.topBar?.visible;
 
-const Layout = ({ children, home }) => {
+const Layout = ({ children, home, noKeywords = false }) => {
   const isTopBarVisible = useSelector(topBarVisibleSelector);
-  const header = isTopBarVisible ? home ? <Header home={home} /> : <TopBar /> : null;
+  const header = isTopBarVisible ?  <Header home={home} noKeywords={noKeywords} /> : null;
   return (
     <React.Fragment>
       {header}

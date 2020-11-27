@@ -155,7 +155,7 @@ const InputRow = ({
 
        dispatch(validateField(fieldValidation));
     }
-    return onChangeData(field, value);
+    
   };
   const actionUrl =
     field === 'URL' ? (
@@ -163,13 +163,17 @@ const InputRow = ({
         <CheckIcon />
       </button>
     ) : null;
+
+  useEffect(()=> {
+    handleChangeValidations(newArticle[field]);
+  }, [newArticle[field], newArticle.contentTypeId])
   return (
     <FormRow field={field} disabled={!validUrl}>
       <Input
         placeholder={textPlaceholder}
         value={newArticle[field]}
         block
-        onChange={handleChangeValidations}
+        onChange={(value)=>onChangeData(field, value)}
         onFocus={() => setTooltipVisible(true)}
         onBlur={() => setTooltipVisible(false)}
         readOnly={readOnly}
@@ -193,6 +197,9 @@ const GeneralTemplate = ({ contentType, article, onChangeData, readOnly }) => {
     return onChangeData('date', value);
   };
 
+  useEffect(()=> {
+
+  }, [newArticle.contentTypeId])
   return (
     <div>
       {contentType?.location ? (

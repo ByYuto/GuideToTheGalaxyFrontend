@@ -15,6 +15,7 @@ import Loader from '../UI/Loader';
 import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import RegisterForm from './RegisterForm';
+import { MdClose } from 'react-icons/md';
 
 const GOOGLE_CLIENT_KEY = process.env.REACT_APP_GOOGLE_CLIENT_KEY;
 const FACEBOOK_CLIENT_KEY = process.env.REACT_APP_FACEBOOK_CLIENT_KEY;
@@ -70,6 +71,10 @@ export default function Login({ handleCancel }) {
 
   return (
     <ThemeProvider theme={{ isDark: true }}>
+      <div className="modal-header">
+        <h4>{displayRegister ? 'Sign up' : 'Log in'}</h4>
+        <MdClose size={24} onClick={handleCancel} />
+      </div>
       <LoginLayout>
         <div>
           <GoogleLogin
@@ -104,37 +109,41 @@ export default function Login({ handleCancel }) {
           <FlexContainer className="form-container" direction="column" align="center" justify="space-between" span="0">
             <p className="form-title">Sign in with an email</p>
             <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email.value}
-                handleChange={(e) => handleEmailChange(e.target.value)}
-                valid={email.valid}
-                errorMessage={email.errorType}
-                isSubmitted={form.submit}
-              />
-
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password.value}
-                handleChange={(e) => handlePasswordChange(e.target.value)}
-                noMargin
-                valid={password.valid}
-                errorMessage={password.errorType}
-                isSubmitted={form.submit}
-              />
-              <div style={{ width: '100%' }}>
-                <p>
-                  Forgot your password? <Link to="/forget-password">Recover it</Link>
-                </p>
-              </div>
-              <div style={{ width: '100%' }}>
-                <p>
-                  <button onClick={(e) => setDisplayRegister(true)}>Register</button>
-                </p>
-              </div>
-
+              <FlexContainer className="form-inside" direction="column" justify="space-evenly">
+                <div>
+                  <Input
+                    type="email"
+                    placeholder="Email"
+                    value={email.value}
+                    handleChange={(e) => handleEmailChange(e.target.value)}
+                    valid={email.valid}
+                    errorMessage={email.errorType}
+                    isSubmitted={form.submit}
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="password"
+                    placeholder="Password"
+                    value={password.value}
+                    handleChange={(e) => handlePasswordChange(e.target.value)}
+                    noMargin
+                    valid={password.valid}
+                    errorMessage={password.errorType}
+                    isSubmitted={form.submit}
+                  />
+                </div>
+                <div style={{ width: '100%' }}>
+                  <p>
+                    Forgot your password? <Link to="/forget-password">Recover it</Link>
+                  </p>
+                </div>
+                <div style={{ width: '100%' }}>
+                  <p>
+                    <button onClick={(e) => setDisplayRegister(true)}>Register</button>
+                  </p>
+                </div>
+              </FlexContainer>
               {!loading ? (
                 <FlexContainer span="0" padding="0" justify="center">
                   <Button span="24px" onClick={handleCancel} rounded modalSecondary>

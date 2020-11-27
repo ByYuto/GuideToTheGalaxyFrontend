@@ -38,7 +38,7 @@ const Router = () => {
           
         </Route>
         <Route path="/article/:id" exact>
-          <Layout>
+          <Layout home="search" noKeywords={true}>
             <ArticleDetail />
           </Layout>
         </Route>
