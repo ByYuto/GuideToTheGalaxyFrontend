@@ -10,8 +10,19 @@ export const LoginLayout = styled.div`
     padding-top: 0 !important;
     width: 90%;
 
-    & p.form-title {
+    & p {
+      margin: 0;
+    }
+    & .form-title {
       margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    & .form-inside {
+      padding: 0;
+      margin: 0;
+      min-height: 200px;
     }
   }
+   
 `;

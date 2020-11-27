@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const StyledInput = styled.span`
   display: flex;
   flex-direction: column;
-  margin-bottom: ${(props) => (props.noMargin ? '0' : '24px')};
+  margin-bottom: 0;
   & input {
     all: unset;
     font-family: 'Open Sans';

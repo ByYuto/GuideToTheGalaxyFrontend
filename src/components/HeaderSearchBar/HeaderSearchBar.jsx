@@ -40,7 +40,12 @@ export default function HeaderSearchBar() {
     dispatch(onSearchValueChange(val));
   };
   const handleSearchArticles = () => {
-    dispatch(getArticlesFiltered(searchValue, locationValue, categoryValue, keywordsSelected.join(',')));
+    if (!searchValue) {
+      return;
+    }
+    dispatch(
+      getArticlesFiltered(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
+    );
     let params = '';
     if (searchValue.length > 0) {
       params += `?search=${searchValue}`;
@@ -60,18 +65,21 @@ export default function HeaderSearchBar() {
     if (categoriesList.length < 1) {
       dispatch(getCategories());
     }
-    if (searchValue.length > 4) {
-      setTimeout(
-        () => dispatch(getSearchSuggestion(searchValue, locationValue, categoryValue, keywordsSelected.join(','))),
-        500
-      );
-    }
-    if (locationValue.length > 0 || categoryValue.length > 0) {
-      setTimeout(
-        () => dispatch(getArticlesFiltered(searchValue, locationValue, categoryValue, keywordsSelected.join(','))),
-        700
-      );
-    }
+
+    setTimeout(
+      () =>
+        dispatch(
+          getSearchSuggestion(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
+        ),
+      500
+    );
+    /* setTimeout(
+      () =>
+        dispatch(
+          getArticlesFiltered(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
+        ),
+      700
+    ); */
   }, [searchValue, locationValue, categoryValue, keywordsSelected.length]);
 
   return (
@@ -106,6 +114,9 @@ export default function HeaderSearchBar() {
               dispatch(setPlaceId(val, addr));
             }}
             value={locationName}
+            clearValueAction={() => {
+              dispatch(setPlaceId('', ''));
+            }}
           />
           <Select
             options={[{ label: 'All categories', value: '' }, ...categoriesList]}

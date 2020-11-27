@@ -5,6 +5,7 @@ const Tag = styled.span`
   text-align: center;
   border-radius: 18px;
   position: relative;
+  cursor: pointer;
 
   ${(props) =>
     props.sm &&

@@ -9,14 +9,14 @@ import Loader from '../../components/UI/Loader';
 
 export default function Home() {
   const { articles } = useSelector((store) => store.app);
-  const { loading, error } = useSelector((store) => store.topbarSearch);
+  const { loading, error, keywordsSelected, keywordSuggestions } = useSelector((store) => store.topbarSearch);
   const { authorization } = useSelector((store) => store.auth);
+
   const dispatch = useDispatch();
+
   useEffect(() => {
-    if (articles.length < 1) {
-      dispatch(getArticlesHome());
-    }
-  }, [authorization]);
+    dispatch(getArticlesHome(keywordsSelected.join(',')));
+  }, [authorization, keywordsSelected.join(','), keywordSuggestions.join(',')]);
   return (
     <ThemeProvider theme={{ isDark: false }}>
       <StyledView>

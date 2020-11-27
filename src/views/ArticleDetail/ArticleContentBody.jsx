@@ -5,6 +5,21 @@ import { decorator } from '../../redux/reducers/newArticleState';
 import ArticleEmbed from '../../components/ArticleDetails/ShareArticle/ArticleEmbed';
 import EmbedPreview from '../../components/ArticleDetails/ShareEmbed/EmbedPreview';
 import ImageEditorComponent from '../../components/ArticleDetails/ImageEditor/ImageEditorComponent';
+import styled from 'styled-components';
+
+const EditorReadOnlyLayout = styled.div`
+  & .article-container {
+    color: inherit;
+    text-decoration: none;
+    outline: 0;
+
+    &:hover {
+      color: inherit;
+      text-decoration: none;
+      outline: 0;
+    }
+  }
+`;
 
 export default function ArticleContentBody({ articleContent }) {
   const contentEditor = convertFromRaw(articleContent);
@@ -44,14 +59,14 @@ export default function ArticleContentBody({ articleContent }) {
     return null;
   };
   return (
-    <>
+    <EditorReadOnlyLayout>
       <Editor
         editorState={editorState}
         onChange={setEditorState}
         readOnly={true}
         blockRendererFn={mediaBlockRenderer}
       />
-    </>
+    </EditorReadOnlyLayout>
   );
 }
 

@@ -20,7 +20,7 @@ const ImageEditorComponent = (props) => {
   };
 
   const confirmMedia = (editorState, onChangeEditor, imageInfo, blockKey) => {
-    const contentState = editorState.getCurrentContent();
+    const { contentState } = props;
     const imageBlock = contentState.getBlockForKey(blockKey);
     const imageEntity = imageBlock.getEntityAt(0);
     const imageEntityF = contentState.getEntity(imageEntity);

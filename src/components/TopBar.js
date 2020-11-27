@@ -14,6 +14,9 @@ import Login from './login/Login';
 import WithAuth from './login/withAuth';
 import { ThemeProvider } from 'styled-components';
 import HeaderSearchBar from './HeaderSearchBar/HeaderSearchBar';
+import Sidebar from './UI/Sidebar';
+import { useState } from 'react';
+
 
 const Separator = styled.div`
   display: block;
@@ -53,12 +56,16 @@ const LoginButton = styled.button`
 
 const TopBar = () => {
   const history = useHistory();
+  const [menuOpen, setMenuOpen] = useState(false);
   const onAddContentClick = () => {
     history.push('/create');
   };
   const modal = useModal();
+  const showSettings = (event) => {
+    event.preventDefault();
+  }
   return (
-    <StyledTopBar>
+    <StyledTopBar id="outer-container">
       <div className="left">
         <Link to="/">
           <img src={logo} className="logo" alt="logo" />
@@ -111,9 +118,10 @@ const TopBar = () => {
             </>
           }
         />
-        <MenuButton transparent secondary icon>
+        <MenuButton transparent secondary icon onClick={()=> setMenuOpen(true)}>
           <MdMenu />
         </MenuButton>
+        <Sidebar shown={menuOpen} isShown={setMenuOpen} />
       </div>
     </StyledTopBar>
   );

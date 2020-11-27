@@ -72,6 +72,15 @@ export default function ShareEmbed({ index, showEmbed, confirmVideo, editorState
         block
         onChange={(value) => handleEmbedValue(value)}
         readOnly={false}
+        handleKeyDown={(e) => {
+          if (e.keyCode === 27) {
+            e.preventDefault();
+            showEmbed(false);
+            return;
+          }
+
+          return;
+        }}
         onBlur={null}
         onFocus={null}
         actionButton={
