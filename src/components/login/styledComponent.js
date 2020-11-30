@@ -24,5 +24,18 @@ export const LoginLayout = styled.div`
       min-height: 200px;
     }
   }
+
+  & .btn-like-link {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 22px;
+    align-items: center;
+    color: #6670F0;
+    background-color: transparent;
+    outline: 0;
+    border: none;
+  }
    
 `;

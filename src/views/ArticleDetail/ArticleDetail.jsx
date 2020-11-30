@@ -20,16 +20,12 @@ import { useHistory } from 'react-router-dom';
 
 export default function ArticleDetail() {
   const { id } = useParams();
-  const [previousId, setPreviousId] = useState(null);
   const articleExampleId = id;
   const dispatch = useDispatch();
   const { article, error, errorMessage, loading } = useSelector((store) => store.articleDetail);
   const history = useHistory();
   useEffect(() => {
-    if (!article || previousId !== articleExampleId) {
-      setPreviousId(articleExampleId);
-      dispatch(getArticleDetail(articleExampleId));
-    }
+    dispatch(getArticleDetail(articleExampleId));
   }, [id]);
 
   const handleTagClick = (tag) => {

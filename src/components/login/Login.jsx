@@ -138,11 +138,6 @@ export default function Login({ handleCancel }) {
                     Forgot your password? <Link to="/forget-password">Recover it</Link>
                   </p>
                 </div>
-                <div style={{ width: '100%' }}>
-                  <p>
-                    <button onClick={(e) => setDisplayRegister(true)}>Register</button>
-                  </p>
-                </div>
               </FlexContainer>
               {!loading ? (
                 <FlexContainer span="0" padding="0" justify="center">
@@ -160,6 +155,15 @@ export default function Login({ handleCancel }) {
               )}
               {error && <div className="error-message">{errorMessage}</div>}
             </form>
+            <Divider />
+            <div style={{ textAlign: 'center' }}>
+              <p>
+                Don’t have an account yet?{' '}
+                <button className="btn-like-link" onClick={(e) => setDisplayRegister(true)}>
+                  SIGN UP
+                </button>
+              </p>
+            </div>
           </FlexContainer>
         ) : (
           <RegisterForm setDisplayRegister={setDisplayRegister} />
