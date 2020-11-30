@@ -7,6 +7,7 @@ import Button from '../UI/Button';
 import { GoPlus } from 'react-icons/go';
 import PropTypes from 'prop-types';
 import { IoIosClose } from 'react-icons/io';
+import { useSelector } from 'react-redux';
 
 const StyledContentType = styled.div`
   display: flex;
@@ -226,6 +227,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
   const containerRef = useRef(null);
   const editableRef = useRef(null);
   const [newContentType, setNewContentType] = useState(null);
+  const {newArticle} = useSelector(store => store.newArticle);
   const onContentTypeClick = (contentType) => {
     !readOnly && onChange && onChange(contentType);
   };
@@ -241,6 +243,11 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
       containerRef.current.scrollLeft += 99999;
     }
   }, [newContentType, editableRef, containerRef]);
+
+
+  useEffect(()=> {
+    setNewContentType(null);
+  }, [newArticle.categoryId]);
 
   const onRightArrowClick = () => (containerRef.current.scrollLeft += 50);
   const onLeftArrowClick = () => (containerRef.current.scrollLeft -= 50);
