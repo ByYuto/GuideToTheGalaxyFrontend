@@ -1,6 +1,8 @@
 import { setArticlesHome } from './appState';
 import { getArticlesFilteredService, getCategoriesList, getSuggestedSearches } from '../../http/articleService';
 import { getKeywordsSuggestions } from '../../http/keywordService';
+import { setAuthorization } from './authState';
+
 const initialState = {
   searchValue: '',
   searchSuggestions: [
@@ -49,7 +51,7 @@ export const getArticlesFiltered = (text, location, category, keywords) => async
     // TO DO handle unauthorized
     if (e.response?.status === 401) {
       window.localStorage.removeItem('_token');
-      getArticlesFiltered(text, location, category, keywords);
+        dispatch(setAuthorization(false));
     }
     console.log(e.response);
   }

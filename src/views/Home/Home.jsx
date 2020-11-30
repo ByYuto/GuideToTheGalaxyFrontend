@@ -15,7 +15,7 @@ export default function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getArticlesHome(keywordsSelected.join(',')));
+    //dispatch(getArticlesHome(keywordsSelected.join(',')));
   }, [authorization, keywordsSelected.join(','), keywordSuggestions.join(',')]);
   return (
     <ThemeProvider theme={{ isDark: false }}>

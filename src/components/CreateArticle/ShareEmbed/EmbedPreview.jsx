@@ -3,11 +3,17 @@ import { EmbedLayout } from './styled-components';
 import { MdClose } from 'react-icons/md';
 ///import { removeEmbed } from '../../../redux/reducers/newArticleState';
 import { validateEmbed } from '../../../utils/validations';
+import { Modifier, convertToRaw, SelectionState } from 'draft-js';
 
-export default function EmbedPreview({ id, embedSource }) {
+export default function EmbedPreview({ embedSource, blockKey, contentState, onChangeEditor }) {
   //const dispatch = useDispatch();
-  const handleRemoveEmbed = () => {
-    //dispatch(removeEmbed(id));
+  const handleRemoveEmbed = (e) => {
+    e.preventDefault();
+    const selection = SelectionState.createEmpty(blockKey);
+    console.log(convertToRaw(contentState));
+    debugger;
+    const newContent = Modifier.removeRange(contentState, selection, 'forward');
+    onChangeEditor(newContent);
   };
   const validUri = validateEmbed(embedSource).valid;
   let videoUri = embedSource;

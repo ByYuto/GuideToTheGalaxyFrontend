@@ -17,6 +17,7 @@ import {
 } from '../../redux/reducers/topbarSearch';
 import { SearchIcon, GoIcon } from '../../assets/icons/svg-icons';
 import { useHistory } from 'react-router-dom';
+import articles from '../../redux/reducers/articles';
 
 export default function HeaderSearchBar() {
   const {
@@ -28,6 +29,7 @@ export default function HeaderSearchBar() {
     categoryValue,
     keywordsSelected,
   } = useSelector((store) => store.topbarSearch);
+  const { articles } = useSelector((store) => store.articles);
   const dispatch = useDispatch();
   const history = useHistory();
   const handleSearchChange = (e) => {
@@ -43,18 +45,15 @@ export default function HeaderSearchBar() {
     if (!searchValue) {
       return;
     }
-    dispatch(
-      getArticlesFiltered(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
-    );
     let params = '';
-    if (searchValue.length > 0) {
+    if (searchValue && searchValue.length > 0) {
       params += `?search=${searchValue}`;
     }
 
-    if (locationValue.length > 0) {
+    if (locationValue && locationValue.length > 0) {
       params += `&location=${locationValue}`;
     }
-    if (categoryValue.length > 0) {
+    if (categoryValue && categoryValue.length > 0) {
       params += `&category=${categoryValue}`;
     }
 
@@ -65,22 +64,43 @@ export default function HeaderSearchBar() {
     if (categoriesList.length < 1) {
       dispatch(getCategories());
     }
+    if (articles.length < 1) {
+      dispatch(
+        getArticlesFiltered(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
+      );
+    }
+  }, []);
 
-    setTimeout(
-      () =>
+  useEffect(() => {
+    let timeout = null;
+    if (searchValue && searchValue.length > 2) {
+      timeout = setTimeout(() => {
         dispatch(
           getSearchSuggestion(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
-        ),
-      500
-    );
-    /* setTimeout(
-      () =>
-        dispatch(
-          getArticlesFiltered(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
-        ),
-      700
-    ); */
-  }, [searchValue, locationValue, categoryValue, keywordsSelected.length]);
+        );
+      }, 300);
+    }
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [searchValue, locationValue, categoryValue, keywordsSelected.join(',')]);
+
+  useEffect(() => {
+    let timeout = setTimeout(() => {
+      dispatch(
+        getArticlesFiltered(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
+      );
+    }, 300);
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [searchValue, locationValue, categoryValue, keywordsSelected.join(',')]);
 
   return (
     <ThemeProvider theme={{ isDark: true }}>

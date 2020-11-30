@@ -12,11 +12,12 @@ export default function SearchResults() {
   const { searchValue, locationValue, categoryValue, keywordsSelected, loading, error } = useSelector(
     (store) => store.topbarSearch
   );
+  const { authorization } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const {} = useParams();
   useEffect(() => {
-    dispatch(getArticlesHome());
-  }, [searchValue, locationValue, categoryValue, keywordsSelected.length]);
+    //dispatch(getArticlesHome());
+  }, [searchValue, locationValue, categoryValue, keywordsSelected.length, authorization]);
   return (
     <ThemeProvider theme={{ isDark: false }}>
       <StyledView>
