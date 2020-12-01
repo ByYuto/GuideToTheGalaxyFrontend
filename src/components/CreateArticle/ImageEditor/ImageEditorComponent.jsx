@@ -12,14 +12,13 @@ const ImageEditorComponent = (props) => {
   const handleUploadImage = async (event, editorState, onChangeEditor, blockKey) => {
     event.preventDefault();
     const files = Array.from(event.target.files);
-    debugger;
     if (files && files.length && MAX_FILES - (props.images.length + files.length) >= 0) {
       const imageResponse = await Promise.all(files.map(uploadImage));
       confirmMedia(editorState, onChangeEditor, imageResponse, blockKey);
     }
   };
 
-  const confirmMedia = (editorState, onChangeEditor, imageInfo, blockKey) => {
+  const confirmMedia = (onChangeEditor, imageInfo, blockKey) => {
     const { contentState } = props;
     const imageBlock = contentState.getBlockForKey(blockKey);
     const imageEntity = imageBlock.getEntityAt(0);
@@ -29,7 +28,6 @@ const ImageEditorComponent = (props) => {
       images: [...images, ...imageInfo],
     });
     const newEditorState = EditorState.set(props.editorState, { currentContent: contentStateWithEntity });
-    debugger;
     onChangeEditor(AtomicBlockUtils.insertAtomicBlock(newEditorState, imageEntity, ' '));
 
     //focus on editor

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { decorator } from '../../redux/reducers/newArticleState';
@@ -22,31 +22,7 @@ const EditorReadOnlyLayout = styled.div`
 `;
 
 export default function ArticleContentBody({ articleContent }) {
-  const contentEditor = convertFromRaw(articleContent);
-  const [editorState, setEditorState] = useState(() => EditorState.createWithContent(contentEditor, decorator));
-  const Media = (props) => {
-    const entity = props.contentState.getEntity(props.block.getEntityAt(0));
-    const blockKey = props.block.key;
-    const type = entity.getType();
-
-    if (type === 'ARTICLE') {
-      const { articleId } = entity.getData();
-      return <ArticleEmbed articleId={articleId} />;
-    }
-
-    if (type === 'IMAGE') {
-      const { images } = entity.getData();
-
-      return <ImageEditorComponent blockKey={blockKey} images={images} />;
-    }
-
-    if (type === 'VIDEO') {
-      const { videoId } = entity.getData();
-      return <EmbedPreview embedSource={videoId} />;
-    }
-
-    return null;
-  };
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty(decorator));
 
   const mediaBlockRenderer = (block) => {
     if (block.getType() === 'atomic') {
@@ -58,18 +34,42 @@ export default function ArticleContentBody({ articleContent }) {
 
     return null;
   };
+
+  useEffect(() => {
+    const contentEditor = convertFromRaw(articleContent);
+    setEditorState(EditorState.set(editorState, { currentContent: contentEditor }));
+  }, [articleContent]);
   return (
     <EditorReadOnlyLayout>
-      <Editor
-        editorState={editorState}
-        onChange={setEditorState}
-        readOnly={true}
-        blockRendererFn={mediaBlockRenderer}
-      />
+      <Editor editorState={editorState} readOnly={true} blockRendererFn={mediaBlockRenderer} />
     </EditorReadOnlyLayout>
   );
 }
 
 ArticleContentBody.propTypes = {
   articleContent: PropTypes.object.isRequired,
+};
+
+const Media = (props) => {
+  const entity = props.contentState.getEntity(props.block.getEntityAt(0));
+  const blockKey = props.block.key;
+  const type = entity.getType();
+
+  if (type === 'ARTICLE') {
+    const { articleId } = entity.getData();
+    return <ArticleEmbed articleId={articleId} />;
+  }
+
+  if (type === 'IMAGE') {
+    const { images } = entity.getData();
+
+    return <ImageEditorComponent blockKey={blockKey} images={images} />;
+  }
+
+  if (type === 'VIDEO') {
+    const { videoId } = entity.getData();
+    return <EmbedPreview embedSource={videoId} />;
+  }
+
+  return null;
 };
