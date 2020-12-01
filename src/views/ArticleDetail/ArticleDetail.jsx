@@ -111,7 +111,7 @@ export default function ArticleDetail() {
           <ThemeProvider theme={{ isDark: false }}>
             <StyledView>
               <MaxWidthContainer className="content-container">
-                {article?.content && <ArticleContentBody articleContent={article.content} />}
+                {article?.content ? <ArticleContentBody articleContent={article.content} /> : null}
               </MaxWidthContainer>
             </StyledView>
             <StyledView>

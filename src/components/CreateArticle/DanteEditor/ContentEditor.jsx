@@ -86,10 +86,11 @@ function ContentEditor() {
         component: Media,
         editable: false,
         props: {
-          onChangeEditor: setEditorState,
+          setEditorState: setEditorState,
           imageInputRef: imageInputRef,
           setBlockKey: setBlockKey,
           setImagesGallery: setImagesGallery,
+          editorState: editorState,
         },
       };
     }
@@ -198,8 +199,11 @@ function ContentEditor() {
       };
 
       const observer = new window.IntersectionObserver(observerHandler, options);
-      observer.observe(mediaToolbarRef.current);
-      observer.observe(styledToolbarRef.current);
+      if (mediaToolbarRef && styledToolbarRef && mediaToolbarRef.current && styledToolbarRef.current) {
+        observer.observe(mediaToolbarRef.current);
+        observer.observe(styledToolbarRef.current);
+      }
+
       //observer.observe(editorRef.current);
     });
 
@@ -370,8 +374,7 @@ export const Link = (props) => {
 };
 
 const Media = (props) => {
-  const { setEditorState, imageInputRef, setBlockKey, setImagesGallery } = props.blockProps;
-  debugger;
+  const { setEditorState, imageInputRef, setBlockKey, setImagesGallery, editorState } = props.blockProps;
   const entity = props.contentState.getEntity(props.block.getEntityAt(0));
   const blockKey = props.block.key;
   const type = entity.getType();
@@ -394,13 +397,23 @@ const Media = (props) => {
         imageInputRef={imageInputRef}
         setBlockKey={setBlockKey}
         setImagesGallery={setImagesGallery}
+        readOnly={false}
+        editorState={editorState}
       />
     );
   }
 
   if (type === 'VIDEO') {
     const { videoId } = entity.getData();
-    return <EmbedPreview embedSource={videoId} />;
+    return (
+      <EmbedPreview
+        blockKey={blockKey}
+        embedSource={videoId}
+        contentState={props.contentState}
+        onChangeEditor={setEditorState}
+        editorState={editorState}
+      />
+    );
   }
 
   return null;
