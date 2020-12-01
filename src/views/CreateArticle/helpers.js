@@ -15,19 +15,19 @@ export const setArticleContent = (articleContent, contentType, categories) => {
     title: articleContent.title,
   };
 
-  if (contentType.location && (contentType.location.required || articleContent.location !== '')) {
+  if (contentType?.location && (contentType?.location.required || articleContent.location !== '')) {
     article.placeId = articleContent.location;
   }
 
-  if (contentType.URL && (contentType.URL.required || articleContent.URL !== '')) {
+  if (contentType?.URL && (contentType?.URL.required || articleContent.URL !== '')) {
     article.URL = "http://" + articleContent.URL;
   }
 
-  if (contentType.image && (contentType.image.required || articleContent.photo.url !== '')) {
+  if (contentType?.image && (contentType?.image.required || articleContent.photo.url !== '')) {
     article.imageId = articleContent.photo.imageId;
   }
 
-  if (contentType.date && (contentType.date.required || articleContent.date !== null || articleContent.date !== '')) {
+  if (contentType?.date && (contentType?.date.required || articleContent.date !== null || articleContent.date !== '')) {
     const date = new Date(articleContent.date);
     const formattedMonth = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
     const dayFormatted = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
@@ -36,17 +36,17 @@ export const setArticleContent = (articleContent, contentType, categories) => {
   }
 
   if (
-    contentType.other &&
-    (contentType.other.required || articleContent.other !== null || articleContent.other !== '')
+    contentType?.other &&
+    (contentType?.other.required || articleContent.other !== null || articleContent.other !== '')
   ) {
     article.other = articleContent.other;
   }
 
   if (
-    contentType.other &&
-    contentType.other.type &&
-    contentType.other.type === 'boolean' &&
-    (contentType.other.required || articleContent.discontinued_law)
+    contentType?.other &&
+    contentType?.other.type &&
+    contentType?.other.type === 'boolean' &&
+    (contentType?.other.required || articleContent.discontinued_law)
   ) {
     article.other = articleContent.discontinued_law;
   }

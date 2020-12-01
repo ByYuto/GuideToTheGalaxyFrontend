@@ -26,6 +26,11 @@ const StyledContentType = styled.div`
   height: 2rem;
   min-width: 100px;
   margin: 0 8px;
+  position: relative;
+
+  &.custom-container-input {
+    width: 180px;
+  }
 
   &:hover {
     ${(props) =>
@@ -50,8 +55,39 @@ const StyledContentType = styled.div`
     }
   }
 
+  & input {
+    padding: 0;
+    margin: 0;
+    display: block;
+    flex-grow: 1;
+    color: ${(props) => (props.active ? props.theme.baseColors.white : props.theme.baseColors.light)};
+    text-transform: uppercase;
+    background-color: transparent;
+    border: none;
+    width: 80%;   
+
+    &:focus {
+      outline: none;
+    }
+
+    &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: ${props => props.theme.baseColors.light};
+      opacity: 1; /* Firefox */
+    }
+    
+    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+      color: ${props => props.theme.baseColors.light};
+    }
+    
+    &::-ms-input-placeholder { /* Microsoft Edge */
+      color: ${props => props.theme.baseColors.light};
+    }
+  }
+
   button {
     margin-left: 10px;
+    position: absolute;
+    left: 140px;
   }
 
   & .close-custom-cat svg:hover {
@@ -106,25 +142,28 @@ const CustomContentType = ({
   editableRef,
   onClearContentType,
   onBlur,
+  onChangeCustom,
+  setNewContentTypeShow
 }) => {
   const [currentKey, setCurrentKey] = useState(null);
   const [isFocus, setFocus] = useState(false);
   const [previousLetter, setPreviousLetter] = useState(null);
   const [inputVal, setInputVal] = useState(value);
-  const [escapePressed, setEscapePressed] = useState(false);
-  const _onClick = () => {
+
+  /* const _onClick = () => {
     if(value === "NEW CONTENT TYPE") {
       return;
     }
     setInputVal(value);
     !readOnly && onClick && onClick(value);
-  };
-  const _onBlur = (e) => {
-    const value = (e.target.textContent || e.target.innerText).toUpperCase() || null;
-    if(value === "NEW CONTENT TYPE") {
+  }; */
+
+  const _onBlur = (val) => {
+    const value = val;
+    if(value === "NEW CONTENT TYPE" || value  === '') {
       return;
     }
-    setFocus(false);  
+    setFocus(false);
     onChange && onChange(value);
     onBlur && onBlur(value);
   };
@@ -142,7 +181,7 @@ const CustomContentType = ({
       e.key === '&' //Ampersand
     ) {
       //Valid
-      if(e.target.textContent.length > 21 && e.keyCode !== 8 && e.keyCode !== 46) {
+      if(e.target.value.length > 21 && e.keyCode !== 8 && e.keyCode !== 46) {
         e.preventDefault();
         return;
       }
@@ -159,12 +198,16 @@ const CustomContentType = ({
       //onBlur && onBlur(value);
       e.preventDefault();
       setCurrentKey(e.keyCode);
+      onChange && onChange(e.target.value);
+        onBlur && onBlur(e.target.value);
     } else if (e.keyCode === 27) {
-      setEscapePressed(true);
-      if(inputVal === "" || value === "New Content Type") {
+      if(!inputVal) {
+        setNewContentTypeShow(false);
+        onChangeCustom(null);
         onChange && onChange(null);
          onBlur && onBlur(null);
       } else {
+        onChangeCustom(inputVal);
         onChange && onChange(inputVal);
          onBlur && onBlur(inputVal);
       }
@@ -183,21 +226,25 @@ const CustomContentType = ({
     document.execCommand('insertHTML', false, text.toUpperCase());
   };
 
-  useEffect(() => {
-    if (currentKey === 13) {
-      editableRef.current.blur();
-      setFocus(false);
-    }
 
-    if(escapePressed) {
-      editableRef.current.textContent = inputVal;
-      setEscapePressed(false);
-    }
-  }, [currentKey, escapePressed]);
+ useEffect(()=>{
+   if(active && editableRef && editableRef.current) {
+    editableRef.current.focus();
+   } 
 
+   
+ }, [active])
+
+ useEffect(()=> {
+  if(currentKey === 13 && editableRef && editableRef.current) {
+    editableRef.current.blur();
+    setFocus(false);
+    setInputVal(value);
+   }
+ }, [currentKey])
   return (
-    <StyledContentType className={className} active={active} readOnly={readOnly} onClick={_onClick}>
-      <h6
+    <StyledContentType className={`${className} custom-container-input`} active={active} readOnly={readOnly} >
+      {/* <h6
         contentEditable={!readOnly}
         onBlur={_onBlur}
         suppressContentEditableWarning={true}
@@ -207,7 +254,22 @@ const CustomContentType = ({
         onFocus={()=>setFocus(true)}
       >
         {value}
-      </h6>
+      </h6> */}
+      <input 
+        value={value}  
+        onBlur={(e)=>{
+          setFocus(false);
+          _onBlur(e.target.value)}}
+        onKeyDown={_onKeyDown}
+        onPaste={_onPaste}
+        onFocus={()=>setFocus(true)}
+        onChange={(e)=> {
+
+          onChangeCustom(e.target.value)}}
+        readOnly={false}
+        placeholder="New Content Type"
+        ref={editableRef}
+          />
       {!isFocus ? (
         <Button className="close-custom-cat" onClick={onClearContentType} transparent secondary icon>
           <IoIosClose size={28} />
@@ -227,34 +289,39 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
   const containerRef = useRef(null);
   const editableRef = useRef(null);
   const [newContentType, setNewContentType] = useState(null);
+  const [newContentTypeShow, setNewContentTypeShow] = useState(false);
   const {newArticle} = useSelector(store => store.newArticle);
   const onContentTypeClick = (contentType) => {
+    setNewContentTypeShow(false);
+    setNewContentType("");
     !readOnly && onChange && onChange(contentType);
   };
 
   useEffect(() => {
     if (newContentType && containerRef && editableRef && containerRef.current && editableRef.current) {
-      containerRef.current.scrollLeft += 99999;
-      editableRef.current.focus();
-      window.getSelection().selectAllChildren(editableRef.current);
+      containerRef.current.scrollLeft += 999999;
+      //editableRef.current.focus();
+      //window.getSelection().selectAllChildren(editableRef.current);
     }
 
     if (newContentType === null && containerRef && editableRef && containerRef.current && editableRef.current) {
-      containerRef.current.scrollLeft += 99999;
+      containerRef.current.scrollLeft += 999999;
     }
   }, [newContentType, editableRef, containerRef]);
 
 
   useEffect(()=> {
     setNewContentType(null);
+    setNewContentTypeShow(false);
   }, [newArticle.categoryId]);
 
   const onRightArrowClick = () => (containerRef.current.scrollLeft += 50);
   const onLeftArrowClick = () => (containerRef.current.scrollLeft -= 50);
 
   const onAddNewContentTypeClick = (e) => {
-    const contentType = 'New Content Type';
+    const contentType = '';
     setNewContentType(contentType);
+    setNewContentTypeShow(true);
     onChange(contentType);
   };
 
@@ -262,6 +329,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
     e.preventDefault();
     e.stopPropagation();
     setNewContentType(null);
+    setNewContentTypeShow(false);
     onChange(null);
     onCustomContentBlur(null);
   };
@@ -270,7 +338,7 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
     setNewContentType(newContentType);
     onChange(newContentType);
   };
-
+  
   return (
     <StyledContentTypeSelector>
       <ArrowButton onClick={onLeftArrowClick}>
@@ -300,20 +368,23 @@ const ContentTypeSelector = ({ contentTypes, value, onChange, onCustomContentBlu
             readOnly={readOnly}
           />
         ))}
-        {!newContentType ? (
+        {!newContentTypeShow ? (
           <AddContentTypeButton primary circle onClick={onAddNewContentTypeClick} className="custom-content-type" icon>
             <GoPlus />
           </AddContentTypeButton>
         ) : (
           <CustomContentType
             value={newContentType}
-            active={newContentType === value}
+            active={newContentTypeShow}
             onClick={onCustomContentChange}
             readOnly={readOnly}
             onChange={onCustomContentChange}
             editableRef={editableRef}
             onClearContentType={onClearContentType}
             onBlur={onCustomContentBlur}
+            onChangeCustom={setNewContentType}
+            setNewContentTypeShow={setNewContentTypeShow}
+
           />
         )}
       </div>
