@@ -42,15 +42,15 @@ const ImageEditorComponent = (props) => {
   };
 
   const onDeleteImage = (imgIndex) => {
-    const { contentState, stateEditor, onChangeEditor } = props;
+    const { contentState, editorState, onChangeEditor } = props;
     const imageBlock = contentState.getBlockForKey(props.blockKey);
     const imageEntity = imageBlock.getEntityAt(0);
     const imageEntityF = contentState.getEntity(imageEntity);
     const { images } = imageEntityF.getData();
 
     if (images.length === 1) {
-      const contentState = stateEditor.getCurrentContent();
-      const selectionState = stateEditor.getSelection();
+      const contentState = editorState.getCurrentContent();
+      const selectionState = editorState.getSelection();
       const key = props.blockKey;
       const blockMap = contentState.getBlockMap();
       const block = blockMap.get(key);
@@ -67,13 +67,13 @@ const ImageEditorComponent = (props) => {
           focusOffset: 0,
         }),
       });
-      onChangeEditor(EditorState.push(stateEditor, newContentState, 'change-block-type'));
+      onChangeEditor(EditorState.push(editorState, newContentState, 'change-block-type'));
     } else {
       const newImgArr = images.filter((item) => item.imageId !== imgIndex);
       const contentStateWithEntity = contentState.replaceEntityData(imageEntity, {
         images: newImgArr,
       });
-      const newEditorState = EditorState.set(stateEditor, { currentContent: contentStateWithEntity });
+      const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
       onChangeEditor(AtomicBlockUtils.insertAtomicBlock(newEditorState, imageEntity, ' '));
     }
   };

@@ -37,6 +37,7 @@ export default function HeaderSearchBar() {
   };
   const handleClearSearch = (e) => {
     dispatch(clearSearchValue());
+    dispatch(getArticlesFiltered('', locationValue || '', categoryValue || '', keywordsSelected.join(',')));
   };
   const handleSearchSelection = (val) => {
     dispatch(onSearchValueChange(val));
@@ -45,6 +46,11 @@ export default function HeaderSearchBar() {
     if (!searchValue) {
       return;
     }
+
+    dispatch(
+      getArticlesFiltered(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
+    );
+
     let params = '';
     if (searchValue && searchValue.length > 0) {
       params += `?search=${searchValue}`;
@@ -100,7 +106,7 @@ export default function HeaderSearchBar() {
         clearTimeout(timeout);
       }
     };
-  }, [searchValue, locationValue, categoryValue, keywordsSelected.join(',')]);
+  }, [locationValue, categoryValue, keywordsSelected.join(',')]);
 
   return (
     <ThemeProvider theme={{ isDark: true }}>

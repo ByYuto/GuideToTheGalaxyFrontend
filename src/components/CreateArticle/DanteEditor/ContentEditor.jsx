@@ -90,7 +90,7 @@ function ContentEditor() {
           imageInputRef: imageInputRef,
           setBlockKey: setBlockKey,
           setImagesGallery: setImagesGallery,
-          stateEditor: editorState,
+          editorState: editorState,
         },
       };
     }
@@ -374,7 +374,7 @@ export const Link = (props) => {
 };
 
 const Media = (props) => {
-  const { setEditorState, imageInputRef, setBlockKey, setImagesGallery, stateEditor } = props.blockProps;
+  const { setEditorState, imageInputRef, setBlockKey, setImagesGallery, editorState } = props.blockProps;
   const entity = props.contentState.getEntity(props.block.getEntityAt(0));
   const blockKey = props.block.key;
   const type = entity.getType();
@@ -398,7 +398,7 @@ const Media = (props) => {
         setBlockKey={setBlockKey}
         setImagesGallery={setImagesGallery}
         readOnly={false}
-        stateEditor={stateEditor}
+        editorState={editorState}
       />
     );
   }
@@ -411,7 +411,7 @@ const Media = (props) => {
         embedSource={videoId}
         contentState={props.contentState}
         onChangeEditor={setEditorState}
-        stateEditor={stateEditor}
+        editorState={editorState}
       />
     );
   }

@@ -66,6 +66,7 @@ const ARTICLE_SUCCESS = 'ARTICLE_SUCCESS';
 const INSERT_EMBED_ARTICLE = 'INSERT_EMBED_ARTICLE';
 const INSERT_KEYWORD = 'INSERT_KEYWORD';
 const REMOVE_KEYWORD = 'REMOVE_KEYWORD';
+const CUSTOM_SUBCATEGORY = 'CUSTOM_SUBCATEGORY';
 //Action Creators
 export const updateNewArticle = (newArticle) => ({ type: UPDATE, payload: newArticle });
 export const setNewArticleStep = (step) => ({ type: SET_STEP, payload: { step } });
@@ -155,6 +156,8 @@ export const activateContributions = (value) => ({ type: ACTIVATE_CONTRIBUTIONS,
 export const setArticleContent = (articleId) => ({ type: INSERT_EMBED_ARTICLE, payload: articleId });
 export const setKeyword = (value) => ({ type: INSERT_KEYWORD, payload: value });
 export const removeKeyword = (value) => ({ type: REMOVE_KEYWORD, payload: value });
+
+export const onChangeCustomSubcategory = (value) => ({ type: CUSTOM_SUBCATEGORY, payload: value })
 //Reducer
 export default (state = initialState, { type, payload }) => {
   switch (type) {
@@ -407,6 +410,14 @@ export default (state = initialState, { type, payload }) => {
         newArticle: {
           ...state.newArticle,
           keywords: keywords,
+        },
+      };
+    case CUSTOM_SUBCATEGORY:
+      return {
+        ...state,
+        newArticle: {
+          ...state.newArticle,
+          contentTypeId: payload,
         },
       };
     default:

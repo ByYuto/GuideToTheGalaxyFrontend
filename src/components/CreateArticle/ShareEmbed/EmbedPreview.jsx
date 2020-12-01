@@ -1,36 +1,13 @@
 import React from 'react';
 import { EmbedLayout } from './styled-components';
 import { MdClose } from 'react-icons/md';
-///import { removeEmbed } from '../../../redux/reducers/newArticleState';
 import { validateEmbed } from '../../../utils/validations';
-import { EditorState } from 'draft-js';
+import { resetBlockWithType } from '../DanteEditor/util';
 
-export const resetBlockWithType = (editorState, newType = 'unstyled') => {
-  const contentState = editorState.getCurrentContent();
-  const selectionState = editorState.getSelection();
-  const key = selectionState.getStartKey();
-  const blockMap = contentState.getBlockMap();
-  const block = blockMap.get(key);
-
-  const newBlock = block.merge({
-    text: '',
-    type: newType,
-    data: {},
-  });
-  const newContentState = contentState.merge({
-    blockMap: blockMap.set(key, newBlock),
-    selectionAfter: selectionState.merge({
-      anchorOffset: 0,
-      focusOffset: 0,
-    }),
-  });
-  return EditorState.push(editorState, newContentState, 'change-block-type');
-};
-
-export default function EmbedPreview({ embedSource, blockKey, onChangeEditor, stateEditor }) {
+export default function EmbedPreview({ embedSource, blockKey, onChangeEditor, editorState }) {
   const handleRemoveEmbed = (e) => {
     e.preventDefault();
-    onChangeEditor(resetBlockWithType(stateEditor, 'unstyled', blockKey));
+    onChangeEditor(resetBlockWithType(editorState, 'unstyled', blockKey));
   };
   const validUri = validateEmbed(embedSource).valid;
   let videoUri = embedSource;

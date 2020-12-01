@@ -1,23 +1,15 @@
 import React, { useEffect } from 'react';
 import { StyledView, MaxWidthContainer } from './styled-components';
 import { ThemeProvider } from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
-import { getArticlesHome } from '../../redux/reducers/appState';
+import { useSelector } from 'react-redux';
 import ArticleEmbedView from '../../components/CreateArticle/ShareArticle/ArticleEmbedView';
 import { useParams } from 'react-router-dom';
 import Loader from '../../components/UI/Loader';
 
 export default function SearchResults() {
   const { articles } = useSelector((store) => store.app);
-  const { searchValue, locationValue, categoryValue, keywordsSelected, loading, error } = useSelector(
-    (store) => store.topbarSearch
-  );
-  const { authorization } = useSelector((store) => store.auth);
-  const dispatch = useDispatch();
+  const { loading, error } = useSelector((store) => store.topbarSearch);
   const {} = useParams();
-  useEffect(() => {
-    //dispatch(getArticlesHome());
-  }, [searchValue, locationValue, categoryValue, keywordsSelected.length, authorization]);
   return (
     <ThemeProvider theme={{ isDark: false }}>
       <StyledView>
