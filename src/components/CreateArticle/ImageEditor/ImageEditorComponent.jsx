@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { BsImages } from 'react-icons/bs';
-import { AddButton, ImageWrapper, ImageItem, ImagesContainer, ButtonLabel } from './styled-components';
+import { RiCloseLine } from 'react-icons/ri';
+import { AddButton, ImageWrapper, ImageItem, ImagesContainer, ButtonLabel, CloseButton } from './styled-components';
 import messages from './messages.json';
 import { EditorState, AtomicBlockUtils } from 'draft-js';
 import { uploadImage } from '../../../http/createArticleService';
@@ -40,12 +41,59 @@ const ImageEditorComponent = (props) => {
     props.imageInputRef.current.click();
   };
 
+  const onDeleteImage = (imgIndex) => {
+    const { contentState, stateEditor, onChangeEditor } = props;
+    const imageBlock = contentState.getBlockForKey(props.blockKey);
+    const imageEntity = imageBlock.getEntityAt(0);
+    const imageEntityF = contentState.getEntity(imageEntity);
+    const { images } = imageEntityF.getData();
+
+    if (images.length === 1) {
+      const contentState = stateEditor.getCurrentContent();
+      const selectionState = stateEditor.getSelection();
+      const key = props.blockKey;
+      const blockMap = contentState.getBlockMap();
+      const block = blockMap.get(key);
+
+      const newBlock = block.merge({
+        text: '',
+        type: 'unstyled',
+        data: {},
+      });
+      const newContentState = contentState.merge({
+        blockMap: blockMap.set(key, newBlock),
+        selectionAfter: selectionState.merge({
+          anchorOffset: 0,
+          focusOffset: 0,
+        }),
+      });
+      onChangeEditor(EditorState.push(stateEditor, newContentState, 'change-block-type'));
+    } else {
+      const newImgArr = images.filter((item) => item.imageId !== imgIndex);
+      const contentStateWithEntity = contentState.replaceEntityData(imageEntity, {
+        images: newImgArr,
+      });
+      const newEditorState = EditorState.set(stateEditor, { currentContent: contentStateWithEntity });
+      onChangeEditor(AtomicBlockUtils.insertAtomicBlock(newEditorState, imageEntity, ' '));
+    }
+  };
+
   return (
     <ImagesContainer aria-label="Photos" role="group">
       {props.images.map((item, imgIndex) => (
-        <ImageWrapper position={imgIndex} length={props.images.length} key={imgIndex}>
-          <ImageItem src={item.url} />
-        </ImageWrapper>
+        <>
+          <ImageWrapper position={imgIndex} length={props.images.length} key={imgIndex}>
+            <CloseButton
+              onMouseDown={(e) => {
+                e.preventDefault();
+                onDeleteImage(item.imageId);
+              }}
+            >
+              <RiCloseLine color="#FFFFFF" size={22} />
+            </CloseButton>
+            <ImageItem src={item.url} />
+          </ImageWrapper>
+        </>
       ))}
       <>
         {props.images.length < 4 && fileInputRef ? (
