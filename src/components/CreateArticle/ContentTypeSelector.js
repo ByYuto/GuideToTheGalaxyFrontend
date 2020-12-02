@@ -161,6 +161,7 @@ const CustomContentType = ({
   const _onBlur = (val) => {
     const value = val;
     if(value === "NEW CONTENT TYPE" || value  === '') {
+      setNewContentTypeShow(false);
       return;
     }
     setFocus(false);
@@ -198,6 +199,10 @@ const CustomContentType = ({
       //onBlur && onBlur(value);
       e.preventDefault();
       setCurrentKey(e.keyCode);
+      if(e.target.value === "NEW CONTENT TYPE" || e.target.value  === '') {
+        setNewContentTypeShow(false);
+        return;
+      }
       onChange && onChange(e.target.value);
         onBlur && onBlur(e.target.value);
     } else if (e.keyCode === 27) {

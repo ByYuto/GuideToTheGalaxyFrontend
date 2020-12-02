@@ -91,7 +91,14 @@ const resizeLayer = () => {
     refParentContainer.current) {
   
   const refContentSize = refParentContainer.current.offsetHeight - refHeaderContainer.current.offsetHeight;
-  const newSize = window.innerHeight < 723 ? refContentSize + 60 : refContentSize;
+  let newSize = 0;
+  if(window.innerWidth < 600) {
+     newSize = 692;
+  } else if(window.innerWidth < 1537) {
+    newSize = 337;
+  } else {
+    newSize = window.innerHeight < 723 ? refContentSize + 60 : refContentSize;
+  }
   setContentHeight(newSize);
   }
 };
