@@ -259,6 +259,13 @@ export const FullHeaderLayout = styled.div`
         & > span {
           cursor: pointer;
         }
+
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
     }
   }

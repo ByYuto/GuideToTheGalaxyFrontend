@@ -47,7 +47,7 @@ const Header = ({ home = 'home', noKeywords }) => {
     };
   }, [window.scrollY]);
   return (
-    <FullHeaderLayout home={home} isSticky={stickyNav ? 1 : 0}>
+    <FullHeaderLayout home={home} isSticky={stickyNav ? 1 : 0} noKeywords={noKeywords ? 1 : 0}>
       <StyledTopBar home={home ? 'home' : 'search'}>
         <div className="left">
           <Link to="/">
