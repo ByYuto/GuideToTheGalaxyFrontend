@@ -52,6 +52,7 @@ export const getArticlesFiltered = (text, location, category, keywords) => async
     if (e.response?.status === 401) {
       window.localStorage.removeItem('_token');
         dispatch(setAuthorization(false));
+        getArticlesFiltered(text, location, category, keywords);
     }
     console.log(e.response);
   }

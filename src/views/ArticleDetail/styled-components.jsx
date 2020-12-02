@@ -36,7 +36,7 @@ export const StyledView = styled(View)`
 `;
 
 export const ArticleDetailContainer = styled.div`
-  margin-bottom: 60px;
+  margin-bottom: 80px;
   & .discontinued-date-label {
     font-family: Lato;
     font-style: normal;
