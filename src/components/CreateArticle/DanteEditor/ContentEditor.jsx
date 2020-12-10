@@ -14,6 +14,7 @@ import Popover from 'react-text-selection-popover';
 import { useDispatch, useSelector } from 'react-redux';
 import { onChangeArticleContent } from '../../../redux/reducers/newArticleState';
 
+const EDITOR_VISIBLE_DISTANCE = 153;
 const styles = {
   root: {
     fontFamily: "'Georgia', serif",
@@ -159,14 +160,11 @@ function ContentEditor() {
 
   useEffect(() => {
     if (editorContainer && editorContainer.current) {
-      //const editorHeight = editorContainer.current.offsetHeight;
-      //const screenEditorFraction = window.innerHeight * 0.6;
-
-      if (topDistance > 153) {
+      if (topDistance > EDITOR_VISIBLE_DISTANCE) {
         setEditorOut(true);
       }
 
-      if (topDistance < 153) {
+      if (topDistance < EDITOR_VISIBLE_DISTANCE) {
         setEditorOut(false);
       }
     }
@@ -211,7 +209,7 @@ function ContentEditor() {
       const scrollElm = document.querySelector('.article-body-container');
       setTopDistance(scrollElm.scrollTop);
     });
-    
+
     return () => {
       document.querySelector('.article-body-container').removeEventListener('scroll', () => {
         const scrollElm = document.querySelector('.article-body-container');

@@ -150,14 +150,6 @@ const CustomContentType = ({
   const [previousLetter, setPreviousLetter] = useState(null);
   const [inputVal, setInputVal] = useState(value);
 
-  /* const _onClick = () => {
-    if(value === "NEW CONTENT TYPE") {
-      return;
-    }
-    setInputVal(value);
-    !readOnly && onClick && onClick(value);
-  }; */
-
   const _onBlur = (val) => {
     const value = val;
     if(value === "NEW CONTENT TYPE" || value  === '') {
@@ -249,17 +241,6 @@ const CustomContentType = ({
  }, [currentKey])
   return (
     <StyledContentType className={`${className} custom-container-input`} active={active} readOnly={readOnly} >
-      {/* <h6
-        contentEditable={!readOnly}
-        onBlur={_onBlur}
-        suppressContentEditableWarning={true}
-        onKeyDown={_onKeyDown}
-        ref={editableRef}
-        onPaste={_onPaste}
-        onFocus={()=>setFocus(true)}
-      >
-        {value}
-      </h6> */}
       <input 
         value={value}  
         onBlur={(e)=>{

@@ -27,6 +27,9 @@ import {
   FullHeaderLayout,
 } from './styled-components';
 import DontPanic from '../../assets/images/dont-panic-lg.svg';
+
+const TOP_DISTANCE_STICKY = 331;
+
 const Header = ({ home = 'home', noKeywords }) => {
   const history = useHistory();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -37,12 +40,12 @@ const Header = ({ home = 'home', noKeywords }) => {
   const modal = useModal();
   useEffect(() => {
     window.addEventListener('scroll', () => {
-      setStickyNav(window.scrollY > 331);
+      setStickyNav(window.scrollY > TOP_DISTANCE_STICKY);
     });
 
     return () => {
       window.removeEventListener('scroll', () => {
-        setStickyNav(window.scrollY > 331);
+        setStickyNav(window.scrollY > TOP_DISTANCE_STICKY);
       });
     };
   }, [window.scrollY]);
