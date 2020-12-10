@@ -28,6 +28,9 @@ const CreateArticleFooter = ({
   publish,
   publishDisabled,
   onPublish,
+  nexDisabledStep2,
+  showNextStep2,
+  showNextStep1
 }) => {
   const nextRef = useRef(null);
   const { loading } = useSelector((store) => store.newArticle);
@@ -38,8 +41,13 @@ const CreateArticleFooter = ({
           <Button primary rounded onClick={onExitClick} disabled={exitDisabled}>
             EXIT
           </Button>
-          {!publish && (
+          {showNextStep1 && (
             <Button primary rounded onClick={onNextClick} disabled={nextDisabled} ref={nextRef}>
+              NEXT
+            </Button>
+          )}
+          { showNextStep2 && (
+            <Button primary rounded onClick={onNextClick} disabled={nexDisabledStep2} ref={nextRef}>
               NEXT
             </Button>
           )}

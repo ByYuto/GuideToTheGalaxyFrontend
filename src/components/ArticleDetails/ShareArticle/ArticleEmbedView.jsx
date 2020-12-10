@@ -24,7 +24,7 @@ export default function ArticleEmbedView({
 }) {
   //const dispatch = useDispatch();
   return (
-    <ShareArticleCardView to={`/article/${_id}`}>
+    <ShareArticleCardView to={`/article/${_id}`} className="article-container">
       <Card fullWidth>
         <FlexContainer justify="space-between" align="center">
           <div className="breadcrumb">

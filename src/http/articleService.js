@@ -6,12 +6,12 @@ const GET_EMBED_ARTICLES = GET_ARTICLES + '/embeddables';
 const GET_CATEGORY_LIST = api + '/categories/list';
 const GET_SUGGESTED_ARTICLES = api + '/articles/suggestions';
 const GET_SEARCH_SUGGESTIONS = api + '/search/suggestions';
-export const getArticleService = async () => {
+export const getArticleService = async (keywords) => {
   const token = await localStorage.getItem('_token');
   if (token !== null) {
-    return axios.get(GET_ARTICLES, { headers: { Authorization: `Bearer ${token}` } });
+    return axios.get(`${GET_ARTICLES}${keywords ? '?keywords=' + keywords : '' }`, { headers: { Authorization: `Bearer ${token}` } });
   } else {
-    return axios.get(GET_ARTICLES);
+    return axios.get(`${GET_ARTICLES}${keywords ? '?keywords=' + keywords : '' }`);
   }
 };
 
@@ -21,21 +21,27 @@ export const getArticlesFilteredService = async (text, location, category, keywo
   if (text.length > 0) {
     params += `?text=${text}`;
   }
-  if (category.length > 0 && text.length > 0 && location.length > 0 && keywords.length > 0) {
+  
+  if (category.length > 0 && params.includes("?")) {
     params += `&categoryId=${category}`;
-  } else if (category.length > 0 && text.length === 0 && location.length === 0 && keywords.length === 0) {
+  }
+  if(category.length > 0 && !params.includes("?"))  {
     params += `?categoryId=${category}`;
   }
-  if (location.length > 0 && text.length > 0 && category.length > 0 && keywords.length > 0) {
+  if (location.length > 0  && params.includes("?")) {
     params += `&placeId=${location}`;
-  } else if (location.length > 0 && text.length === 0 && category.length === 0 && keywords.length === 0) {
+  }
+  
+  if (location.length > 0 && !params.includes("?")) {
     params += `?placeId=${location}`;
   }
-  if (keywords.length > 0 && location.length > 0 && text.length > 0 && category.length > 0) {
+  if (keywords.length > 0 && params.includes("?")) {
     params += `&keywords=${keywords}`;
-  } else if (keywords.length > 0 && location.length === 0 && text.length === 0 && category.length === 0) {
+  } 
+  if (keywords.length > 0 && !params.includes("?")) {
     params += `?keywords=${keywords}`;
   }
+
   if (token !== null) {
     return axios.get(GET_ARTICLES_BY_SEARCH + params, { headers: { Authorization: `Bearer ${token}` } });
   } else {
@@ -60,19 +66,23 @@ export const getSuggestedSearches = async (text, location, category, keywords) =
   if (text.length > 0) {
     params += `?text=${text}`;
   }
-  if (category.length > 0 && text.length > 0 && location.length > 0 && keywords.length > 0) {
+  if (category.length > 0 && params.includes("?")) {
     params += `&categoryId=${category}`;
-  } else if (category.length > 0 && text.length === 0 && location.length === 0 && keywords.length === 0) {
+  }
+  if(category.length > 0 && !params.includes("?"))  {
     params += `?categoryId=${category}`;
   }
-  if (location.length > 0 && text.length > 0 && category.length > 0 && keywords.length > 0) {
+  if (location.length > 0  && params.includes("?")) {
     params += `&placeId=${location}`;
-  } else if (location.length > 0 && text.length === 0 && category.length === 0 && keywords.length === 0) {
+  }
+  
+  if (location.length > 0 && !params.includes("?")) {
     params += `?placeId=${location}`;
   }
-  if (keywords.length > 0 && location.length > 0 && text.length > 0 && category.length > 0) {
+  if (keywords.length > 0 && params.includes("?")) {
     params += `&keywords=${keywords}`;
-  } else if (keywords.length > 0 && location.length === 0 && text.length === 0 && category.length === 0) {
+  } 
+  if (keywords.length > 0 && !params.includes("?")) {
     params += `?keywords=${keywords}`;
   }
 

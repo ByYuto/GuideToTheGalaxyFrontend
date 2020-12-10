@@ -40,3 +40,7 @@ export const StyledView = styled(View)`
     flex-grow: 1;
   }
 `;
+
+export const HomeLayout = styled.div`
+  padding-bottom: 60px;
+`;

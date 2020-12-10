@@ -8,6 +8,7 @@ import Button from '../UI/Button';
 import { validateUppercase, matchStringValidate, validateWorstPassword } from './validations';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUserAction } from '../../redux/actions/authActions';
+import Divider from '../UI/Divider';
 
 export default function RegisterForm({ setDisplayRegister }) {
   const { register, handleSubmit, setValue, errors, control, formState } = useForm();
@@ -31,7 +32,6 @@ export default function RegisterForm({ setDisplayRegister }) {
   };
 
   const passwordErrorMessage =
-    (errors?.password?.type === 'upperCase' && 'Password need at least one uppercase') ||
     (errors?.password?.type === 'worstPassword' && 'Worst password ever, please try a better one') ||
     errors?.password?.message;
 
@@ -83,8 +83,11 @@ export default function RegisterForm({ setDisplayRegister }) {
               value: 8,
               message: 'Password need at least 8 characters',
             },
+            pattern: {
+              value: /[A-Z]+/,
+              message: 'Password need at least one uppercase',
+            },
             validate: {
-              upperCase: validateUppercase,
               worstPassword: validateWorstPassword,
             },
           })}
@@ -133,11 +136,6 @@ export default function RegisterForm({ setDisplayRegister }) {
             <span className="validation">{errors?.accept_terms?.message}</span>
           </div>
         )}
-        <div style={{ width: '100%' }}>
-          <p>
-            <button onClick={(e) => setDisplayRegister(false)}>Log in</button>
-          </p>
-        </div>
 
         {!loading ? (
           <FlexContainer span="0" padding="0" justify="center">
@@ -155,6 +153,15 @@ export default function RegisterForm({ setDisplayRegister }) {
         )}
         {error && <div className="error-message">{errorMessage}</div>}
       </form>
+      <Divider />
+      <div style={{ textAlign: 'center' }}>
+        <p>
+          Already registered?{' '}
+          <button className="btn-like-link" onClick={(e) => setDisplayRegister(false)}>
+            LOG IN
+          </button>
+        </p>
+      </div>
     </FlexContainer>
   );
 }

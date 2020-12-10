@@ -1,8 +1,7 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Button from '../UI/Button';
 import HeaderBackground from '../../assets/images/home-bg.jpg';
 
-const os = navigator.userAgent.match(/Mac/);
 export const customStyle = {
   indicatorsContainer: (provided, state) => ({ color: state.isFocused ? 'white' : '#BDBFDF' }),
   indicatorSeparator: () => ({ display: 'none' }),
@@ -164,10 +163,29 @@ export const StyledView = styled(View)`
 
 export const FullHeaderLayout = styled.div`
   background-color: #1f1f3d;
-  background-image: ${(props) => (props.home === 'home' ? `url('${HeaderBackground}')` : 'none')};
+  background-image: ${(props) => (props.home === 'home' && !props.isSticky ? `url('${HeaderBackground}')` : 'none')};
   background-size: cover;
   background-repeat: no-repeat;
-  height: ${(props) => (props.home === 'home' ? '460px' : '184px')};
+  position: ${(props) => (props.isSticky ? 'fixed' : 'relative')};
+  z-index: 15;
+
+  ${(props) => {
+    if (!props.noKeywords) {
+      return props.home === 'home' && !props.isSticky
+        ? css`
+            height: 460px;
+          `
+        : css`
+            height: 154px;
+          `;
+    } else {
+      return css`
+        height: 76px;
+      `;
+    }
+  }}
+
+  width: 100%;
   & .selected-keywords {
     padding-right: 30px;
   }
@@ -206,7 +224,7 @@ export const FullHeaderLayout = styled.div`
     background-color: #1f1f3d;
     display: flex;
     align-items: center;
-    height: ${(props) => (props.home === 'home' ? '76px' : '110px')};
+    height: 76px;
     justify-content: space-evenly;
     overflow: visible;
     width: 100%;
@@ -225,18 +243,28 @@ export const FullHeaderLayout = styled.div`
         overflow: hidden;
         overflow-x: auto;
         align-items: center;
-        margin-bottom: ${os ? '-10px' : '-30px'};
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
       }
       & .keywords {
         width: auto;
         white-space: nowrap;
         overflow-y: hidden;
-        padding-bottom: 20px;
-        padding-top: 10px;
         position: relative;
         /* box-shadow: inset 0 20px 20px rgba(21, 21, 49, 0.7);*/
         & > span {
           cursor: pointer;
+        }
+
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+          display: none;
         }
       }
     }
@@ -282,7 +310,6 @@ export const FullHeaderLayout = styled.div`
     height: 100%;
     display: flex;
     z-index: 34;
-    bottom: 10px;
     align-items: center;
     & button {
       background-color: transparent;
@@ -301,7 +328,7 @@ export const FullHeaderLayout = styled.div`
     filter: blur(8px);
     -webkit-filter: blur(8px);
     background-clip: padding-box;
-    height: 78px;
+    height: 76px;
     display: flex;
     align-items: center;
     width: 45px;
@@ -310,7 +337,6 @@ export const FullHeaderLayout = styled.div`
   & .left-arrow-blurred {
     position: relative;
     left: 20px;
-    bottom: 10px;
     cursor: pointer;
     padding-left: 20px;
     background: linear-gradient(270deg, rgba(31, 31, 61, 1) 50%, rgba(31, 31, 61, 0.8) 85%, rgba(31, 31, 61, 0.6) 65%);
@@ -333,7 +359,6 @@ export const FullHeaderLayout = styled.div`
     display: flex;
     z-index: 34;
     align-items: center;
-    bottom: 10px;
     & button {
       background-color: transparent;
       outline: 0;

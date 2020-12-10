@@ -14,6 +14,7 @@ import Popover from 'react-text-selection-popover';
 import { useDispatch, useSelector } from 'react-redux';
 import { onChangeArticleContent } from '../../../redux/reducers/newArticleState';
 
+const EDITOR_VISIBLE_DISTANCE = 153;
 const styles = {
   root: {
     fontFamily: "'Georgia', serif",
@@ -79,45 +80,19 @@ function ContentEditor() {
   const mediaToolbarRef = useRef(null);
   const [topDistance, setTopDistance] = useState(0);
   const [embedActive, setEmbedActivation] = useState(false);
-  const Media = (props) => {
-    const entity = props.contentState.getEntity(props.block.getEntityAt(0));
-    const blockKey = props.block.key;
-    const type = entity.getType();
 
-    if (type === 'ARTICLE') {
-      const { articleId } = entity.getData();
-      return <ArticleEmbed articleId={articleId} />;
-    }
-
-    if (type === 'IMAGE') {
-      const { images } = entity.getData();
-
-      return (
-        <ImageEditorComponent
-          blockKey={blockKey}
-          images={images}
-          {...props}
-          onChangeEditor={setEditorState}
-          editorState={editorState}
-          imageInputRef={imageInputRef}
-          setBlockKey={setBlockKey}
-          setImagesGallery={setImagesGallery}
-        />
-      );
-    }
-
-    if (type === 'VIDEO') {
-      const { videoId } = entity.getData();
-      return <EmbedPreview embedSource={videoId} />;
-    }
-
-    return null;
-  };
   const mediaBlockRenderer = (block) => {
     if (block.getType() === 'atomic') {
       return {
         component: Media,
         editable: false,
+        props: {
+          setEditorState: setEditorState,
+          imageInputRef: imageInputRef,
+          setBlockKey: setBlockKey,
+          setImagesGallery: setImagesGallery,
+          editorState: editorState,
+        },
       };
     }
 
@@ -185,14 +160,11 @@ function ContentEditor() {
 
   useEffect(() => {
     if (editorContainer && editorContainer.current) {
-      //const editorHeight = editorContainer.current.offsetHeight;
-      //const screenEditorFraction = window.innerHeight * 0.6;
-
-      if (topDistance > 133) {
+      if (topDistance > EDITOR_VISIBLE_DISTANCE) {
         setEditorOut(true);
       }
 
-      if (topDistance < 133) {
+      if (topDistance < EDITOR_VISIBLE_DISTANCE) {
         setEditorOut(false);
       }
     }
@@ -219,14 +191,17 @@ function ContentEditor() {
       const options = {
         root: document,
         rootMargin: '0px',
-        threshold: 0.7,
+        threshold: 0,
         trackVisibility: true,
         delay: 100,
       };
 
       const observer = new window.IntersectionObserver(observerHandler, options);
-      observer.observe(mediaToolbarRef.current);
-      observer.observe(styledToolbarRef.current);
+      if (mediaToolbarRef && styledToolbarRef && mediaToolbarRef.current && styledToolbarRef.current) {
+        observer.observe(mediaToolbarRef.current);
+        observer.observe(styledToolbarRef.current);
+      }
+
       //observer.observe(editorRef.current);
     });
 
@@ -234,7 +209,7 @@ function ContentEditor() {
       const scrollElm = document.querySelector('.article-body-container');
       setTopDistance(scrollElm.scrollTop);
     });
-    
+
     return () => {
       document.querySelector('.article-body-container').removeEventListener('scroll', () => {
         const scrollElm = document.querySelector('.article-body-container');
@@ -394,6 +369,52 @@ export const Link = (props) => {
       {props.children}
     </a>
   );
+};
+
+const Media = (props) => {
+  const { setEditorState, imageInputRef, setBlockKey, setImagesGallery, editorState } = props.blockProps;
+  const entity = props.contentState.getEntity(props.block.getEntityAt(0));
+  const blockKey = props.block.key;
+  const type = entity.getType();
+
+  if (type === 'ARTICLE') {
+    const { articleId } = entity.getData();
+    return <ArticleEmbed isPreview={true} articleId={articleId} />;
+  }
+
+  if (type === 'IMAGE') {
+    const { images } = entity.getData();
+
+    return (
+      <ImageEditorComponent
+        blockKey={blockKey}
+        images={images}
+        {...props}
+        onChangeEditor={setEditorState}
+        contentState={props.contentState}
+        imageInputRef={imageInputRef}
+        setBlockKey={setBlockKey}
+        setImagesGallery={setImagesGallery}
+        readOnly={false}
+        editorState={editorState}
+      />
+    );
+  }
+
+  if (type === 'VIDEO') {
+    const { videoId } = entity.getData();
+    return (
+      <EmbedPreview
+        blockKey={blockKey}
+        embedSource={videoId}
+        contentState={props.contentState}
+        onChangeEditor={setEditorState}
+        editorState={editorState}
+      />
+    );
+  }
+
+  return null;
 };
 
 export default ContentEditor;

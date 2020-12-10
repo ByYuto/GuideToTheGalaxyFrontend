@@ -62,3 +62,8 @@ export const generalTemplate = {
     tooltip: 'A tooltip',
   },
 };
+
+export const KEYCODES = {
+  SCAPE: 27,
+  ENTER: 13
+}

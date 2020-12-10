@@ -24,7 +24,7 @@ const StyledInputContainer = styled.div`
     props.theme.isDark
       ? `background-color: #151531;
   border-radius: 8px;`
-      : ''}
+      : 'background-color: white;'}
 
   ${Menu} {
     position: absolute;
@@ -167,6 +167,7 @@ const Input = ({
   contained,
   actionButton,
   avoidSpecialCharacters,
+  handleKeyDown,
   ...props
 }) => {
   const inputRef = useRef(null);
@@ -240,6 +241,8 @@ const Input = ({
     }
     setFocusedCount(focusedCount + 1);
   };
+
+  
   return (
     <StyledInputContainer
       onFocus={_onFocus}
@@ -269,6 +272,7 @@ const Input = ({
           onChange={onInputChange}
           readOnly={readOnly}
           onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyDown}
         />
         {!disabled && !readOnly ? (
           <ClearButton

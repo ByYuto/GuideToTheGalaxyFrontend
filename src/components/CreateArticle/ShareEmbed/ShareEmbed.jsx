@@ -3,6 +3,7 @@ import Input from '../../UI/Input';
 import { CheckIcon, VideoMediaIcon } from '../../../assets/icons/svg-icons';
 import { ShareEmbedLayout } from './styled-components';
 import { validateEmbed } from '../../../utils/validations';
+import { KEYCODES } from '../../../utils/constants';
 
 export default function ShareEmbed({ index, showEmbed, confirmVideo, editorState }) {
   const [embed, setEmbed] = useState('');
@@ -53,7 +54,7 @@ export default function ShareEmbed({ index, showEmbed, confirmVideo, editorState
   };
 
   const handleEnterSubmit = (e) => {
-    if (e.keyCode === 13) {
+    if (e.keyCode === KEYCODES.ENTER) {
       e.preventDefault();
       handleSubmitValue();
     }
@@ -72,6 +73,15 @@ export default function ShareEmbed({ index, showEmbed, confirmVideo, editorState
         block
         onChange={(value) => handleEmbedValue(value)}
         readOnly={false}
+        handleKeyDown={(e) => {
+          if (e.keyCode === KEYCODES.SCAPE) {
+            e.preventDefault();
+            showEmbed(false);
+            return;
+          }
+
+          return;
+        }}
         onBlur={null}
         onFocus={null}
         actionButton={

@@ -7,8 +7,8 @@ const LIKES_ROUTE = api + '/likes';
 export const setLikeService = async (articleId) => {
   const token = await localStorage.getItem('_token');
   return axios.post(
-    `${LIKES_ROUTE}?articleId=${articleId}`,
-    {},
+    `${LIKES_ROUTE}`,
+    {articleId},
     {
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     }
@@ -19,8 +19,8 @@ export const setLikeService = async (articleId) => {
 export const unsetLikeService = async (articleId) => {
   const token = await localStorage.getItem('_token');
   return axios.post(
-    `${LIKES_ROUTE}?articleId=${articleId}`,
-    {},
+    `${LIKES_ROUTE}`,
+    {articleId},
     {
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     }

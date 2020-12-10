@@ -1,13 +1,13 @@
 import React from 'react';
 import { EmbedLayout } from './styled-components';
 import { MdClose } from 'react-icons/md';
-///import { removeEmbed } from '../../../redux/reducers/newArticleState';
 import { validateEmbed } from '../../../utils/validations';
+import { resetBlockWithType } from '../DanteEditor/util';
 
-export default function EmbedPreview({ id, embedSource }) {
-  //const dispatch = useDispatch();
-  const handleRemoveEmbed = () => {
-    //dispatch(removeEmbed(id));
+export default function EmbedPreview({ embedSource, blockKey, onChangeEditor, editorState }) {
+  const handleRemoveEmbed = (e) => {
+    e.preventDefault();
+    onChangeEditor(resetBlockWithType(editorState, 'unstyled', blockKey));
   };
   const validUri = validateEmbed(embedSource).valid;
   let videoUri = embedSource;

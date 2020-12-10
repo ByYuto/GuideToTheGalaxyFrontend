@@ -25,10 +25,10 @@ export const getCategoriesRequest = () => ({ type: APP_GET_CATEGORIES_REQUEST })
 export const getCategoriesSuccess = (categories) => ({ type: APP_GET_CATEGORIES_SUCCESS, payload: { categories } });
 export const getCategoriesError = () => ({ type: APP_GET_CATEGORIES_ERROR });
 
-export const getArticlesHome = () => async (dispatch) => {
+export const getArticlesHome = (keywords) => async (dispatch) => {
   dispatch(setLoading(true));
   try {
-    const response = await getArticleService();
+    const response = await getArticleService(keywords ? keywords : undefined);
     dispatch(setArticlesHome(response.data));
     dispatch(setLoading(false));
   } catch (e) {

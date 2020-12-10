@@ -15,19 +15,24 @@ import Loader from '../../components/UI/Loader';
 import { getDateFormatted } from '../../utils/utils';
 import ArticleContentBody from './ArticleContentBody';
 import Button from '../../components/UI/Button';
+import { setSelectedKeyword } from '../../redux/reducers/topbarSearch';
+import { useHistory } from 'react-router-dom';
 
 export default function ArticleDetail() {
   const { id } = useParams();
-  const [previousId, setPreviousId] = useState(null);
   const articleExampleId = id;
   const dispatch = useDispatch();
   const { article, error, errorMessage, loading } = useSelector((store) => store.articleDetail);
+  const history = useHistory();
   useEffect(() => {
-    if (!article || previousId !== articleExampleId) {
-      setPreviousId(articleExampleId);
-      dispatch(getArticleDetail(articleExampleId));
-    }
+    dispatch(getArticleDetail(articleExampleId));
   }, [id]);
+
+  const handleTagClick = (tag) => {
+    dispatch(setSelectedKeyword(tag));
+    history.push('/search');
+  };
+
   return (
     <ArticleDetailContainer>
       {error && (
@@ -106,7 +111,7 @@ export default function ArticleDetail() {
           <ThemeProvider theme={{ isDark: false }}>
             <StyledView>
               <MaxWidthContainer className="content-container">
-                {article?.content && <ArticleContentBody articleContent={article.content} />}
+                {article?.content ? <ArticleContentBody articleContent={article.content} /> : null}
               </MaxWidthContainer>
             </StyledView>
             <StyledView>
@@ -129,7 +134,7 @@ export default function ArticleDetail() {
                   article.keywords &&
                   article.keywords.length > 0 &&
                   article.keywords.map((k, index) => (
-                    <Tag key={index} md tagType="primary">
+                    <Tag key={index} md tagType="primary" onClick={() => handleTagClick(k)}>
                       {k}
                     </Tag>
                   ))}
