@@ -22,7 +22,8 @@ const EditorReadOnlyLayout = styled.div`
 `;
 
 export default function ArticleContentBody({ articleContent }) {
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty(decorator));
+  const contentEditor = convertFromRaw(articleContent);
+  const [editorState, setEditorState] = useState(() => EditorState.createWithContent(contentEditor, decorator));
 
   const mediaBlockRenderer = (block) => {
     if (block.getType() === 'atomic') {
@@ -37,11 +38,16 @@ export default function ArticleContentBody({ articleContent }) {
 
   useEffect(() => {
     const contentEditor = convertFromRaw(articleContent);
-    setEditorState(EditorState.set(editorState, { currentContent: contentEditor }));
+    setEditorState(EditorState.push(editorState, contentEditor));
   }, [articleContent]);
   return (
     <EditorReadOnlyLayout>
-      <Editor editorState={editorState} readOnly={true} blockRendererFn={mediaBlockRenderer} />
+      <Editor
+        editorState={editorState}
+        readOnly={true}
+        blockRendererFn={mediaBlockRenderer}
+        onChange={setEditorState}
+      />
     </EditorReadOnlyLayout>
   );
 }
