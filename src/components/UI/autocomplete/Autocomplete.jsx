@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AutocompleteLayout } from './styled-components';
 import { IoIosClose } from 'react-icons/io';
 import Suggestions from './Suggestions';
@@ -15,8 +15,10 @@ export default function Autocomplete({
   className,
   actionButton,
   patternAllowed,
+  setFocusOnMount,
 }) {
   const [focused, setFocus] = useState(false);
+  const inputRef = useRef(null);
   const handleFocus = () => {
     setFocus(true);
   };
@@ -41,6 +43,11 @@ export default function Autocomplete({
       return;
     }
   };
+  useEffect(() => {
+    if (setFocusOnMount && inputRef && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [setFocusOnMount]);
   return (
     <AutocompleteLayout className={className} actionButton={!!actionButton} leftIcon={!!icon}>
       <div className="input-autocomplete-container">
@@ -54,6 +61,8 @@ export default function Autocomplete({
           placeholder={placeholder}
           onKeyDown={handleKeydown}
           onKeyPress={handleKeyPress}
+          type="text"
+          ref={inputRef}
         />
         {value.length > 0 ? <IoIosClose onClick={onClearValue} className="clear-element" size={30} /> : null}
         {actionButton && actionButton}

@@ -3,8 +3,6 @@ import logo from '../../assets/images/logo.png';
 import dontPanic from '../../assets/images/dont-panic.png';
 import { GoPlus } from 'react-icons/go';
 import Link from '../UI/Link';
-import { MdMenu } from 'react-icons/md';
-import { AiOutlineBell } from 'react-icons/ai';
 import { useHistory } from 'react-router-dom';
 import Modal from '../UI/modal/Modal';
 import Sidebar from '../UI/Sidebar';
@@ -27,8 +25,12 @@ import {
   FullHeaderLayout,
 } from './styled-components';
 import DontPanic from '../../assets/images/dont-panic-lg.svg';
+import { BellNotification, BurgerMenu, Logo, DontPanicLogo } from '../../assets/icons/svg-icons';
+import { Avatar } from 'rsuite';
+import { AiOutlineUser } from 'react-icons/ai';
 
-const TOP_DISTANCE_STICKY = 331;
+const TOP_DISTANCE_STICKY = 291;
+const TOP_DISTANCE_SEARCH = 0;
 
 const Header = ({ home = 'home', noKeywords }) => {
   const history = useHistory();
@@ -40,97 +42,107 @@ const Header = ({ home = 'home', noKeywords }) => {
   const modal = useModal();
   useEffect(() => {
     window.addEventListener('scroll', () => {
-      setStickyNav(window.scrollY > TOP_DISTANCE_STICKY);
+      const headerHeight = home === 'home' ? TOP_DISTANCE_STICKY : TOP_DISTANCE_SEARCH;
+      setStickyNav(window.scrollY > headerHeight);
     });
 
     return () => {
       window.removeEventListener('scroll', () => {
-        setStickyNav(window.scrollY > TOP_DISTANCE_STICKY);
+        const headerHeight = home === 'home' ? TOP_DISTANCE_STICKY : TOP_DISTANCE_SEARCH;
+        setStickyNav(window.scrollY > headerHeight);
       });
     };
   }, [window.scrollY]);
   return (
-    <FullHeaderLayout home={home} isSticky={stickyNav ? 1 : 0} noKeywords={noKeywords ? 1 : 0}>
-      <StyledTopBar home={home ? 'home' : 'search'}>
-        <div className="left">
-          <Link to="/">
-            <img src={logo} className="logo" alt="logo" />
-            {home === 'search' && <img src={dontPanic} alt="dont panic" />}
-          </Link>
-        </div>
-        <div className="middle">{home === 'search' || stickyNav ? <HeaderSearchBar /> : null}</div>
-        <div className="right">
-          <WithAuth
-            component={
-              <>
-                <AddContentButton secondary circle onClick={onAddContentClick} icon>
-                  <GoPlus />
-                </AddContentButton>
-              </>
-            }
-            componentReplacement={
-              <>
-                <AddContentButton secondary circle onClick={modal.handleClick} icon>
-                  <GoPlus />
-                </AddContentButton>
-              </>
-            }
-          />
-          <Separator />
+    <>
+      {stickyNav && <div style={{ height: home === 'home' ? '460px' : '154px' }}></div>}
+      <FullHeaderLayout home={home} isSticky={stickyNav ? 1 : 0} noKeywords={noKeywords ? 1 : 0}>
+        <StyledTopBar home={home} isSticky={stickyNav ? 1 : 0}>
+          <div className="left">
+            <Link to="/">
+              <Logo />
+              {home === 'search' || stickyNav ? <DontPanicLogo className="dontpanic-logo" /> : null}
+            </Link>
+          </div>
+          <div className="middle">{home === 'search' || stickyNav ? <HeaderSearchBar /> : null}</div>
+          <div className="right">
+            <WithAuth
+              component={
+                <>
+                  <AddContentButton secondary circle onClick={onAddContentClick} icon>
+                    <GoPlus />
+                  </AddContentButton>
+                </>
+              }
+              componentReplacement={
+                <>
+                  <AddContentButton secondary circle onClick={modal.handleClick} icon>
+                    <GoPlus />
+                  </AddContentButton>
+                </>
+              }
+            />
+            <Separator />
 
-          <WithAuth
-            component={
-              <NotificationsButton transparent secondary icon>
-                <AiOutlineBell />
-              </NotificationsButton>
-            }
-            componentReplacement={
-              <>
-                <LoginButton onClick={modal.handleClick}>Log in</LoginButton>
-                <ThemeProvider theme={{ isDark: true }}>
-                  <Modal
-                    setVisibility={modal.handleClick}
-                    visible={modal.visible}
-                    elmHeight="auto"
-                    elmWidth="496px"
-                    footer={null}
-                  >
-                    <Login handleCancel={modal.handleClick} />
-                  </Modal>
-                </ThemeProvider>
-              </>
-            }
-          />
-          <MenuButton transparent secondary icon onClick={() => setMenuOpen(true)}>
-            <MdMenu />
-          </MenuButton>
-          <Sidebar shown={menuOpen} isShown={setMenuOpen} />
-        </div>
-      </StyledTopBar>
-      <ThemeProvider theme={{ isDark: true }}>
-        {home === 'home' && !stickyNav && (
-          <StyledView>
-            <MaxWidthContainer className="main-hero-content">
-              <FlexContainer column justify="center" align="center">
-                <img src={DontPanic} title="Don't Panic" alt="Don't Panic" />
-                <p className="home-main-text">
-                  The Busker's Guide to the Galaxy will tell you everything you want to know about busking, either as
-                  demonstrable facts or opinions from other people.
-                </p>
-                <div className="searchbar-container-home">
-                  <HeaderSearchBar />
-                </div>
-              </FlexContainer>
-            </MaxWidthContainer>
-          </StyledView>
-        )}
-        {!noKeywords && (
-          <StyledView className="header-keywords">
-            <KeywordsSection />
-          </StyledView>
-        )}
-      </ThemeProvider>
-    </FullHeaderLayout>
+            <WithAuth
+              component={
+                <>
+                  <NotificationsButton transparent secondary icon>
+                    <BellNotification />
+                  </NotificationsButton>
+                  <Avatar circle>
+                    <AiOutlineUser />
+                  </Avatar>
+                </>
+              }
+              componentReplacement={
+                <>
+                  <LoginButton onClick={modal.handleClick}>Log in</LoginButton>
+                  <ThemeProvider theme={{ isDark: true }}>
+                    <Modal
+                      setVisibility={modal.handleClick}
+                      visible={modal.visible}
+                      elmHeight="auto"
+                      elmWidth="496px"
+                      footer={null}
+                    >
+                      <Login handleCancel={modal.handleClick} />
+                    </Modal>
+                  </ThemeProvider>
+                </>
+              }
+            />
+            <MenuButton transparent secondary icon onClick={() => setMenuOpen(true)}>
+              <BurgerMenu />
+            </MenuButton>
+            <Sidebar shown={menuOpen} isShown={setMenuOpen} />
+          </div>
+        </StyledTopBar>
+        <ThemeProvider theme={{ isDark: true }}>
+          {home === 'home' && !stickyNav && (
+            <StyledView>
+              <MaxWidthContainer className="main-hero-content">
+                <FlexContainer column justify="center" align="center">
+                  <img src={DontPanic} title="Don't Panic" alt="Don't Panic" />
+                  <p className="home-main-text">
+                    The Busker's Guide to the Galaxy will tell you everything you want to know about busking, either as
+                    demonstrable facts or opinions from other people.
+                  </p>
+                  <div className="searchbar-container-home">
+                    <HeaderSearchBar />
+                  </div>
+                </FlexContainer>
+              </MaxWidthContainer>
+            </StyledView>
+          )}
+          {!noKeywords && (
+            <StyledView className="header-keywords">
+              <KeywordsSection />
+            </StyledView>
+          )}
+        </ThemeProvider>
+      </FullHeaderLayout>
+    </>
   );
 };
 export default Header;

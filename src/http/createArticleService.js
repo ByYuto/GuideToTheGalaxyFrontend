@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from './interceptor';
 
 const api = process.env.REACT_APP_API_URL;
 const loadImageRoute = api + '/images';
@@ -13,7 +13,7 @@ export const uploadImage = async (file) => {
     return { url: dataImage.data.content.content, imageId: dataImage.data._id };
   } catch (e) {
     console.log(e.response || e.message);
-    return e;
+    throw e;
   }
 };
 

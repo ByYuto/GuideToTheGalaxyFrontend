@@ -101,7 +101,7 @@ const Toggle = ({ className, onChange, checked, disabled, readOnly, tooltipText,
 const ToggleContainerLayout = styled.div`
   position: relative;
   & .tooltip-toggle {
-    bottom: 0;
+    bottom: -7px;
     top: auto;
   }
 `;

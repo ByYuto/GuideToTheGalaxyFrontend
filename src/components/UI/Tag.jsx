@@ -16,23 +16,38 @@ const Tag = styled.span`
       font-size: 12px;
       line-height: 14px;
       display: inline-flex;
-      padding: 6px;
+      padding: 6px 21px;
       margin-left: 5px;
     `}
   ${(props) =>
     props.md &&
     css`
-      padding: 4px 14px;
-      font-family: Open Sans;
+      padding: 4px 21px;
+      display: inline-block;
+      text-align: center;
+      margin: 8px;
+      font-family: Lato;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 14px;
+      text-align: center;
+    `}
+  ${(props) =>
+    props.mt &&
+    css`
+      padding: 4px 21px;
+      display: inline-block;
+      text-align: center;
+      margin: 8px;
+      font-family: Lato;
       font-style: normal;
       font-weight: normal;
       font-size: 14px;
       line-height: 22px;
-      display: inline-block;
-      align-items: center;
       text-align: center;
-      margin: 10px;
     `}
+
   ${(props) =>
     !props.theme.isDark &&
     props.tagType === 'primary' &&

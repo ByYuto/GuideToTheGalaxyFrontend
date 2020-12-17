@@ -121,6 +121,12 @@ const resizeLayer = () => {
       dispatch(getCategories());
   }, [])
 
+  useEffect(()=>{
+    if(refParentContainer  && refParentContainer.current) {
+      refParentContainer.current.scrollTop = refParentContainer.current.scrollHeight;
+    }
+  }, [step])
+
 
 
   const onCategoryChange = (category) => {

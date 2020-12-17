@@ -20,6 +20,8 @@ export default function Dropdown({
   const onOptionSelect = (option) => {
     setCurrentValue(option);
   };
+
+  const optionsFiltered = options.filter((elm) => elm.description !== currentValue);
   return (
     <DropdownLayout
       focused={focused ? 1 : 0}
@@ -41,8 +43,8 @@ export default function Dropdown({
       </div>
       {focused && (
         <div className="autocomplete-dropdown-container">
-          {options.length > 0 &&
-            options.map((opt, index) => {
+          {optionsFiltered.length > 0 &&
+            optionsFiltered.map((opt, index) => {
               return <Options key={index} option={opt} onOptionSelect={onOptionSelect} />;
             })}
         </div>

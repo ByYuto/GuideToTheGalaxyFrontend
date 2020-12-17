@@ -50,6 +50,12 @@ export const ArticleDetailContainer = styled.div`
     margin-top: 24px;
   }
   & .contributions-bar {
+    padding-left: 42px;
+    padding-right: 10px;
+
+    & .contributions-number {
+      margin-right: 10px;
+    }
     & span {
       color: #1f1f3d;
       cursor: pointer;
@@ -139,21 +145,31 @@ export const ArticleDetailContainer = styled.div`
     margin-top: 16px;
   }
 
-  & .button-buy > a {
-    color: white;
-    margin-top: 0;
-    font-family: Lato;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 14px;
-    padding-left: 20px;
-    padding-right: 20px;
+  & .button-buy {
+    margin-top: 16px;
+    & a {
+      color: white;
+      margin-top: 0;
+      font-family: Lato;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 14px;
+      padding-left: 20px;
+      padding-right: 20px;
+      text-decoration: none;
+    }
+  }
+
+  & .post-metadata-date {
+    color: #9695b7;
   }
 
   & .metadata-date {
     display: flex;
     align-items: center;
+    margin-top: 12px;
+    color: #9695b7;
   }
 
   & .metadata-container {

@@ -97,7 +97,7 @@ export default function ArticleDetail() {
                     <div>
                       <strong>{article?.user?.name}</strong>
                     </div>
-                    <div>
+                    <div className="post-metadata-date">
                       <span>{article?.updated_at && getDateFormatted(article.updated_at)}</span>
                     </div>
                   </div>
@@ -151,22 +151,22 @@ export default function ArticleDetail() {
               <MaxWidthContainer className="reactions-column">
                 <FlexContainer align="stretch" elmWidth="100%" justify="space-between">
                   {article?.communityEditsAllowed ? (
-                    <FlexContainer align="center" elmWidth="30%" className="contributions-bar">
+                    <FlexContainer align="center" elmWidth="40%" className="contributions-bar">
                       <FlexContainer elmWidth="100%">
-                        <FlexContainer justify="space-evenly" align="center" elmWidth="100%">
-                          <span>0</span>
+                        <FlexContainer align="center" elmWidth="100%">
+                          <span className="contributions-number">0</span>
                           <span>CONTRIBUTIONS</span>
                         </FlexContainer>
                       </FlexContainer>
                       <FlexContainer elmWidth="100%">
-                        <FlexContainer justify="space-evenly" align="center" elmWidth="100%">
-                          <EditIcon />
+                        <FlexContainer align="center" elmWidth="100%">
+                          <EditIcon className="contributions-number" />
                           <span>SUGGEST EDIT</span>
                         </FlexContainer>
                       </FlexContainer>
                     </FlexContainer>
                   ) : (
-                    <FlexContainer align="center" elmWidth="70%">
+                    <FlexContainer align="center" elmWidth="60%">
                       <span className="edit-lock">
                         <LockIcon />
                         EDIT LOCKED

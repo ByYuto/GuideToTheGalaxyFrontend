@@ -59,10 +59,18 @@ export const AddContentButton = styled(Button)`
 
 export const MenuButton = styled(Button)`
   font-size: 34px;
+  margin-left: 16px;
+  & svg:hover rect {
+    fill: #cf92e5;
+  }
 `;
 
 export const NotificationsButton = styled(Button)`
   font-size: 30px;
+  margin-right: 16px;
+  & svg:hover path {
+    fill: #cf92e5;
+  }
 `;
 
 export const LoginButton = styled.button`
@@ -90,13 +98,18 @@ export const StyledTopBar = styled.div`
   align-items: center;
   flex-direction: row;
   padding: 0 24px 0 24px;
-  box-shadow: 20px 0 #151531;
+  ${(props) => (props.home === 'home' && !props.isSticky ? '' : 'box-shadow: 0px 1px 10px 0px #14144f;')};
+  margin-bottom: 5px;
   border-bottom: solid 1px ${(props) => (props.home === 'home' ? 'transparent' : '#151531')};
 
   .left {
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    .dontpanic-logo {
+      margin-left: 16px;
+    }
 
     a {
       display: flex;
@@ -167,6 +180,11 @@ export const FullHeaderLayout = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   position: ${(props) => (props.isSticky ? 'fixed' : 'relative')};
+  ${(props) =>
+    props.isSticky &&
+    css`
+      top: 0;
+    `};
   z-index: 15;
 
   ${(props) => {

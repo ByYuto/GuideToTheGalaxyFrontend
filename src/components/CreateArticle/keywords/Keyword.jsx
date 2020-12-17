@@ -9,7 +9,7 @@ export default function Keyword({ name, tagType, readonlyTag, handleClick, curso
   const dispatch = useDispatch();
   return (
     <KeywordLayout readonlyTag={readonlyTag} onClick={handleClick} cursorPointer={cursorPointer}>
-      <Tag tagType={tagType} md>
+      <Tag tagType={tagType} mt>
         {name}
         {!readonlyTag && <IoIosClose className="closable" size={24} onClick={() => dispatch(removeKeyword(name))} />}
       </Tag>

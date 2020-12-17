@@ -8,6 +8,8 @@ import { validateField } from '../../../redux/reducers/newArticleState';
 import { TextValidation } from './styledComponents';
 import { CameraIcon } from '../../../assets/icons/svg-icons';
 import { uploadImage } from '../../../http/createArticleService';
+import { FlexboxGrid } from 'rsuite';
+import Loader from '../Loader';
 
 const UploadInputLayout = styled.div`
   display: flex;
@@ -84,8 +86,13 @@ const UploadInputLayout = styled.div`
   }
 `;
 
+const LoaderContainer = styled.div`
+  margin-top: 16px;
+`;
+
 export default function UploadInput({ contentType, onChange, readOnly, srcImg = PlaceholderImg }) {
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const tooltip = contentType ? contentType['image']?.tooltip : 'Select an Image';
   const inputRef = useRef(null);
   const dispatch = useDispatch();
@@ -112,6 +119,7 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
     e.preventDefault();
     const dataSrc = e.target.files[0];
     if (dataSrc) {
+      setLoading(true);
       const imageData = await uploadImage(dataSrc);
       if (imageData.url) {
         const newArticle = {
@@ -121,6 +129,7 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
       } else {
         return;
       }
+      setLoading(false);
     } else {
       return;
     }
@@ -131,7 +140,7 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
       handleImageValidation(inputRef.current.files);
     }
   }, [srcImg]);
-  return (
+  return !loading ? (
     <>
       <UploadInputLayout onClick={handleImgSelect} isRequired={contentType.image.required}>
         <img
@@ -151,5 +160,11 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
         <TextValidation>{imageValidation?.errorType}</TextValidation>
       )}
     </>
+  ) : (
+    <LoaderContainer className="laoder-container">
+      <FlexboxGrid justify="center" align="stretch">
+        <Loader />
+      </FlexboxGrid>
+    </LoaderContainer>
   );
 }

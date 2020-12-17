@@ -126,6 +126,17 @@ export const ShareArticleCardView = styled(Link)`
   text-decoration: none;
   outline: 0;
 
+  & .keywords-container {
+    overflow-x: hidden;
+    max-width: 808px;
+  }
+
+  & .tag-embed-post {
+    &:first-child {
+      margin-left: 0 !important;
+    }
+  }
+
   &:hover {
     cursor: pointer;
     color: inherit;
@@ -135,7 +146,7 @@ export const ShareArticleCardView = styled(Link)`
 
   & h4 {
     margin: 0;
-    padding: 5px;
+    padding: 5px 5px 5px 1px;
     font-family: Lato;
     font-style: normal;
     font-weight: bold;
@@ -152,9 +163,11 @@ export const ShareArticleCardView = styled(Link)`
     color: #1f1f3d;
     margin-right: 10px;
     margin-top: 0;
-    font-size: 15px;
-    line-height: 22px;
-    min-height: ;
+    font-family: Open Sans !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    line-height: 22px !important;
   }
 
   & figure {
@@ -163,9 +176,9 @@ export const ShareArticleCardView = styled(Link)`
     height: 138px;
     overflow: hidden;
     border-radius: 16px;
-    margin-bottom: 16px;
+    margin: 0;
     & img {
-      width: 169px;
+      width: 100%;
       height: auto;
       border-radius: 16px;
     }
@@ -218,7 +231,7 @@ export const ShareArticleCardView = styled(Link)`
   }
 
   & .post-content {
-    min-height: 165px;
+    height: 138px;
     margin-top: 16px;
   }
 `;
@@ -228,9 +241,14 @@ export const ShareArticleCardPreview = styled.div`
   color: inherit;
   cursor: pointer;
   outline: 0;
+  & .tag-embed-post {
+    &:first-child {
+      margin-left: 0 !important;
+    }
+  }
   & h4 {
     margin: 0;
-    padding: 5px;
+    padding: 5px 5px 5px 0;
     font-family: Lato;
     font-style: normal;
     font-weight: bold;
@@ -247,9 +265,11 @@ export const ShareArticleCardPreview = styled.div`
     color: #1f1f3d;
     margin-right: 10px;
     margin-top: 0;
-    font-size: 15px;
-    line-height: 22px;
-    min-height: ;
+    font-family: Open Sans !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    line-height: 22px !important;
   }
 
   & figure {
@@ -258,9 +278,9 @@ export const ShareArticleCardPreview = styled.div`
     height: 138px;
     overflow: hidden;
     border-radius: 16px;
-    margin-bottom: 16px;
+    margin: 0;
     & img {
-      width: 169px;
+      width: 100%;
       height: auto;
       border-radius: 16px;
     }
@@ -313,7 +333,7 @@ export const ShareArticleCardPreview = styled.div`
   }
 
   & .post-content {
-    min-height: 165px;
+    height: 138px;
     margin-top: 16px;
   }
 

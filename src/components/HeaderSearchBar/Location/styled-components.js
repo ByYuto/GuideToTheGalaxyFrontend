@@ -57,12 +57,17 @@ export const AutocompleteLayout = styled.div`
   }
 
   & .autocomplete-dropdown-container {
-    boder-radius-bottom: 8px;
+    border-radius: 0 0 8px 8px;
     background-color: #151531;
     color: #bdbfdf;
     position: absolute;
     z-index: 99;
     width: 100%;
+    box-shadow: 0px 1px 7px 0px #151531;
+    & .suggestion-item:last-child {
+      border-radius: 0 0 8px 8px;
+
+    }
   }
 `;
 
