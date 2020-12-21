@@ -10,6 +10,11 @@ const FooterLayout = styled.footer`
   position: relative;
   & a {
     color: #1f1f3d;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
   }
 `;
 const Footer = () => (

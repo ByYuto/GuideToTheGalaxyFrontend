@@ -40,6 +40,8 @@ export const customStyle = {
     color: '#f6f8ff',
     zIndex: 99,
     position: 'absolute',
+    borderRadius: '0 0 8px 8px',
+    boxShadow: '0px 0px 7px #151531',
   }),
   menuList: (provided, state) => ({ ...provided, color: '#BDBFDF', fontSize: '14px', background: state.isHover }),
 };

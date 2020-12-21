@@ -27,7 +27,7 @@ const initialState = {
     discontinued_law: false,
     date: new Date(),
     pdf: null,
-    contributions: false,
+    contributions: true,
     keywords: [],
     content: EditorState.createEmpty(decorator)
   },

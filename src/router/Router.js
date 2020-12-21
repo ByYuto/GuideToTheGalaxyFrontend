@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route,  Router} from 'react-router-dom';
 import Home from '../views/Home/Home';
 import CreateArticle from '../views/CreateArticle/CreateArticle';
 import Layout from '../components/Layout/Layout';
@@ -7,12 +7,13 @@ import ArticleDetail from '../views/ArticleDetail/ArticleDetail';
 import { useSelector } from 'react-redux';
 import NotFound from '../views/NotFound/NotFound';
 import ContentEditor from '../components/CreateArticle/DanteEditor/ContentEditor'
+import history from './history';
 //import ComponentsTestPage from '../views/ComponentsTestPage';
 
-const Router = () => {
+const RouterApp = () => {
   const { authorization } = useSelector((store) => store.auth);
   return (
-    <BrowserRouter>
+    <Router history={history}>
       {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
       <Switch>
@@ -51,8 +52,8 @@ const Router = () => {
           </Layout>
         </Route>
       </Switch>
-    </BrowserRouter>
+    </Router>
   );
 };
 
-export default Router;
+export default RouterApp;

@@ -3,7 +3,7 @@ import { OptionsLayout } from './styled-components';
 
 export default function Options({ option, onOptionSelect }) {
   return (
-    <OptionsLayout isActive={option.active} onMouseDown={() => onOptionSelect(option.description)}>
+    <OptionsLayout onMouseDown={() => onOptionSelect(option.description)}>
       <span>{option.description}</span>
     </OptionsLayout>
   );

@@ -82,10 +82,7 @@ export default function KeywordsSection() {
       <FlexContainer elmWidth="10%" justify="flex-start">
         <Dropdown
           icon={<SortIcon className="location-icon" />}
-          options={[
-            { active: true, description: 'Sort by popular' },
-            { active: false, description: 'Sort by recent' },
-          ]}
+          options={[{ description: 'Sort by popular' }, { description: 'Sort by recent' }]}
           defaultOption={'Sort by popular'}
         />
       </FlexContainer>
@@ -103,14 +100,14 @@ export default function KeywordsSection() {
         <div ref={keywordContainer} className="keywords">
           {keywordsSelected?.length > 0 &&
             keywordsSelected.map((tag, index) => (
-              <Tag className="selected-keywords" key={index} md tagType="primary">
+              <Tag className="selected-keywords" key={index} mt tagType="primary">
                 {tag}
                 <IoIosClose className="closable" size={24} onClick={() => dispatch(removeKeyword(tag))} />
               </Tag>
             ))}
           {keywordsFiltered?.length > 0 &&
             keywordsFiltered.map((tag, index) => (
-              <Tag key={index} md tagType="secondary" onClick={() => addTag(tag)}>
+              <Tag key={index} mt tagType="secondary" onClick={() => addTag(tag)}>
                 {tag}
               </Tag>
             ))}

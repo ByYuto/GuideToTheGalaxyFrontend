@@ -54,6 +54,7 @@ export const DropdownLayout = styled.div`
     position: relative;
     width: 16px;
     height: 16px;
+    left: 5px;
     & path,
     rect {
       fill: rgb(102, 112, 240);
@@ -61,12 +62,14 @@ export const DropdownLayout = styled.div`
   }
 
   & .autocomplete-dropdown-container {
-    boder-radius-bottom: 8px;
+    border-radius: 0 0 8px 8px;
     background-color: #151531;
     color: #bdbfdf;
     position: absolute;
     z-index: 99;
     width: 100%;
+    top: 100%;
+    box-shadow: 0px 1px 7px 0px #151531;
   }
 
   & .action-button {
@@ -81,6 +84,7 @@ export const OptionsLayout = styled.div`
   color: ${(props) => (props.isActive ? 'white' : '#bdbfdf')};
   padding: 12px;
   border: 0.5px solid #1f1f3d;
+  border-radius: 0 0 8px 8px;
   & span {
     font-family: Open Sans;
     font-style: normal;

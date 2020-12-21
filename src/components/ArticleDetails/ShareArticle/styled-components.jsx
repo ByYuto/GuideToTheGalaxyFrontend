@@ -123,9 +123,14 @@ export const ShareArticleCardView = styled(Link)`
   color: inherit;
   cursor: pointer;
   outline: 0;
+  & .tag-embed-post {
+    &:first-child {
+      margin-left: 0 !important;
+    }
+  }
   & h4 {
     margin: 0;
-    padding: 5px;
+    padding: 5px 5px 5px 0px;
     font-family: Lato;
     font-style: normal;
     font-weight: bold;
@@ -142,9 +147,11 @@ export const ShareArticleCardView = styled(Link)`
     color: #1f1f3d;
     margin-right: 10px;
     margin-top: 0;
-    font-size: 15px;
-    line-height: 22px;
-    min-height: ;
+    font-family: Open Sans !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    line-height: 22px !important;
   }
 
   & figure {

@@ -2,22 +2,23 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Editor, EditorState, convertFromRaw } from 'draft-js';
 import { decorator } from '../../redux/reducers/newArticleState';
-import ArticleEmbed from '../../components/ArticleDetails/ShareArticle/ArticleEmbed';
+import ArticleEmbed from '../../components/CreateArticle/ShareArticle/ArticleEmbed';
 import EmbedPreview from '../../components/ArticleDetails/ShareEmbed/EmbedPreview';
 import ImageEditorComponent from '../../components/ArticleDetails/ImageEditor/ImageEditorComponent';
 import styled from 'styled-components';
 
 const EditorReadOnlyLayout = styled.div`
+  & .public-DraftStyleDefault-block.public-DraftStyleDefault-ltr > span {
+    font-family: Open Sans;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+  }
   & .article-container {
-    color: inherit;
-    text-decoration: none;
-    outline: 0;
-
-    &:hover {
-      color: inherit;
-      text-decoration: none;
-      outline: 0;
-    }
+    color: inherit !important;
+    text-decoration: none !important;
+    outline: 0 !important;
   }
 `;
 

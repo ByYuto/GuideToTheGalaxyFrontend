@@ -5,17 +5,27 @@ import { AddButton, ImageWrapper, ImageItem, ImagesContainer, ButtonLabel, Close
 import messages from './messages.json';
 import { EditorState, AtomicBlockUtils } from 'draft-js';
 import { uploadImage } from '../../../http/createArticleService';
+import { setAuthorization } from '../../../redux/reducers/authState';
+import { useDispatch } from 'react-redux';
 const MAX_FILES = 4;
 
 const ImageEditorComponent = (props) => {
   const fileInputRef = useRef(null);
+  const dispatch = useDispatch();
 
   const handleUploadImage = async (event, editorState, onChangeEditor, blockKey) => {
     event.preventDefault();
     const files = Array.from(event.target.files);
     if (files && files.length && MAX_FILES - (props.images.length + files.length) >= 0) {
-      const imageResponse = await Promise.all(files.map(uploadImage));
-      confirmMedia(editorState, onChangeEditor, imageResponse, blockKey);
+      try {
+        const imageResponse = await Promise.all(files.map(uploadImage));
+        confirmMedia(editorState, onChangeEditor, imageResponse, blockKey);
+      } catch (e) {
+        console.log(e);
+        if (e.response?.status === 401) {
+          dispatch(setAuthorization(false));
+        }
+      }
     }
   };
 

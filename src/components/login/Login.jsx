@@ -85,7 +85,7 @@ export default function Login({ handleCancel }) {
             render={(renderProps) => (
               <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
                 <img src={GoogleLogo} alt="Sign up with google" />
-                Sign up with Google
+                {displayRegister ? 'Sign up' : 'Log in'} with Google
               </Button>
             )}
           />
@@ -98,7 +98,7 @@ export default function Login({ handleCancel }) {
             render={(renderProps) => (
               <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
                 <img src={FacebookLogo} alt="Sign up with Facebook" />
-                Sign up with Facebook
+                {displayRegister ? 'Sign up' : 'Log in'} with Facebook
               </Button>
             )}
             callback={responseFacebook}
@@ -107,7 +107,7 @@ export default function Login({ handleCancel }) {
         <Divider />
         {!displayRegister ? (
           <FlexContainer className="form-container" direction="column" align="center" justify="space-between" span="0">
-            <p className="form-title">Sign in with an email</p>
+            <p className="form-title">{displayRegister ? 'Sign up' : 'Log in'} with an email</p>
             <form onSubmit={handleSubmit} style={{ width: '100%' }}>
               <FlexContainer className="form-inside" direction="column" justify="space-evenly">
                 <div>

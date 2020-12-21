@@ -59,7 +59,7 @@ export function findLinkEntities(contentBlock, callback, contentState) {
 
 function ContentEditor() {
   const dispatch = useDispatch();
-  const { newArticle } = useSelector((store) => store.newArticle);
+  const { newArticle, step } = useSelector((store) => store.newArticle);
   const editorState = newArticle.content;
   const setEditorState = (editorData) => dispatch(onChangeArticleContent(editorData));
   const [isFocusEditor, setFocusEditor] = useState(false);
@@ -75,7 +75,8 @@ function ContentEditor() {
   const [urlValue, setUrlValue] = useState('');
   const [selectionState, setSelectionState] = useState(null);
   const editorRef = useRef(null);
-  const makeFocus = () => editorRef.current.focus();
+  const editorDraftRef = useRef(null);
+  const makeFocus = () => editorDraftRef.current.focus();
   const styledToolbarRef = useRef(null);
   const mediaToolbarRef = useRef(null);
   const [topDistance, setTopDistance] = useState(0);
@@ -247,7 +248,11 @@ function ContentEditor() {
       </div>
     </Popover>
   );
-
+  useEffect(() => {
+    if (step === 3) {
+      makeFocus();
+    }
+  }, [step]);
   return (
     <EditorLayout
       ref={editorContainer}
@@ -275,7 +280,7 @@ function ContentEditor() {
           width: '180px',
           position: editorOut && !styledToolbarOut ? 'fixed' : 'relative',
           top: editorOut && !styledToolbarOut ? '2%' : '0',
-          left: editorOut && !styledToolbarOut ? '20%' : '0',
+          left: editorOut && !styledToolbarOut ? '16.5%' : '0',
           display: editorOut && !styledToolbarOut ? 'block' : 'none',
           zIndex: 5,
           opacity: isFocusEditor || embedActive ? 1 : 0,
@@ -309,6 +314,7 @@ function ContentEditor() {
             readOnly={linkInputActive === 'active'}
             onFocus={() => setFocusEditor(true)}
             onBlur={() => setFocusEditor(false)}
+            ref={editorDraftRef}
           />
         </div>
       </div>

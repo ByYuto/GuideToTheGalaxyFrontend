@@ -8,6 +8,15 @@ export const AuthorMetaLayout = styled.div`
     line-height: 14px;
   }
 
+  & .date-metadata {
+    color: #9695b7;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+  }
+
   & .post-author-avatar {
     overflow: hidden;
     width: 32px;
