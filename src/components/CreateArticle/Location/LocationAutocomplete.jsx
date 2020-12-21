@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { suggestionsFilter, getPlaceHolderText } from '../../../utils/utils';
 import { isRequired } from '../../../utils/validations';
@@ -15,6 +15,8 @@ export default function LocationAutocomplete(props) {
   const [address, setAddress] = useState('');
   const [placeId] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [isGoogleReady, setIsGoogleReady] = useState(false);
+
   const dispatch = useDispatch();
 
   const handleChange = async (address) => {
@@ -46,56 +48,74 @@ export default function LocationAutocomplete(props) {
     setAddress(address);
     return onChangeData(field, placeId);
   };
+  useEffect(() => {
+    const loadGoogleMaps = (callback) => {
+      const existingScript = document.getElementById('googlePlaces');
+      if (!existingScript) {
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_CLIENT_PLACES_KEY}&libraries=places`;
+        script.id = 'googlePlaces';
+        document.body.appendChild(script);
+        script.onload = () => {
+          if (callback) callback();
+        };
+      }
+      if (existingScript && callback) callback();
+    };
+    loadGoogleMaps(() => setIsGoogleReady(true));
+  }, []);
   return (
-    <PlacesAutocompleteContainerLayout>
-      <PlacesAutocomplete
-        value={address}
-        onChange={handleChange}
-        onSelect={handleChangeValidations}
-        debounce={500}
-        shouldFetchSuggestions={address.length > 1}
-      >
-        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => {
-          const filteredSuggestions = suggestionsFilter(suggestions);
-          return (
-            <AutocompleteLayout>
-              <div className="input-autocomplete-container">
-                <BlueLocationIcon className="location-icon" />
-                <input
-                  {...getInputProps({
-                    placeholder: contentType ? getPlaceHolderText(contentType[field]) : placeholderText,
-                    className: 'location-search-input',
-                  })}
-                  onFocus={() => setTooltipVisible(true)}
-                  onBlur={() => setTooltipVisible(false)}
-                />
-                {address.length > 0 ? <IoIosClose onClick={clearValue} className="clear-element" size={30} /> : null}
-              </div>
-              {tooltipVisible ? (
-                <div className="autocomplete-dropdown-container">
-                  {filteredSuggestions.map((suggestion, index) => (
-                    <SuggestionOptions
-                      key={index}
-                      suggestion={suggestion}
-                      getSuggestionItemProps={getSuggestionItemProps}
-                    />
-                  ))}
-                  {!dataType.required ? (
-                    <SuggestionOptions
-                      getSuggestionItemProps={getSuggestionItemProps}
-                      suggestion={{ active: false, description: 'Worldwide', placeId: '' }}
-                    />
-                  ) : null}
+    isGoogleReady && (
+      <PlacesAutocompleteContainerLayout>
+        <PlacesAutocomplete
+          value={address}
+          onChange={handleChange}
+          onSelect={handleChangeValidations}
+          debounce={500}
+          shouldFetchSuggestions={address.length > 1}
+        >
+          {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => {
+            const filteredSuggestions = suggestionsFilter(suggestions);
+            return (
+              <AutocompleteLayout>
+                <div className="input-autocomplete-container">
+                  <BlueLocationIcon className="location-icon" />
+                  <input
+                    {...getInputProps({
+                      placeholder: contentType ? getPlaceHolderText(contentType[field]) : placeholderText,
+                      className: 'location-search-input',
+                    })}
+                    onFocus={() => setTooltipVisible(true)}
+                    onBlur={() => setTooltipVisible(false)}
+                  />
+                  {address.length > 0 ? <IoIosClose onClick={clearValue} className="clear-element" size={30} /> : null}
                 </div>
-              ) : null}
-            </AutocompleteLayout>
-          );
-        }}
-      </PlacesAutocomplete>
-      {!validateError?.valid && validateError?.errorType && (
-        <TextValidation className="validation-message">{validateError?.errorType}</TextValidation>
-      )}
-      {tooltipVisible && tooltip && <StyledFieldTooltip>{tooltip}</StyledFieldTooltip>}
-    </PlacesAutocompleteContainerLayout>
+                {tooltipVisible ? (
+                  <div className="autocomplete-dropdown-container">
+                    {filteredSuggestions.map((suggestion, index) => (
+                      <SuggestionOptions
+                        key={index}
+                        suggestion={suggestion}
+                        getSuggestionItemProps={getSuggestionItemProps}
+                      />
+                    ))}
+                    {!dataType.required ? (
+                      <SuggestionOptions
+                        getSuggestionItemProps={getSuggestionItemProps}
+                        suggestion={{ active: false, description: 'Worldwide', placeId: '' }}
+                      />
+                    ) : null}
+                  </div>
+                ) : null}
+              </AutocompleteLayout>
+            );
+          }}
+        </PlacesAutocomplete>
+        {!validateError?.valid && validateError?.errorType && (
+          <TextValidation className="validation-message">{validateError?.errorType}</TextValidation>
+        )}
+        {tooltipVisible && tooltip && <StyledFieldTooltip>{tooltip}</StyledFieldTooltip>}
+      </PlacesAutocompleteContainerLayout>
+    )
   );
 }
