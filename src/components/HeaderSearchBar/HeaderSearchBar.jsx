@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import LocationAutoComplete from './Location/LocationAutocomplete';
-import FlexContainer from '../UI/FlexContainer';
 import Autocomplete from '../UI/autocomplete/Autocomplete';
 import { ThemeProvider } from 'styled-components';
 import Select from 'react-select';
-import { HeaderSearchBarLayout, customStyle } from './styled-components';
+import { HeaderSearchBarLayout, customStyle, SearchInputsContainer } from './styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   onSearchValueChange,
@@ -17,7 +16,6 @@ import {
 } from '../../redux/reducers/topbarSearch';
 import { SearchIcon, GoIcon } from '../../assets/icons/svg-icons';
 import { useHistory } from 'react-router-dom';
-import articles from '../../redux/reducers/articles';
 
 export default function HeaderSearchBar() {
   const {
@@ -111,7 +109,7 @@ export default function HeaderSearchBar() {
   return (
     <ThemeProvider theme={{ isDark: true }}>
       <HeaderSearchBarLayout actionButton={searchValue.length > 0 ? 1 : 0}>
-        <FlexContainer className="search-inputs-container" justify="center" elmWidth="100%" smCol>
+        <SearchInputsContainer justify="center" elmWidth="100%" smCol>
           <Autocomplete
             value={searchValue}
             onChange={handleSearchChange}
@@ -154,7 +152,7 @@ export default function HeaderSearchBar() {
             onChange={(val) => dispatch(setCategoryValue(val.value))}
             defaultValue={categoriesList.filter((c) => c.value === categoryValue)}
           />
-        </FlexContainer>
+        </SearchInputsContainer>
       </HeaderSearchBarLayout>
     </ThemeProvider>
   );

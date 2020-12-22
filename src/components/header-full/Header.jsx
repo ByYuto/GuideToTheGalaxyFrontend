@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import logo from '../../assets/images/logo.png';
-import dontPanic from '../../assets/images/dont-panic.png';
 import { GoPlus } from 'react-icons/go';
 import Link from '../UI/Link';
 import { useHistory } from 'react-router-dom';
@@ -23,18 +21,23 @@ import {
   StyledView,
   MaxWidthContainer,
   FullHeaderLayout,
+  ActivateSearchBtn,
 } from './styled-components';
 import DontPanic from '../../assets/images/dont-panic-lg.svg';
-import { BellNotification, BurgerMenu, Logo, DontPanicLogo } from '../../assets/icons/svg-icons';
+import { BellNotification, BurgerMenu, Logo, DontPanicLogo, SearchIcon, PlusIcon } from '../../assets/icons/svg-icons';
 import { Avatar } from 'rsuite';
 import { AiOutlineUser } from 'react-icons/ai';
+import { useDispatch, useSelector } from 'react-redux';
+import { setVisibleSearch } from '../../redux/reducers/appState';
 
 const TOP_DISTANCE_STICKY = 291;
 const TOP_DISTANCE_SEARCH = 0;
 
-const Header = ({ home = 'home', noKeywords }) => {
+const Header = ({ home = 'home', noKeywords, isMobile }) => {
   const history = useHistory();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { showSearch } = useSelector((store) => store.app);
+  const dispatch = useDispatch();
   const onAddContentClick = () => {
     history.push('/create');
   };
@@ -53,10 +56,30 @@ const Header = ({ home = 'home', noKeywords }) => {
       });
     };
   }, [window.scrollY]);
+
+  const setHeightHelper = () => {
+    if (isMobile && home === 'home') {
+      return '500px';
+    }
+    if (!isMobile && home === 'home') {
+      return '460px';
+    }
+    if (!isMobile && home !== 'home') {
+      return '154px';
+    }
+    if (isMobile && home !== 'home') {
+      return '174px';
+    }
+  };
   return (
     <>
-      {stickyNav && <div style={{ height: home === 'home' ? '460px' : '154px' }}></div>}
-      <FullHeaderLayout home={home} isSticky={stickyNav ? 1 : 0} noKeywords={noKeywords ? 1 : 0}>
+      {stickyNav && <div style={{ height: setHeightHelper() }}></div>}
+      <FullHeaderLayout
+        isMobile={isMobile ? 1 : 0}
+        home={home}
+        isSticky={stickyNav ? 1 : 0}
+        noKeywords={noKeywords ? 1 : 0}
+      >
         <StyledTopBar home={home} isSticky={stickyNav ? 1 : 0}>
           <div className="left">
             <Link to="/">
@@ -64,7 +87,16 @@ const Header = ({ home = 'home', noKeywords }) => {
               {home === 'search' || stickyNav ? <DontPanicLogo className="dontpanic-logo" /> : null}
             </Link>
           </div>
-          <div className="middle">{home === 'search' || stickyNav ? <HeaderSearchBar /> : null}</div>
+          {!isMobile && <div className="middle">{home === 'search' || stickyNav ? <HeaderSearchBar /> : null}</div>}
+          {isMobile && (
+            <div className="middle">
+              {home === 'search' || stickyNav ? (
+                <ActivateSearchBtn onClick={() => dispatch(setVisibleSearch(!showSearch))} secondary circle icon>
+                  <SearchIcon color="#9695B7" />
+                </ActivateSearchBtn>
+              ) : null}
+            </div>
+          )}
           <div className="right">
             <WithAuth
               component={
@@ -119,22 +151,36 @@ const Header = ({ home = 'home', noKeywords }) => {
           </div>
         </StyledTopBar>
         <ThemeProvider theme={{ isDark: true }}>
-          {home === 'home' && !stickyNav && (
-            <StyledView>
-              <MaxWidthContainer className="main-hero-content">
-                <FlexContainer column justify="center" align="center">
-                  <img src={DontPanic} title="Don't Panic" alt="Don't Panic" />
-                  <p className="home-main-text">
-                    The Busker's Guide to the Galaxy will tell you everything you want to know about busking, either as
-                    demonstrable facts or opinions from other people.
-                  </p>
-                  <div className="searchbar-container-home">
-                    <HeaderSearchBar />
-                  </div>
-                </FlexContainer>
-              </MaxWidthContainer>
-            </StyledView>
-          )}
+          {(isMobile && showSearch) || !isMobile ? (
+            <>
+              {!stickyNav && home === 'home' && (
+                <StyledView>
+                  <MaxWidthContainer className="main-hero-content">
+                    <FlexContainer column justify="center" align="center">
+                      {home === 'home' && !stickyNav && <img src={DontPanic} title="Don't Panic" alt="Don't Panic" />}
+                      {home === 'home' && !stickyNav && (
+                        <p className="home-main-text">
+                          The Busker's Guide to the Galaxy will tell you everything you want to know about busking,
+                          either as demonstrable facts or opinions from other people.
+                        </p>
+                      )}
+                    </FlexContainer>
+                  </MaxWidthContainer>
+                </StyledView>
+              )}
+              {(!stickyNav && !isMobile && home === 'home') || isMobile ? (
+                <StyledView>
+                  <MaxWidthContainer className="main-hero-content">
+                    <FlexContainer column justify="center" align="center">
+                      <div className="searchbar-container-home">
+                        <HeaderSearchBar />
+                      </div>
+                    </FlexContainer>
+                  </MaxWidthContainer>
+                </StyledView>
+              ) : null}
+            </>
+          ) : null}
           {!noKeywords && (
             <StyledView className="header-keywords">
               <KeywordsSection />

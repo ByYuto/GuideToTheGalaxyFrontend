@@ -4,7 +4,7 @@ import Home from '../views/Home/Home';
 import CreateArticle from '../views/CreateArticle/CreateArticle';
 import Layout from '../components/Layout/Layout';
 import ArticleDetail from '../views/ArticleDetail/ArticleDetail';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import NotFound from '../views/NotFound/NotFound';
 import ContentEditor from '../components/CreateArticle/DanteEditor/ContentEditor'
 import history from './history';

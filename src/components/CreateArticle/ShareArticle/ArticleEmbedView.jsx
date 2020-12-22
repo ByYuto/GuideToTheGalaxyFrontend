@@ -10,7 +10,10 @@ import { getDateFormatted } from '../../../utils/utils';
 import { setSelectedKeyword } from '../../../redux/reducers/topbarSearch';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Grid, Row, Col, FlexboxGrid } from 'rsuite';
+import { FlexboxGrid } from 'rsuite';
+import { screen } from '../../../utils/constants';
+import styled from 'styled-components';
+import useMobile from '../../../hooks/useMobile';
 
 export default function ArticleEmbedView({
   _id,
@@ -30,27 +33,39 @@ export default function ArticleEmbedView({
 }) {
   const dispatch = useDispatch();
   const history = useHistory();
-  const keyWordsCutted = keywords?.slice(0, 10) || [];
+  const isMobile = useMobile();
+  const getKeywordsPreview = (keywords) => {
+    if (keywords && keywords.length === 0) {
+      return [];
+    }
+
+    if (window.innerWidth > 864) {
+      return keywords?.slice(0, 10);
+    } else {
+      return keywords?.slice(0, 3);
+    }
+  };
+  const keyWordsCutted = getKeywordsPreview(keywords);
   const cardContent = (
-    <Card fullWidth>
+    <ArticleCard fullWidth>
       <FlexContainer column>
         <div style={{ width: '100%' }}>
-          <FlexboxGrid>
-            <FlexboxGrid.Item colspan={image && image.content?.featured_sm ? 16 : 24}>
+          <ArticleMainContent>
+            <ArticleContentContainer colspan={(!image && !image?.content?.featured_sm) || isMobile ? 24 : 16}>
               <FlexContainer justify="space-between" align="center">
                 <div className="breadcrumb">
                   {categoryId} <Ellipse /> {contentTypeId} <Ellipse /> {location ? location : 'Worldwide'}
                 </div>
               </FlexContainer>
               <FlexContainer justify="space-between" align="stretch">
-                <FlexContainer className="post-content" column breakRow="wrap" elmWidth="100%">
+                <FlexContainer className="post-content" column breakRow="wrap">
                   <div style={{ flexGrow: 1 }}>
                     <h4>{title}</h4>
                     <p>{textContent}</p>
                     <div></div>
                   </div>
                   <div style={{ flexGrow: 1 }}>
-                    <FlexContainer justify="space-around" inline className="keywords-container">
+                    <KeywordsContainer justify="space-around" inline className="keywords-container">
                       {keyWordsCutted && keyWordsCutted.length > 0
                         ? keyWordsCutted.map((k, index) => (
                             <>
@@ -76,21 +91,21 @@ export default function ArticleEmbedView({
                             </>
                           ))
                         : null}
-                    </FlexContainer>
+                    </KeywordsContainer>
                   </div>
                 </FlexContainer>
               </FlexContainer>
-            </FlexboxGrid.Item>
+            </ArticleContentContainer>
             {image && image.content?.featured_sm ? (
-              <FlexboxGrid.Item colspan={8}>
+              <FlexboxGrid.Item colspan={isMobile ? 24 : 8}>
                 <FlexContainer justify="flex-end" elmWidth="100%" align="center">
-                  <figure>
+                  <FeaturedImageContainer>
                     <img src={image.content.featured_m} alt={title} />
-                  </figure>
+                  </FeaturedImageContainer>
                 </FlexContainer>
               </FlexboxGrid.Item>
             ) : null}
-          </FlexboxGrid>
+          </ArticleMainContent>
         </div>
         <div style={{ width: '100%' }}>
           <FlexboxGrid justify="space-between">
@@ -111,7 +126,7 @@ export default function ArticleEmbedView({
           </FlexboxGrid>
         </div>
       </FlexContainer>
-    </Card>
+    </ArticleCard>
   );
   const handleTagClick = (tag) => {
     dispatch(setSelectedKeyword(tag));
@@ -127,3 +142,52 @@ export default function ArticleEmbedView({
     </div>
   );
 }
+
+const ArticleMainContent = styled(FlexboxGrid)`
+  @media (max-width: ${screen.SM}) {
+    flex-direction: column;
+  }
+`;
+
+const ArticleContentContainer = styled(FlexboxGrid.Item)`
+  @media (max-width: ${screen.SM}) {
+    order: 2;
+  }
+`;
+
+const ArticleCard = styled(Card)`
+  @media (max-width: ${screen.SM}) {
+    box-shadow: none;
+    border-bottom: 1px solid #f6f8ff;
+    filter: none;
+    border-radius: none;
+    padding-bottom: 24px;
+    padding-top: 0px;
+  }
+`;
+
+const FeaturedImageContainer = styled.figure`
+  margin: 0;
+  width: 169px;
+  height: 138px;
+  overflow: hidden;
+  border-radius: 16px;
+  margin: 0;
+  @media (max-width: ${screen.SM}) {
+    width: 100%;
+    height: auto;
+    margin-bottom: 8px;
+  }
+  & img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+  }
+`;
+
+const KeywordsContainer = styled(FlexContainer)`
+  @media (max-width: ${screen.SM}) {
+    margin-top: 16px;
+    margin-bottom: 24px;
+  }
+`;

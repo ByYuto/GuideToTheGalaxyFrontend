@@ -33,6 +33,10 @@ export const AutocompleteLayout = styled.div`
     @media (max-width:1300px ){
       width: 79%;
     }
+    @media (max-width:864px ){
+      margin:0;
+      width: 82%;
+    }
   }
 
   & .clear-element {

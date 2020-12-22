@@ -10,9 +10,11 @@ import {
 import FlexContainer from '../FlexContainer';
 import { ReactionLayout } from './styled-components';
 import { setLikeService, unsetLikeService } from '../../../http/likeService';
+import { useSelector } from 'react-redux';
 
 export default function ToolbarReactions({ articleId, postDetail, liked, likes }) {
   const [reactions, setReactions] = useState({ like: liked, numLikes: likes });
+  const { isMobile } = useSelector((store) => store.app);
   useEffect(() => {}, [reactions.like]);
   const setLike = async (e) => {
     e.preventDefault();
@@ -50,7 +52,7 @@ export default function ToolbarReactions({ articleId, postDetail, liked, likes }
             <span>0</span>
           </FlexContainer>
         </FlexContainer>
-        {postDetail && (
+        {postDetail && !isMobile && (
           <>
             <FlexContainer elmWidth="100%">
               <FlexContainer className="share-btn" align="center" elmWidth="100%">
@@ -66,11 +68,11 @@ export default function ToolbarReactions({ articleId, postDetail, liked, likes }
             </FlexContainer>
           </>
         )}
-        {!postDetail && (
+        {!postDetail || (postDetail && isMobile) ? (
           <FlexContainer elmWidth="100%">
             <SubMenuIcon />
           </FlexContainer>
-        )}
+        ) : null}
       </FlexContainer>
     </ReactionLayout>
   );

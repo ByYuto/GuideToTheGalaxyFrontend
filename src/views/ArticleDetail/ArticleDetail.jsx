@@ -23,6 +23,7 @@ export default function ArticleDetail() {
   const articleExampleId = id;
   const dispatch = useDispatch();
   const { article, error, errorMessage, loading } = useSelector((store) => store.articleDetail);
+  const { isMobile } = useSelector((store) => store.app);
   const history = useHistory();
   useEffect(() => {
     dispatch(getArticleDetail(articleExampleId));
@@ -54,12 +55,22 @@ export default function ArticleDetail() {
                 <FlexContainer className="metadata-container" align="stretch">
                   <FlexContainer elmWidth="80%" column align="stretch">
                     <h2>{article?.title}</h2>
+
                     {article?.date && (
                       <div className="metadata-date">
                         <CalendarIcon className="head-article-content-icon" />
                         <span>Passed: {getDateFormatted(article.date)}</span>
                         {article?.other && <span className="discontinued-date-label">Discontinued</span>}
                       </div>
+                    )}
+                    {isMobile && (
+                      <FlexContainer align="center" className="featured-img-container">
+                        {article?.image?.content?.featured_m && (
+                          <figure className="featured-img">
+                            <img src={article.image.content.featured_m} alt={article?.title || ''} />
+                          </figure>
+                        )}
+                      </FlexContainer>
                     )}
                     <div className="metadata-url">
                       {article && article.URL && article.categoryId !== 'TOOLS' && (
@@ -77,13 +88,15 @@ export default function ArticleDetail() {
                       )}
                     </div>
                   </FlexContainer>
-                  <FlexContainer elmWidth="20%" align="center">
-                    {article?.image?.content?.featured_m && (
-                      <figure className="featured-img">
-                        <img src={article.image.content.featured_m} alt={article?.title || ''} />
-                      </figure>
-                    )}
-                  </FlexContainer>
+                  {!isMobile && (
+                    <FlexContainer elmWidth="20%" align="center" className="featured-img-container">
+                      {article?.image?.content?.featured_m && (
+                        <figure className="featured-img">
+                          <img src={article.image.content.featured_m} alt={article?.title || ''} />
+                        </figure>
+                      )}
+                    </FlexContainer>
+                  )}
                 </FlexContainer>
               </MaxWidthContainer>
             </StyledView>

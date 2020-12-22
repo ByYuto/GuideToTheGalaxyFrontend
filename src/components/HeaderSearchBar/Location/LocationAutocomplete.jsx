@@ -25,20 +25,21 @@ export default function LocationAutocomplete(props) {
     props.setPlaceId(placeId, address);
   };
 
+  const loadGoogleMaps = (callback) => {
+    const existingScript = document.getElementById('googlePlaces');
+    if (!existingScript) {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_CLIENT_PLACES_KEY}&libraries=places`;
+      script.id = 'googlePlaces';
+      document.body.appendChild(script);
+      script.onload = () => {
+        if (callback) callback();
+      };
+    }
+    if (existingScript && callback) callback();
+  };
+
   useEffect(() => {
-    const loadGoogleMaps = (callback) => {
-      const existingScript = document.getElementById('googlePlaces');
-      if (!existingScript) {
-        const script = document.createElement('script');
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_CLIENT_PLACES_KEY}&libraries=places`;
-        script.id = 'googlePlaces';
-        document.body.appendChild(script);
-        script.onload = () => {
-          if (callback) callback();
-        };
-      }
-      if (existingScript && callback) callback();
-    };
     loadGoogleMaps(() => setIsGoogleReady(true));
   }, []);
 

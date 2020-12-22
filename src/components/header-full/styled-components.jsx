@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import Button from '../UI/Button';
+import Button from '../../components/UI/Button';
 import HeaderBackground from '../../assets/images/home-bg.jpg';
 
 export const customStyle = {
@@ -109,6 +109,9 @@ export const StyledTopBar = styled.div`
 
     .dontpanic-logo {
       margin-left: 16px;
+      @media (max-width: 600px) {
+        display: none;
+      }
     }
 
     a {
@@ -153,6 +156,13 @@ export const MaxWidthContainer = styled.div`
   background-color: ${(props) =>
     props.home ? (props.theme.isDark ? props.theme.baseColors.dark : props.theme.baseColors.white) : 'transparent'};
   color: ${(props) => (props.theme.isDark ? props.theme.baseColors.white : props.theme.baseColors.dark)};
+  @media (max-width: 600px) {
+    max-width: 100vw;
+    width: 100%;
+    padding: 16px;
+    padding-bottom: 0;
+    background-color: #1f1f3d;
+  }
 `;
 
 export const StyledView = styled(View)`
@@ -191,10 +201,10 @@ export const FullHeaderLayout = styled.div`
     if (!props.noKeywords) {
       return props.home === 'home' && !props.isSticky
         ? css`
-            height: 460px;
+            height: auto;
           `
         : css`
-            height: 154px;
+            height: auto;
           `;
     } else {
       return css`
@@ -204,6 +214,11 @@ export const FullHeaderLayout = styled.div`
   }}
 
   width: 100%;
+
+  @media (max-width: 600px) {
+    background-image: none;
+  }
+
   & .selected-keywords {
     padding-right: 30px;
   }
@@ -213,13 +228,29 @@ export const FullHeaderLayout = styled.div`
     cursor: pointer;
   }
   & .main-hero-content {
-    height: 296px;
     overflow: visible;
+
+    @media (max-width: 600px) {
+      height: auto;
+    }
+
+    & img {
+      @media (max-width: 600px) {
+        width: 100%;
+        height: auto;
+      }
+    }
   }
   & .searchbar-container-home {
     margin-top: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 63px;
     overflow: visible;
+    @media (max-width: 864px) {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+      border-radius: 8px;
+    }
   }
 
   & .home-main-text {
@@ -233,8 +264,8 @@ export const FullHeaderLayout = styled.div`
     margin-top: 30px;
     width: 65%;
 
-    @media (max-width: 600px) {
-      width: 90%;
+    @media (max-width: 864px) {
+      width: 100%;
     }
   }
 
@@ -248,48 +279,13 @@ export const FullHeaderLayout = styled.div`
     width: 100%;
     position: relative;
 
-    & .keywords-container {
-      position: relative;
-      & > div:first-child {
-        padding-right: 15px;
-        margin-right: 15px;
-        border-right: solid 1px #151531;
-        width: 200px;
-      }
-      & .keywords-hidden {
-        width: 970px;
-        overflow: hidden;
-        overflow-x: auto;
-        align-items: center;
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-          display: none;
-        }
-      }
-      & .keywords {
-        width: auto;
-        white-space: nowrap;
-        overflow-y: hidden;
-        position: relative;
-        /* box-shadow: inset 0 20px 20px rgba(21, 21, 49, 0.7);*/
-        & > span {
-          cursor: pointer;
-        }
-
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-          display: none;
-        }
-      }
+    @media (max-width: 600px) {
+      height: auto;
     }
   }
 
   & .css-1wa3eu0-placeholder {
-    color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
+    color: #bdbfdf;
   }
 
   & .category__option {
@@ -383,5 +379,12 @@ export const FullHeaderLayout = styled.div`
       border: none;
       cursor: pointer;
     }
+  }
+`;
+
+export const ActivateSearchBtn = styled(Button)`
+  background: #151531;
+  &:focus {
+    background: #151531;
   }
 `;

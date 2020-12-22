@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { screen } from '../../../utils/constants';
 
 export const ShareArticleLayout = styled.div`
   padding: 16px;
@@ -170,20 +171,6 @@ export const ShareArticleCardView = styled(Link)`
     line-height: 22px !important;
   }
 
-  & figure {
-    margin: 0;
-    width: 169px;
-    height: 138px;
-    overflow: hidden;
-    border-radius: 16px;
-    margin: 0;
-    & img {
-      width: 100%;
-      height: auto;
-      border-radius: 16px;
-    }
-  }
-
   & .reactions-toolbar svg {
     margin-right: 10px;
   }
@@ -233,6 +220,9 @@ export const ShareArticleCardView = styled(Link)`
   & .post-content {
     height: 138px;
     margin-top: 16px;
+    @media (max-width: ${screen.SM}) {
+      height: auto;
+    }
   }
 `;
 export const ShareArticleCardPreview = styled.div`
@@ -272,20 +262,6 @@ export const ShareArticleCardPreview = styled.div`
     line-height: 22px !important;
   }
 
-  & figure {
-    margin: 0;
-    width: 169px;
-    height: 138px;
-    overflow: hidden;
-    border-radius: 16px;
-    margin: 0;
-    & img {
-      width: 100%;
-      height: auto;
-      border-radius: 16px;
-    }
-  }
-
   & .reactions-toolbar svg {
     margin-right: 10px;
   }
@@ -335,6 +311,9 @@ export const ShareArticleCardPreview = styled.div`
   & .post-content {
     height: 138px;
     margin-top: 16px;
+    @media (max-width: ${screen.SM}) {
+      height: auto;
+    }
   }
 
   & a {
