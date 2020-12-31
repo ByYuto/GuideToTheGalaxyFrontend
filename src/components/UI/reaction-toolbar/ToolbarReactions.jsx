@@ -15,7 +15,9 @@ import { useSelector } from 'react-redux';
 export default function ToolbarReactions({ articleId, postDetail, liked, likes }) {
   const [reactions, setReactions] = useState({ like: liked, numLikes: likes });
   const { isMobile } = useSelector((store) => store.app);
-  useEffect(() => {}, [reactions.like]);
+  useEffect(() => {
+    setReactions({ like: liked, numLikes: likes });
+  }, [liked, likes]);
   const setLike = async (e) => {
     e.preventDefault();
     e.stopPropagation();

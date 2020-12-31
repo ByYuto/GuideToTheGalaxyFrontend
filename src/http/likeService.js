@@ -8,7 +8,7 @@ export const setLikeService = async (articleId) => {
   const token = await localStorage.getItem('_token');
   return axios.post(
     `${LIKES_ROUTE}`,
-    {articleId},
+    { articleId },
     {
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     }
@@ -18,11 +18,8 @@ export const setLikeService = async (articleId) => {
 //To unset a like in a specific post triggered by specific user.
 export const unsetLikeService = async (articleId) => {
   const token = await localStorage.getItem('_token');
-  return axios.post(
-    `${LIKES_ROUTE}`,
-    {articleId},
-    {
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    }
-  );
+  return axios.delete(`${LIKES_ROUTE}`, {
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    data: { articleId },
+  });
 };

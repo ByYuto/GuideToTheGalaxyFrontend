@@ -9,6 +9,7 @@ const initialState = {
 };
 
 const SET_ARTICLE = 'SET_ARTICLE';
+const SET_ARTICLE_LIKED = 'SET_ARTICLE_LIKED';
 const SET_ERROR = 'SET_ERROR';
 const SET_LOADING = 'SET_LOADING';
 
@@ -24,16 +25,23 @@ export const getArticleDetail = (id) => async (dispatch) => {
     if (e.response?.status === 401) {
       dispatch(setAuthorization(false));
     }
+
+    let errorMessage =
+      e.response?.status === 404
+        ? 'Article not found'
+        : e.response?.data?.error || e.response?.errorMessage || 'Unexpected error has ocurred...';
+
     dispatch(
       setError({
         error: true,
-        errorMessage: e.response?.data?.error || e.response?.errorMessage || 'Unexpected error has ocurred...',
+        errorMessage,
       })
     );
   }
 };
 
 const setArticle = (article) => ({ type: SET_ARTICLE, payload: article });
+const setArticleLiked = (article, liked) => ({ type: SET_ARTICLE_LIKED, payload: liked });
 const setError = (e) => ({ type: SET_ERROR, payload: e });
 const setLoading = (isLoading) => ({ type: SET_LOADING, payload: isLoading });
 
@@ -55,6 +63,15 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         loading: payload,
       };
+    case SET_ARTICLE_LIKED:
+      return {
+        ...state,
+        article: {
+          ...state.article,
+          liked: payload,
+        },
+      };
+
     default:
       return {
         ...state,

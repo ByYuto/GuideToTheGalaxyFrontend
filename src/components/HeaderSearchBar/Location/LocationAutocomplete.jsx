@@ -10,12 +10,15 @@ export default function LocationAutocomplete(props) {
   const [address, setAddress] = useState(props.value);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [isGoogleReady, setIsGoogleReady] = useState(false);
+  const [placeId, setPlaceId] = useState(null);
   const handleChange = async (address) => {
     setAddress(address);
+    setPlaceId(null);
   };
 
   const clearValue = (address) => {
     setAddress('');
+    setPlaceId(null);
     props.clearValueAction();
   };
   const { placeholderText = 'Select a location' } = props;
@@ -23,6 +26,7 @@ export default function LocationAutocomplete(props) {
   const handleChangeValidations = async (address, placeId) => {
     setAddress(address);
     props.setPlaceId(placeId, address);
+    setPlaceId(placeId);
   };
 
   const loadGoogleMaps = (callback) => {
@@ -79,10 +83,12 @@ export default function LocationAutocomplete(props) {
                       />
                     ))}
 
-                    <SuggestionOptions
-                      getSuggestionItemProps={getSuggestionItemProps}
-                      suggestion={{ active: false, description: 'Worldwide', placeId: '' }}
-                    />
+                    {!placeId && address !== 'Worldwide' ? (
+                      <SuggestionOptions
+                        getSuggestionItemProps={getSuggestionItemProps}
+                        suggestion={{ active: false, description: 'Worldwide', placeId: '' }}
+                      />
+                    ) : null}
                   </div>
                 ) : null}
               </AutocompleteLayout>
