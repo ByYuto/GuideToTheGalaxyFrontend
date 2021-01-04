@@ -166,7 +166,7 @@ export default function ArticleDetail() {
                   {article?.communityEditsAllowed ? (
                     <FlexContainer align="center" elmWidth="40%" className="contributions-bar">
                       <FlexContainer elmWidth="100%">
-                        <FlexContainer align="center" elmWidth="100%">
+                        <FlexContainer align="center" elmWidth="100%" className="contributions-counter">
                           <span className="contributions-number">0</span>
                           <span>CONTRIBUTIONS</span>
                         </FlexContainer>

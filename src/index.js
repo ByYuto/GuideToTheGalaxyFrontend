@@ -3,11 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-/* const placesApi = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_CLIENT_PLACES_KEY}&libraries=places`;
-//const placesScript = document.createElement('script');
-const placesScript = document.querySelector('#google-places');
-placesScript.setAttribute("src", placesApi); */
-    
+
 ReactDOM.render(<App />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
