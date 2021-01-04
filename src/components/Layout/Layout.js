@@ -6,10 +6,10 @@ import useMobile from '../../hooks/useMobile';
 
 const topBarVisibleSelector = (state) => state.app?.topBar?.visible;
 
-const Layout = ({ children, home, noKeywords = false }) => {
+const Layout = ({ children, home, noKeywords = false, view="" }) => {
   const isMobile = useMobile();
   const isTopBarVisible = useSelector(topBarVisibleSelector);
-  const header = isTopBarVisible ?  <Header home={home} noKeywords={noKeywords} isMobile={isMobile} /> : null;
+  const header = isTopBarVisible ?  <Header home={home} noKeywords={noKeywords} isMobile={isMobile} view={view} /> : null;
   return (
     <React.Fragment>
       {header}

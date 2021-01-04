@@ -39,7 +39,7 @@ const RouterApp = () => {
           
         </Route>
         <Route path="/article/:id" exact>
-          <Layout home="search" noKeywords={true}>
+          <Layout home="search" noKeywords={true} view="detail">
             <ArticleDetail />
           </Layout>
         </Route>

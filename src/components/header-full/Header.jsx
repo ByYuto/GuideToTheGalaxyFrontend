@@ -33,7 +33,7 @@ import { setVisibleSearch } from '../../redux/reducers/appState';
 const TOP_DISTANCE_STICKY = 291;
 const TOP_DISTANCE_SEARCH = 0;
 
-const Header = ({ home = 'home', noKeywords, isMobile }) => {
+const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
   const history = useHistory();
   const [menuOpen, setMenuOpen] = useState(false);
   const { showSearch } = useSelector((store) => store.app);
@@ -56,6 +56,12 @@ const Header = ({ home = 'home', noKeywords, isMobile }) => {
       });
     };
   }, [window.scrollY]);
+
+  useEffect(() => {
+    if (view === 'detail') {
+      dispatch(setVisibleSearch(false));
+    }
+  }, []);
 
   const setHeightHelper = () => {
     if (isMobile && home === 'home') {
@@ -90,7 +96,7 @@ const Header = ({ home = 'home', noKeywords, isMobile }) => {
           {!isMobile && <div className="middle">{home === 'search' || stickyNav ? <HeaderSearchBar /> : null}</div>}
           {isMobile && (
             <div className="middle">
-              {home === 'search' || stickyNav ? (
+              {view === 'detail' ? (
                 <ActivateSearchBtn onClick={() => dispatch(setVisibleSearch(!showSearch))} secondary circle icon>
                   <SearchIcon color="#9695B7" />
                 </ActivateSearchBtn>
