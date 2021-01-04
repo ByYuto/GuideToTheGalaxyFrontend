@@ -43,13 +43,6 @@ export const ArticleDetailContainer = styled.div`
       padding: 16px;
       & figure[contenteditable='false'] {
         margin: 0;
-        & img {
-          border-radius: 16px;
-        }
-      }
-
-      & div[aria-label='Photos'] {
-        height: auto;
       }
     }
   }

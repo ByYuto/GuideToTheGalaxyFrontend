@@ -37,6 +37,15 @@ export const ImageWrapper = styled.picture`
     }
   }};
   margin-bottom: 0;
+  @media (max-width: 864px) {
+    height: ${({ position, length }) => {
+      if ((position === 0 && length >= 1 && length <= 3) || (position === 1 && length === 2)) {
+        return '100%';
+      } else {
+        return '154px';
+      }
+    }};
+  }
 `;
 
 export const ImageItem = styled.img`
