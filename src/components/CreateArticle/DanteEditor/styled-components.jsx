@@ -17,6 +17,15 @@ export const EditorLayout = styled.div`
   & .d-none {
     display: none;
   }
+
+  & .DraftEditor-root {
+    @media (max-width: 864px) {
+      padding: 16px;
+      & figure[contenteditable='false'] {
+        margin: 0;
+      }
+    }
+  }
 `;
 
 export const TextToolbarFixed = styled.div`
@@ -26,17 +35,17 @@ export const TextToolbarFixed = styled.div`
     if (isMobile) {
       return css`
         top: ${({ editorOut, styledToolbarOut }) => {
-          return editorOut && !styledToolbarOut ? '2%' : '0';
+          return editorOut && !styledToolbarOut ? '2vh' : '0';
         }};
-        left: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? '3%' : '0')};
+        left: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? '3vw' : '0')};
       `;
     }
 
     return css`
       top: ${({ editorOut, styledToolbarOut }) => {
-        return editorOut && !styledToolbarOut ? '2%' : '0';
+        return editorOut && !styledToolbarOut ? '2vh' : '0';
       }};
-      left: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? '16.5%' : '0')};
+      left: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? '16.5vw' : '0')};
     `;
   }}
 
@@ -52,14 +61,14 @@ export const MediaToolbarFixed = styled.div`
   ${({ isMobile }) => {
     if (isMobile) {
       return css`
-        top: ${({ editorOut, mediaToolbarOut }) => (editorOut && !mediaToolbarOut ? '72%' : '0')};
-        left: ${({ editorOut, mediaToolbarOut }) => (editorOut && !mediaToolbarOut ? '17%' : '0')};
+        top: ${({ editorOut, mediaToolbarOut }) => (editorOut && !mediaToolbarOut ? '72vh' : '0')};
+        left: ${({ editorOut, mediaToolbarOut }) => (editorOut && !mediaToolbarOut ? '17vw' : '0')};
       `;
     }
 
     return css`
-      top: ${({ editorOut, mediaToolbarOut }) => (editorOut && !mediaToolbarOut ? '70%' : '0')};
-      left: ${({ editorOut, mediaToolbarOut }) => (editorOut && !mediaToolbarOut ? '40%' : '0')};
+      top: ${({ editorOut, mediaToolbarOut }) => (editorOut && !mediaToolbarOut ? '70vh' : '0')};
+      left: ${({ editorOut, mediaToolbarOut }) => (editorOut && !mediaToolbarOut ? '40vw' : '0')};
     `;
   }}
 

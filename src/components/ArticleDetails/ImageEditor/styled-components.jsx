@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { screen } from '../../../utils/constants';
 
 export const ImagesContainer = styled.div`
   display: flex;
@@ -11,7 +12,7 @@ export const ImagesContainer = styled.div`
   border-radius: 15px;
   overflow: hidden;
   margin: 20px 0;
-  @media (max-width: 864px) {
+  @media (max-width: ${screen.SM}) {
     height: 310px;
   }
 `;
@@ -40,7 +41,7 @@ export const ImageWrapper = styled.picture`
     }
   }};
   margin-bottom: 0;
-  @media (max-width: 864px) {
+  @media (max-width: ${screen.SM}) {
     height: ${({ position, length }) => {
       if ((position === 0 && length >= 1 && length <= 3) || (position === 1 && length === 2)) {
         return '100%';
