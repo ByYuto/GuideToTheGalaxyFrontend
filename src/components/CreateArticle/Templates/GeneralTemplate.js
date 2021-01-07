@@ -13,6 +13,7 @@ import { TextValidation } from '../../UI/forms/styledComponents';
 import { CheckIcon } from '../../../assets/icons/svg-icons';
 import LocationAutocomplete from '../Location/LocationAutocomplete';
 import { getPlaceHolderText } from '../../../utils/utils';
+import {screen} from '../../../utils/constants';
 
 const PickerDate = ({ value = new Date(), _onChange, contentType, readOnly }) => {
   const dispatch = useDispatch();
@@ -57,20 +58,13 @@ const FormRow = styled.div`
     color: white;
     filter: invert(1);
   }
-
   ${(props) =>
     props.field === 'URL'
       ? `
-      
-  
-
 
   & input {
       padding-left: 10px:
-  }
-
-
-  
+  }  
   `
       : ''}
 
@@ -123,7 +117,13 @@ const FormRow = styled.div`
       }
     }}
   }
+
+  @media(max-width: ${screen.SM}) {
+    width: 100%;
+  }
 `;
+
+const GeneralTemplateLayout = styled.div``;
 
 const InputRow = ({
   field,
@@ -135,6 +135,7 @@ const InputRow = ({
   validations,
   validateError,
   readOnly,
+  className
 }) => {
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [validUrl, setValidUrl] = useState(false);
@@ -168,7 +169,7 @@ const InputRow = ({
     handleChangeValidations(newArticle[field]);
   }, [newArticle[field], newArticle.contentTypeId])
   return (
-    <FormRow field={field} disabled={!validUrl}>
+    <FormRow field={field} disabled={!validUrl} className={className}>
       <Input
         placeholder={textPlaceholder}
         value={newArticle[field]}
@@ -201,7 +202,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData, readOnly }) => {
 
   }, [newArticle.contentTypeId])
   return (
-    <div>
+    <GeneralTemplateLayout>
       {contentType?.location ? (
         <FormRow>
           <LocationAutocomplete
@@ -241,6 +242,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData, readOnly }) => {
           validations={[validateUrl]}
           validateError={articleValidations.URL}
           readOnly={readOnly}
+          className="url-field"
         />
       ) : null}
 
@@ -257,11 +259,11 @@ const GeneralTemplate = ({ contentType, article, onChangeData, readOnly }) => {
           readOnly={readOnly}
         />
       ) : null}
-      <DivInputColumn>
+      <DivInputColumn className="date-field">
         {contentType?.date && (
-          <FormRow>
+          <FormRow className="date-input-container">
             <DivInputRow>
-              <span>{textPlaceholder}</span>
+              <span className="date-text-label">{textPlaceholder}</span>
               <PickerDate
                 value={dateValue}
                 _onChange={handleDateValidation}
@@ -285,7 +287,7 @@ const GeneralTemplate = ({ contentType, article, onChangeData, readOnly }) => {
           </DivInputRow>
         )}
       </DivInputColumn>
-    </div>
+    </GeneralTemplateLayout>
   );
 };
 

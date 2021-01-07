@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Caption from '../UI/Caption';
-
+import {screen} from '../../utils/constants';
 const StyledHeader = styled.div`
   display: flex;
   flex-direction: column;
@@ -15,6 +15,9 @@ const StyledHeader = styled.div`
     margin-bottom: 32px;
     color: ${(props) => props.theme.accentColors.primary.color};
     text-align: center;
+    @media(max-width: ${screen.SM}) {
+      display: none;
+    }
   }
 
   & > ${Caption} {
@@ -28,12 +31,17 @@ const StyledHeader = styled.div`
     width: 100%;
     justify-content: center;
   }
+
+  & .main-subtitle {
+    margin-top: 40px;
+    margin-bottom: 24px;
+  }
 `;
 
 const CreateArticleHeader = ({ children, headerRef }) => (
   <StyledHeader ref={headerRef}>
     <h3>Create an article</h3>
-    <Caption bold>CATEGORY AND SUBCATEGORY</Caption>
+    <Caption className="main-subtitle" bold>CATEGORY AND SUBCATEGORY</Caption>
     {children}
   </StyledHeader>
 );

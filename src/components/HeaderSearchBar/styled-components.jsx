@@ -147,7 +147,7 @@ export const HeaderSearchBarLayout = styled.div`
     fill: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
   }
 
-  & .category__control.css-4r1df6-Control {
+  & .category__control {
     @media (max-width: ${screen.SM}) {
       border-radius: 0 0 8px 8px !important;
       width: 100%;

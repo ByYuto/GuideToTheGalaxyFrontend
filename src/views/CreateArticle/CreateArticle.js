@@ -242,7 +242,7 @@ const resizeLayer = () => {
                           <p>No content types defined for this category</p>
                         )}
                         {step === 1 ? (
-                          <StyledCategorySelectorTooltip>
+                          <StyledCategorySelectorTooltip className="subcategory-tooltip">
                             Select a Content Type for your post to help other users find it, and for them to quickly
                             identify what kind of content it is.
                           </StyledCategorySelectorTooltip>

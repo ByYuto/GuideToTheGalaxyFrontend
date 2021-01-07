@@ -1,6 +1,7 @@
 import View from '../../components/View';
 import styled from 'styled-components';
 import CreateArticleTooltip from '../../components/CreateArticle/CreateArticleTooltip';
+import {screen} from '../../utils/constants'
 
 
 
@@ -35,6 +36,11 @@ export const StyledCategorySelectorTooltip = styled(CreateArticleTooltip)`
       left: calc(50% - 12px);
       border-width: 0 12px 12px 12px;
     }
+  }
+
+  @media(max-width: ${screen.SM}) {
+    position: absolute;
+    
   }
 `;
 
@@ -75,6 +81,17 @@ export const StyledCategorySelectorContainer = styled.div`
   & .category-tooltip {
     top: 25%;
   }
+
+  @media(max-width:${screen.SM}) {
+
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+
+    & .category-tooltip {
+      top: 116px;
+    }
+  }
 `;
 
 export const StyledContentTypeSelectorContainer = styled.div`
@@ -83,6 +100,13 @@ export const StyledContentTypeSelectorContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+
+  @media(max-width:${screen.SM}) {
+    & .subcategory-tooltip {
+      top: 50px;
+    }
+  }
+
 `;
 
 export const MaxWidthContainer = styled.div`

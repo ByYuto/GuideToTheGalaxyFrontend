@@ -13,6 +13,7 @@ import FlexContainer from '../../UI/FlexContainer';
 import Popover from 'react-text-selection-popover';
 import { useDispatch, useSelector } from 'react-redux';
 import { onChangeArticleContent } from '../../../redux/reducers/newArticleState';
+import styled, { css } from 'styled-components';
 
 const EDITOR_VISIBLE_DISTANCE = 153;
 const styles = {
@@ -60,6 +61,7 @@ export function findLinkEntities(contentBlock, callback, contentState) {
 function ContentEditor() {
   const dispatch = useDispatch();
   const { newArticle, step } = useSelector((store) => store.newArticle);
+  const { isMobile } = useSelector((store) => store.app);
   const editorState = newArticle.content;
   const setEditorState = (editorData) => dispatch(onChangeArticleContent(editorData));
   const [isFocusEditor, setFocusEditor] = useState(false);
@@ -274,17 +276,13 @@ function ContentEditor() {
           setSelectionState={setSelectionState}
         />
       </div>
-      <div
+      <TextToolbarFixed
         className="fixed-styled-toolbar-container"
-        style={{
-          width: '180px',
-          position: editorOut && !styledToolbarOut ? 'fixed' : 'relative',
-          top: editorOut && !styledToolbarOut ? '2%' : '0',
-          left: editorOut && !styledToolbarOut ? '16.5%' : '0',
-          display: editorOut && !styledToolbarOut ? 'block' : 'none',
-          zIndex: 5,
-          opacity: isFocusEditor || embedActive ? 1 : 0,
-        }}
+        editorOut={editorOut}
+        styledToolbarOut={styledToolbarOut}
+        isFocusEditor={isFocusEditor}
+        embedActive={embedActive}
+        isMobile={isMobile}
       >
         <TextFormat
           editorState={editorState}
@@ -294,7 +292,7 @@ function ContentEditor() {
           setLinkInputActive={setLinkInputActive}
           setSelectionState={setSelectionState}
         />
-      </div>
+      </TextToolbarFixed>
       <div>
         {urlInput}
         <div
@@ -422,5 +420,31 @@ const Media = (props) => {
 
   return null;
 };
+
+const TextToolbarFixed = styled.div`
+  width: 180px;
+  position: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? 'fixed' : 'relative')};
+  ${({ isMobile }) => {
+    if (isMobile) {
+      return css`
+        top: ${({ editorOut, styledToolbarOut }) => {
+          return editorOut && !styledToolbarOut ? '2%' : '0';
+        }};
+        left: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? '3%' : '0')};
+      `;
+    }
+
+    return css`
+      top: ${({ editorOut, styledToolbarOut }) => {
+        return editorOut && !styledToolbarOut ? '2%' : '0';
+      }};
+      left: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? '16.5%' : '0')};
+    `;
+  }}
+
+  display: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? 'block' : 'none')};
+  z-index: 5;
+  opacity: ${({ isFocusEditor, embedActive }) => (isFocusEditor || embedActive ? 1 : 0)};
+`;
 
 export default ContentEditor;

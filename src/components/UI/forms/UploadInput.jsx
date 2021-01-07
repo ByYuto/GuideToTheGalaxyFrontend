@@ -10,6 +10,7 @@ import { CameraIcon } from '../../../assets/icons/svg-icons';
 import { uploadImage } from '../../../http/createArticleService';
 import { FlexboxGrid } from 'rsuite';
 import Loader from '../Loader';
+import { screen } from '../../../utils/constants';
 
 const UploadInputLayout = styled.div`
   display: flex;
@@ -19,6 +20,11 @@ const UploadInputLayout = styled.div`
   height: 74%;
   cursor: pointer;
   ${(props) => props.isRequired && 'margin-top: 2em;'}
+
+  @media(max-width: ${screen.SM}) {
+    display: block;
+    margin-bottom: 24px;
+  }
   & .upload-tooltip {
     left: 0;
     top: 100%;
@@ -72,6 +78,10 @@ const UploadInputLayout = styled.div`
     & svg {
       margin-bottom: 5px;
     }
+    @media (max-width: ${screen.SM}) {
+      bottom: 35%;
+      left: 40%;
+    }
   }
 
   & img {
@@ -79,10 +89,20 @@ const UploadInputLayout = styled.div`
     width: 100%;
     height: auto;
     z-index: 2;
+    @media (max-width: ${screen.SM}) {
+      position: static;
+      margin-top: 24px;
+    }
   }
 
   & input {
     z-index: -1;
+    @media (max-width: ${screen.SM}) {
+      position: relative;
+      bottom: 50%;
+      left: 10%;
+      opacity: 0;
+    }
   }
 `;
 
