@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { EditorLayout } from './styled-components';
-import { Editor, EditorState, CompositeDecorator, RichUtils } from 'draft-js';
+import { EditorLayout, TextToolbarFixed, MediaToolbarFixed } from './styled-components';
+import { Editor, EditorState, RichUtils } from 'draft-js';
 import TextFormat from './style-toolbar/TextFormat';
 import 'draft-js/dist/Draft.css';
 import InsertLink from './widgets/link/InsertLink';
@@ -13,7 +13,6 @@ import FlexContainer from '../../UI/FlexContainer';
 import Popover from 'react-text-selection-popover';
 import { useDispatch, useSelector } from 'react-redux';
 import { onChangeArticleContent } from '../../../redux/reducers/newArticleState';
-import styled, { css } from 'styled-components';
 
 const EDITOR_VISIBLE_DISTANCE = 153;
 const styles = {
@@ -317,17 +316,13 @@ function ContentEditor() {
         </div>
       </div>
       <FlexContainer justify="center">
-        <div
-          style={{
-            width: '250px',
-            position: editorOut && !mediaToolbarOut ? 'fixed' : 'relative',
-            top: editorOut && !mediaToolbarOut ? '70%' : '0',
-            left: editorOut && !mediaToolbarOut ? '40%' : '0',
-            display: editorOut && !mediaToolbarOut ? 'block' : 'none',
-            zIndex: 5,
-            opacity: isFocusEditor || embedActive ? 1 : 0,
-          }}
+        <MediaToolbarFixed
           className="fixed-media-toolbar-container"
+          editorOut={editorOut}
+          mediaToolbarOut={mediaToolbarOut}
+          isFocusEditor={isFocusEditor}
+          embedActive={embedActive}
+          isMobile={isMobile}
         >
           <MediaToolbar
             editorState={editorState}
@@ -336,7 +331,7 @@ function ContentEditor() {
             embedActive={embedActive}
             setEmbedActivation={setEmbedActivation}
           />
-        </div>
+        </MediaToolbarFixed>
         <div
           ref={mediaToolbarRef}
           className="media-toolbar-container"
@@ -420,31 +415,5 @@ const Media = (props) => {
 
   return null;
 };
-
-const TextToolbarFixed = styled.div`
-  width: 180px;
-  position: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? 'fixed' : 'relative')};
-  ${({ isMobile }) => {
-    if (isMobile) {
-      return css`
-        top: ${({ editorOut, styledToolbarOut }) => {
-          return editorOut && !styledToolbarOut ? '2%' : '0';
-        }};
-        left: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? '3%' : '0')};
-      `;
-    }
-
-    return css`
-      top: ${({ editorOut, styledToolbarOut }) => {
-        return editorOut && !styledToolbarOut ? '2%' : '0';
-      }};
-      left: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? '16.5%' : '0')};
-    `;
-  }}
-
-  display: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? 'block' : 'none')};
-  z-index: 5;
-  opacity: ${({ isFocusEditor, embedActive }) => (isFocusEditor || embedActive ? 1 : 0)};
-`;
 
 export default ContentEditor;

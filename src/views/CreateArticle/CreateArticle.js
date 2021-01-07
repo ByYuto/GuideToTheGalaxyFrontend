@@ -37,6 +37,7 @@ import { getContentType, setArticleContent } from './helpers';
 import Notice from '../../components/UI/notice/Notice';
 import KeywordSelector from '../../components/CreateArticle/keywords/KeywordSelector';
 import {convertToRaw} from 'draft-js';
+import useMobile from '../../hooks/useMobile';
 
 
 const categoriesSelector = (state) => state.app.categories;
@@ -57,6 +58,7 @@ const hasFieldsErrors = (articleValidations) => {
 const CreateArticle = () => {
   const modal = useModal();
   const history = useHistory();
+  useMobile();
   const dispatch = useDispatch();
   const refHeaderContainer = useRef(null);
   const refContentContainer = useRef(null);
