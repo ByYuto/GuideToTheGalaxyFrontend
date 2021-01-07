@@ -13,7 +13,7 @@ import { validateField } from '../../../redux/reducers/newArticleState';
 
 export default function LocationAutocomplete(props) {
   const [address, setAddress] = useState('');
-  const [placeId] = useState('');
+  const [placeId, setPlaceId] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [isGoogleReady, setIsGoogleReady] = useState(false);
 
@@ -99,7 +99,7 @@ export default function LocationAutocomplete(props) {
                         getSuggestionItemProps={getSuggestionItemProps}
                       />
                     ))}
-                    {!dataType.required ? (
+                    {!placeId && !dataType.required ? (
                       <SuggestionOptions
                         getSuggestionItemProps={getSuggestionItemProps}
                         suggestion={{ active: false, description: 'Worldwide', placeId: '' }}

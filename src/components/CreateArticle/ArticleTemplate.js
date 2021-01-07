@@ -1,8 +1,5 @@
 import React from 'react';
-import DiscontinuedTemplate from './Templates/DiscontinuedTemplate';
 import GeneralTemplate from './Templates/GeneralTemplate';
-import NoDateTemplate from './Templates/NoDateTemplate';
-import ProductTemplate from './Templates/ProductTemplate';
 
 const ArticleTemplate = ({ contentType, article, onChange, readOnly }) => {
   const _onChangeData = (key, value) => {
@@ -13,30 +10,15 @@ const ArticleTemplate = ({ contentType, article, onChange, readOnly }) => {
     onChange && onChange(newArticle);
   };
 
-  let SelectedArticleTemplate = null;
-  const template = contentType ? contentType.template : 'GENERAL';
-  if (template === 'GENERAL') {
-    SelectedArticleTemplate = GeneralTemplate;
-  } else if (template === 'NODATE') {
-    SelectedArticleTemplate = NoDateTemplate;
-  } else if (template === 'PRODUCT') {
-    SelectedArticleTemplate = ProductTemplate;
-  } else if (template === 'DISCONTINUED') {
-    SelectedArticleTemplate = DiscontinuedTemplate;
-  } else {
-    SelectedArticleTemplate = GeneralTemplate;
-  }
+  let SelectedArticleTemplate = GeneralTemplate;
+ 
 
-  return SelectedArticleTemplate ? (
-    <SelectedArticleTemplate
-      contentType={contentType}
-      article={article}
-      onChangeData={_onChangeData}
-      readOnly={readOnly}
-    />
-  ) : (
-    <p>NO Template function defined for {template}</p>
-  );
+  return <SelectedArticleTemplate
+    contentType={contentType}
+    article={article}
+    onChangeData={_onChangeData}
+    readOnly={readOnly}
+  />
 };
 
 export default ArticleTemplate;

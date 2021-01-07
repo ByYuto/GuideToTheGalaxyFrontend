@@ -118,6 +118,7 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
   };
   const handleFileChange = async (e) => {
     e.preventDefault();
+    const files = e.target.files;
     const dataSrc = e.target.files[0];
     if (dataSrc) {
       setLoading(true);
@@ -127,6 +128,7 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
           const newArticle = {
             photo: imageData,
           };
+          handleImageValidation(files);
           onChange(newArticle);
         } else {
           return;
