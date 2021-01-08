@@ -161,8 +161,8 @@ const ArticleCard = styled(Card)`
     border-bottom: 1px solid #f6f8ff;
     filter: none;
     border-radius: none;
+    padding: 0;
     padding-bottom: 24px;
-    padding-top: 0px;
   }
 `;
 

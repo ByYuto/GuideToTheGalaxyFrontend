@@ -5,6 +5,7 @@ import Card from '../../UI/Card';
 import Button from '../../UI/Button';
 import Tag from '../../UI/Tag';
 import { ShareArticleCardLayout } from './styled-components';
+import { useSelector } from 'react-redux';
 
 export default function ShareArticleCard({
   _id,
@@ -24,6 +25,17 @@ export default function ShareArticleCard({
     //dispatch(insertEmbedArticle(contentIndex, _id));
     confirmArticle(e, editorState, _id);
   };
+  const { isMobile } = useSelector((store) => store.app);
+
+  const filterKeywords = (keywords) => {
+    if (!keywords || !keywords.length || keywords.length === 0) {
+      return [];
+    }
+
+    return keywords.slice(0, 2);
+  };
+
+  const keywordsFiltered = filterKeywords(keywords);
   return (
     <ShareArticleCardLayout existImage={!!image}>
       <Card className="article-card">
@@ -58,8 +70,8 @@ export default function ShareArticleCard({
         <FlexContainer align="center">
           <div style={{ width: '65%' }}>
             <FlexContainer className="keywords-container" justify="flex-start" inline>
-              {keywords && keywords.length > 0
-                ? keywords.map((k, index) => {
+              {keywordsFiltered && keywordsFiltered.length > 0
+                ? keywordsFiltered.map((k, index) => {
                     if (index > 2) {
                       return null;
                     }

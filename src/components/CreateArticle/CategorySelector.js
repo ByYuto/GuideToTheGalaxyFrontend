@@ -2,6 +2,7 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import Caption from '../UI/Caption';
 import {screen} from '../../utils/constants'
+import {useSelector} from 'react-redux';
 
 const StyledCategory = styled.div`
   background: ${(props) => (props.active ? props.theme.accentColors.primary.color : props.theme.baseColors.darkMiddle)};
@@ -92,12 +93,12 @@ const StyledCategorySelector = styled.div`
   }
 `;
 
-const Category = ({ className, title, description, value, active, onClick, showDescription, readOnly }) => {
+const Category = ({ className, title, description, value, active, onClick, showDescription, readOnly, altText }) => {
   const _onClick = () => {
     !readOnly && onClick && onClick(value);
   };
   return (
-    <StyledCategory className={className} onClick={_onClick} active={active} readOnly={readOnly}>
+    <StyledCategory className={className} onClick={_onClick} active={active} readOnly={readOnly} alt={altText}>
       <h6>{title}</h6>
       {showDescription ? <Caption>{description}</Caption> : null}
     </StyledCategory>
@@ -107,18 +108,29 @@ const CategorySelector = ({ categories, value, onChange, showDescriptions, readO
   const onCategoryClick = (category) => {
     !readOnly && onChange && onChange(category);
   };
+  const {isMobile} = useSelector(store => store.app);
+  const cutDescription = (description) => {
+    if(isMobile) {
+      /* const descriptionArray = description.split(" ", 4);
+      const descriptionCutted = descriptionArray.join(" "); */
+
+      return description.slice(0, 20) + "..."
+    }
+    return description;
+  }
   return (
     <StyledCategorySelector>
       {categories.map((category) => (
         <Category
           key={category.name}
           title={category.name}
-          description={category.description}
+          description={cutDescription(category.description)}
           value={category.name}
           active={category.name === value}
           onClick={onCategoryClick}
           showDescription={showDescriptions}
           readOnly={readOnly}
+          altText={category.description}
         />
       ))}
     </StyledCategorySelector>

@@ -25,11 +25,13 @@ export const ShareArticleLayout = styled.div`
     `}
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: ${screen.SM}) {
     .articles-container {
       grid-template-columns: 100%;
       grid-template-row: auto;
     }
+    padding-left: 0;
+    padding-right: 0;
   }
 `;
 
@@ -38,6 +40,9 @@ export const ShareArticleCardLayout = styled.div`
   margin-left: 10px;
   height: 198px;
   overflow: hidden;
+  @media (max-width: ${screen.SM}) {
+    margin-left: 0;
+  }
   & .article-card {
     height: 198px;
     overflow: hidden;
