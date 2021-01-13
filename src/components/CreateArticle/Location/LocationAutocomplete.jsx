@@ -13,13 +13,15 @@ import { validateField } from '../../../redux/reducers/newArticleState';
 
 export default function LocationAutocomplete(props) {
   const [address, setAddress] = useState('');
-  const [placeId, setPlaceId] = useState('');
+  const [placeId, setPlaceId] = useState(null);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [isGoogleReady, setIsGoogleReady] = useState(false);
 
+  console.log('rendering', placeId);
   const dispatch = useDispatch();
 
   const handleChange = async (address) => {
+    console.log('handleChange', placeId);
     if (validate && validations) {
       const validationsUpdate = dataType.required ? [isRequired, ...validations] : validations;
       const isValid = validate(placeId, validationsUpdate);
@@ -28,16 +30,20 @@ export default function LocationAutocomplete(props) {
       await dispatch(validateField(fieldValidation));
     }
     setAddress(address);
+    setPlaceId(null);
   };
 
   const clearValue = (address) => {
+    console.log('clearValue', placeId);
     setAddress('');
+    setPlaceId(null);
   };
   const { contentType, field, placeholderText, validations, validate, validateError, onChangeData } = props;
   const dataType = contentType[field];
   const tooltip = contentType ? contentType[field]?.tooltip : `${field}`;
 
   const handleChangeValidations = async (address, placeId) => {
+    console.log('handleChangeValidations', placeId);
     if (validate && validations) {
       const validationsUpdate = dataType.required ? [isRequired, ...validations] : validations;
       const isValid = validate(placeId, validationsUpdate);
@@ -46,6 +52,7 @@ export default function LocationAutocomplete(props) {
       await dispatch(validateField(fieldValidation));
     }
     setAddress(address);
+    setPlaceId(placeId);
     return onChangeData(field, placeId);
   };
   useEffect(() => {
@@ -99,7 +106,7 @@ export default function LocationAutocomplete(props) {
                         getSuggestionItemProps={getSuggestionItemProps}
                       />
                     ))}
-                    {!placeId && !dataType.required ? (
+                    {placeId === null && !dataType.required ? (
                       <SuggestionOptions
                         getSuggestionItemProps={getSuggestionItemProps}
                         suggestion={{ active: false, description: 'Worldwide', placeId: '' }}
