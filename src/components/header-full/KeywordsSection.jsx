@@ -142,7 +142,7 @@ export default function KeywordsSection() {
 const SorterDropdown = styled(Dropdown)`
   @media (max-width: 864px) {
     background: #151531;
-    width: 70%;
+    width: 50%;
     & input {
       background: #151531;
     }
@@ -154,6 +154,7 @@ const SorterContainer = styled(FlexContainer)`
     width: 100%;
     order: 2;
     background: #151531;
+    justify-content: space-between;
   }
 
   & button {
