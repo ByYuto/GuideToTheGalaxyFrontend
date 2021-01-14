@@ -30,6 +30,7 @@ export default function ArticleEmbedView({
   liked,
   likes,
   isPreview,
+  className,
 }) {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -47,7 +48,7 @@ export default function ArticleEmbedView({
   };
   const keyWordsCutted = getKeywordsPreview(keywords);
   const cardContent = (
-    <ArticleCard fullWidth>
+    <ArticleCard className={className} fullWidth>
       <FlexContainer column>
         <div style={{ width: '100%' }}>
           <ArticleMainContent>

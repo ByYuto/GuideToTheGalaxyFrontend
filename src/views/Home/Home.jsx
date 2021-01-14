@@ -12,8 +12,6 @@ export default function Home() {
   const { loading, error, keywordsSelected, keywordSuggestions } = useSelector((store) => store.topbarSearch);
   const { authorization } = useSelector((store) => store.auth);
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
     //dispatch(getArticlesHome(keywordsSelected.join(',')));
   }, [authorization, keywordsSelected.join(','), keywordSuggestions.join(',')]);
@@ -23,7 +21,7 @@ export default function Home() {
         <StyledView>
           <MaxWidthContainer>
             {articles?.length > 0 ? (
-              articles.map((a, index) => <ArticleEmbedView key={index} {...a} />)
+              articles.map((a, index) => <ArticleEmbedView className="articles-feed" key={index} {...a} />)
             ) : (
               <FlexContainer align="center" justify="center" className="no-posts-container">
                 <div>No posts related on your search...</div>

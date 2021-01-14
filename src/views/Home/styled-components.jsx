@@ -51,4 +51,9 @@ export const HomeLayout = styled.div`
   padding-bottom: 60px;
   max-width: 100vw;
   width: 100%;
+
+  & .articles-feed {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 `;
