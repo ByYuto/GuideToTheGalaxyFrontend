@@ -7,6 +7,7 @@ import theme, { GlobalStyle } from './components/Layout/Theme';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Notifications from './components/Notifications';
+import './App.css';
 
 
 
