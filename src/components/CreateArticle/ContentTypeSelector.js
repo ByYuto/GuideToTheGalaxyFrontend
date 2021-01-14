@@ -8,6 +8,7 @@ import { GoPlus } from 'react-icons/go';
 import PropTypes from 'prop-types';
 import { IoIosClose } from 'react-icons/io';
 import { useSelector } from 'react-redux';
+import {screen} from '../../utils/constants';
 
 const StyledContentType = styled.div`
   display: flex;
@@ -103,6 +104,9 @@ const ArrowButton = styled.button`
   font-size: 1.5em;
   cursor: pointer;
   height: 42px;
+  @media(max-width: ${screen.SM}) {
+    display: none;
+  }
 `;
 
 const StyledContentTypeSelector = styled.div`

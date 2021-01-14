@@ -33,7 +33,7 @@ export default function KeywordSelector() {
           callBack={() => setNotice(false)}
         />
       )}
-      <FlexContainer column elmWidth={'50%'} align="stretch" className="add-keyword-container">
+      <FlexContainer column align="stretch" className="add-keyword-container">
         <h5>YOUR KEYWORDS</h5>
         <div>
           <SearchKeywords />
@@ -46,9 +46,9 @@ export default function KeywordSelector() {
           )}
         </FlexContainer>
       </FlexContainer>
-      <FlexContainer column elmWidth={'50%'} align="stretch" className="recommend-keyword-container">
+      <FlexContainer column align="stretch" className="recommend-keyword-container">
         <h5>RECOMMENDED</h5>
-        <FlexContainer breakRow="wrap">
+        <FlexContainer breakRow="wrap" className="recommended-keywords-parent">
           {recommendedFiltered && recommendedFiltered.length > 0 ? (
             recommendedFiltered.map((k, index) => (
               <Keyword

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { EditorLayout } from './styled-components';
-import { Editor, EditorState, CompositeDecorator, RichUtils } from 'draft-js';
+import { EditorLayout, TextToolbarFixed, MediaToolbarFixed } from './styled-components';
+import { Editor, EditorState, RichUtils } from 'draft-js';
 import TextFormat from './style-toolbar/TextFormat';
 import 'draft-js/dist/Draft.css';
 import InsertLink from './widgets/link/InsertLink';
@@ -60,6 +60,7 @@ export function findLinkEntities(contentBlock, callback, contentState) {
 function ContentEditor() {
   const dispatch = useDispatch();
   const { newArticle, step } = useSelector((store) => store.newArticle);
+  const { isMobile } = useSelector((store) => store.app);
   const editorState = newArticle.content;
   const setEditorState = (editorData) => dispatch(onChangeArticleContent(editorData));
   const [isFocusEditor, setFocusEditor] = useState(false);
@@ -274,17 +275,13 @@ function ContentEditor() {
           setSelectionState={setSelectionState}
         />
       </div>
-      <div
+      <TextToolbarFixed
         className="fixed-styled-toolbar-container"
-        style={{
-          width: '180px',
-          position: editorOut && !styledToolbarOut ? 'fixed' : 'relative',
-          top: editorOut && !styledToolbarOut ? '2%' : '0',
-          left: editorOut && !styledToolbarOut ? '16.5%' : '0',
-          display: editorOut && !styledToolbarOut ? 'block' : 'none',
-          zIndex: 5,
-          opacity: isFocusEditor || embedActive ? 1 : 0,
-        }}
+        editorOut={editorOut}
+        styledToolbarOut={styledToolbarOut}
+        isFocusEditor={isFocusEditor}
+        embedActive={embedActive}
+        isMobile={isMobile}
       >
         <TextFormat
           editorState={editorState}
@@ -294,7 +291,7 @@ function ContentEditor() {
           setLinkInputActive={setLinkInputActive}
           setSelectionState={setSelectionState}
         />
-      </div>
+      </TextToolbarFixed>
       <div>
         {urlInput}
         <div
@@ -319,17 +316,13 @@ function ContentEditor() {
         </div>
       </div>
       <FlexContainer justify="center">
-        <div
-          style={{
-            width: '250px',
-            position: editorOut && !mediaToolbarOut ? 'fixed' : 'relative',
-            top: editorOut && !mediaToolbarOut ? '70%' : '0',
-            left: editorOut && !mediaToolbarOut ? '40%' : '0',
-            display: editorOut && !mediaToolbarOut ? 'block' : 'none',
-            zIndex: 5,
-            opacity: isFocusEditor || embedActive ? 1 : 0,
-          }}
+        <MediaToolbarFixed
           className="fixed-media-toolbar-container"
+          editorOut={editorOut}
+          mediaToolbarOut={mediaToolbarOut}
+          isFocusEditor={isFocusEditor}
+          embedActive={embedActive}
+          isMobile={isMobile}
         >
           <MediaToolbar
             editorState={editorState}
@@ -338,7 +331,7 @@ function ContentEditor() {
             embedActive={embedActive}
             setEmbedActivation={setEmbedActivation}
           />
-        </div>
+        </MediaToolbarFixed>
         <div
           ref={mediaToolbarRef}
           className="media-toolbar-container"

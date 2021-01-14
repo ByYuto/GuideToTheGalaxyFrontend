@@ -37,6 +37,7 @@ import { getContentType, setArticleContent } from './helpers';
 import Notice from '../../components/UI/notice/Notice';
 import KeywordSelector from '../../components/CreateArticle/keywords/KeywordSelector';
 import { convertToRaw } from 'draft-js';
+import useMobile from '../../hooks/useMobile';
 
 const categoriesSelector = (state) => state.app.categories;
 const getContentTypes = (categories, selectedCategory) => {
@@ -57,6 +58,7 @@ const hasFieldsErrors = (articleValidations) => {
 const CreateArticle = () => {
   const modal = useModal();
   const history = useHistory();
+  useMobile();
   const dispatch = useDispatch();
   const refHeaderContainer = useRef(null);
   const refContentContainer = useRef(null);
@@ -240,7 +242,7 @@ const CreateArticle = () => {
                           <p>No content types defined for this category</p>
                         )}
                         {step === 1 ? (
-                          <StyledCategorySelectorTooltip>
+                          <StyledCategorySelectorTooltip className="subcategory-tooltip">
                             Select a Content Type for your post to help other users find it, and for them to quickly
                             identify what kind of content it is.
                           </StyledCategorySelectorTooltip>

@@ -207,9 +207,13 @@ export const FullHeaderLayout = styled.div`
             height: auto;
           `;
     } else {
-      return css`
-        height: 76px;
-      `;
+      return props.home === 'home' || props.isSticky
+        ? css`
+            height: auto;
+          `
+        : css`
+            height: 76px;
+          `;
     }
   }}
 

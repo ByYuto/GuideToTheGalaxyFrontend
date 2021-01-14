@@ -43,13 +43,6 @@ export const ArticleDetailContainer = styled.div`
       padding: 16px;
       & figure[contenteditable='false'] {
         margin: 0;
-        & img {
-          border-radius: 16px;
-        }
-      }
-
-      & div[aria-label='Photos'] {
-        height: auto;
       }
     }
   }
@@ -73,6 +66,18 @@ export const ArticleDetailContainer = styled.div`
     padding-left: 42px;
     padding-right: 10px;
 
+    @media (max-width: 864px) {
+      flex-direction: column;
+      padding: 0;
+    }
+
+    & .contributions-counter {
+      @media (max-width: 864px) {
+        border-bottom: 1px solid #f6f8ff;
+        margin-bottom: 3px;
+      }
+    }
+
     & .contributions-number {
       margin-right: 10px;
     }
@@ -89,6 +94,9 @@ export const ArticleDetailContainer = styled.div`
     @media (max-width: 864px) {
       padding-left: 16px;
       padding-right: 16px;
+    }
+    & > div {
+      align-items: flex-end;
     }
   }
   & .edit-lock {
