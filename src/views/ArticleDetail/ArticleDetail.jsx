@@ -116,7 +116,7 @@ export default function ArticleDetail() {
                   </div>
                 </FlexContainer>
                 <FlexContainer align="center">
-                  <ToolbarReactions articleId={article?._id} />
+                  <ToolbarReactions articleId={article?._id} liked={article?.liked} likes={article?.likes} />
                 </FlexContainer>
               </MaxWidthContainer>
             </StyledView>
@@ -188,7 +188,12 @@ export default function ArticleDetail() {
                   )}
 
                   <FlexContainer align="center" elmWidth="30%" justify="flex-end">
-                    <ToolbarReactions postDetail articleId={article?._id} />
+                    <ToolbarReactions
+                      postDetail
+                      articleId={article?._id}
+                      liked={article?.liked}
+                      likes={article?.likes}
+                    />
                   </FlexContainer>
                 </FlexContainer>
               </MaxWidthContainer>

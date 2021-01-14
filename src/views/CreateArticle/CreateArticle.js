@@ -36,9 +36,8 @@ import { useModal } from '../../components/UI/modal/useModal';
 import { getContentType, setArticleContent } from './helpers';
 import Notice from '../../components/UI/notice/Notice';
 import KeywordSelector from '../../components/CreateArticle/keywords/KeywordSelector';
-import {convertToRaw} from 'draft-js';
+import { convertToRaw } from 'draft-js';
 import useMobile from '../../hooks/useMobile';
-
 
 const categoriesSelector = (state) => state.app.categories;
 const getContentTypes = (categories, selectedCategory) => {
@@ -54,7 +53,8 @@ const hasFieldsErrors = (articleValidations) => {
       return acc;
     }
   }, false);
-}
+};
+
 const CreateArticle = () => {
   const modal = useModal();
   const history = useHistory();
@@ -73,63 +73,60 @@ const CreateArticle = () => {
     categories && newArticle.categoryId ? getContentTypes(categories, newArticle.categoryId) : null;
   useHiddenTopbar(); //hideTopbar
   const rawContent = convertToRaw(newArticle.content.getCurrentContent());
-  
-  useEffect(()=> {
 
+  useEffect(() => {
     resizeLayer();
-  window.addEventListener('resize', () => resizeLayer());
+    window.addEventListener('resize', () => resizeLayer());
 
-  return () => {
-    window.removeEventListener('resize', () => resizeLayer());
+    return () => {
+      window.removeEventListener('resize', () => resizeLayer());
+    };
+  }, [newArticle.contentTypeId, contentHeight, newArticle]);
+
+  const resizeLayer = () => {
+    if (
+      refContentContainer &&
+      refContentContainer.current &&
+      refHeaderContainer &&
+      refHeaderContainer.current &&
+      refParentContainer &&
+      refParentContainer.current
+    ) {
+      const refContentSize = refParentContainer.current.offsetHeight - refHeaderContainer.current.offsetHeight;
+      let newSize = 0;
+      if (window.innerWidth < 600) {
+        newSize = 692;
+      } else if (window.innerWidth < 1537) {
+        newSize = 337;
+      } else {
+        newSize = window.innerHeight < 723 ? refContentSize + 60 : refContentSize;
+      }
+      setContentHeight(newSize);
+    }
   };
-}, [newArticle.contentTypeId, contentHeight, newArticle]);
 
-const resizeLayer = () => {
-  if(refContentContainer &&
-    refContentContainer.current &&
-    refHeaderContainer &&
-    refHeaderContainer.current &&
-    refParentContainer &&
-    refParentContainer.current) {
-  
-  const refContentSize = refParentContainer.current.offsetHeight - refHeaderContainer.current.offsetHeight;
-  let newSize = 0;
-  if(window.innerWidth < 600) {
-     newSize = 692;
-  } else if(window.innerWidth < 1537) {
-    newSize = 337;
-  } else {
-    newSize = window.innerHeight < 723 ? refContentSize + 60 : refContentSize;
-  }
-  setContentHeight(newSize);
-  }
-};
-
-  useEffect(() => {     
-   
-     if(rawContent && (rawContent?.blocks[0]?.text !== "" || rawContent?.blocks?.length > 1)){
+  useEffect(() => {
+    if (rawContent && (rawContent?.blocks[0]?.text !== '' || rawContent?.blocks?.length > 1)) {
       dispatch(updateNewArticle({ validStep3: true }));
     } else {
       dispatch(updateNewArticle({ validStep3: false }));
-    }    
-  }, [dispatch,   JSON.stringify(rawContent)]);
+    }
+  }, [dispatch, JSON.stringify(rawContent)]);
 
   useEffect(() => {
     const hasArticleDataError = hasFieldsErrors(articleValidations);
     dispatch(updateNewArticle({ validStep2: !hasArticleDataError && newArticle.contentTypeId }));
-  }, [articleValidations, newArticle.contentTypeId, hasFieldsErrors, dispatch]);  
+  }, [articleValidations, newArticle.contentTypeId, hasFieldsErrors, dispatch]);
 
-  useEffect(()=> {
-      dispatch(getCategories());
-  }, [])
+  useEffect(() => {
+    dispatch(getCategories());
+  }, []);
 
-  useEffect(()=>{
-    if(refParentContainer  && refParentContainer.current) {
+  useEffect(() => {
+    if (refParentContainer && refParentContainer.current) {
       refParentContainer.current.scrollTop = refParentContainer.current.scrollHeight;
     }
-  }, [step])
-
-
+  }, [step]);
 
   const onCategoryChange = (category) => {
     dispatch(updateNewArticle({ categoryId: category, contentTypeId: null, validStep1: false }));
@@ -155,17 +152,18 @@ const resizeLayer = () => {
       return;
     }
 
-    if (
+    const isAlreadyAnOption =
       contentTypesAvailableForSelectedCategory &&
-      contentTypesAvailableForSelectedCategory.find((cat) => cat.name === value)
-    ) {
-      //Content type already exists
-      toast(`content type ${value} already added`);
-    }
+      contentTypesAvailableForSelectedCategory.find((cat) => cat.name === value);
+
     if (!customContent) {
-      toast(`Content type added: ${value}`);
+      if (!isAlreadyAnOption) {
+        toast(`Content type added: ${value}`);
+      }
     } else if (value) {
-      toast(`Content type edited: ${value}`);
+      if (!isAlreadyAnOption) {
+        toast(`Content type edited: ${value}`);
+      }
     }
     setCustomContent(value);
   };
@@ -271,10 +269,7 @@ const resizeLayer = () => {
           <ThemeProvider theme={{ isDark: step <= 2 }}>
             <StyledViewContent>
               {step >= 3 && categories ? (
-                <ArticleContent
-                  article={newArticle}
-                  onChangeArticle={onChangeArticle}
-                />
+                <ArticleContent article={newArticle} onChangeArticle={onChangeArticle} />
               ) : null}
             </StyledViewContent>
           </ThemeProvider>
@@ -322,7 +317,7 @@ const resizeLayer = () => {
         okClick={onExitClick}
         header={undefined}
       >
-        <p style={{ textAlign: 'center', marginTop: "16px" }}>
+        <p style={{ textAlign: 'center', marginTop: '16px' }}>
           Are you sure you want to exit this page?
           <br /> You’ll lose all your progress
         </p>

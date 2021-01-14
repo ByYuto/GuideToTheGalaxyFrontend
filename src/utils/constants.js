@@ -47,7 +47,7 @@ export const generalTemplate = {
     tooltip: 'Put in a URL to help us verify this post',
   },
   location: {
-    placeholder: 'Where did they used to busk?',
+    placeholder: 'Location',
     required: false,
     tooltip: 'Place a location (optional)',
   },

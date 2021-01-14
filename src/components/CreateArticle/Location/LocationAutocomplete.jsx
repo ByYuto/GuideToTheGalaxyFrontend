@@ -13,7 +13,7 @@ import { validateField } from '../../../redux/reducers/newArticleState';
 
 export default function LocationAutocomplete(props) {
   const [address, setAddress] = useState('');
-  const [placeId] = useState('');
+  const [placeId, setPlaceId] = useState(null);
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
   const dispatch = useDispatch();
@@ -27,10 +27,12 @@ export default function LocationAutocomplete(props) {
       await dispatch(validateField(fieldValidation));
     }
     setAddress(address);
+    setPlaceId(null);
   };
 
   const clearValue = (address) => {
     setAddress('');
+    setPlaceId(null);
   };
   const { contentType, field, placeholderText, validations, validate, validateError, onChangeData } = props;
   const dataType = contentType[field];
@@ -45,6 +47,7 @@ export default function LocationAutocomplete(props) {
       await dispatch(validateField(fieldValidation));
     }
     setAddress(address);
+    setPlaceId(placeId);
     return onChangeData(field, placeId);
   };
   return (
@@ -81,7 +84,7 @@ export default function LocationAutocomplete(props) {
                       getSuggestionItemProps={getSuggestionItemProps}
                     />
                   ))}
-                  {!dataType.required ? (
+                  {placeId === null && !dataType.required ? (
                     <SuggestionOptions
                       getSuggestionItemProps={getSuggestionItemProps}
                       suggestion={{ active: false, description: 'Worldwide', placeId: '' }}

@@ -117,6 +117,7 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
   const inputRef = useRef(null);
   const dispatch = useDispatch();
   const { articleValidations } = useSelector((store) => store.newArticle);
+  const [serverError, setServerError] = useState(null);
   const imageValidation = articleValidations.image;
   //handle image validations
   const handleImageValidation = async (value) => {
@@ -137,17 +138,24 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
   };
   const handleFileChange = async (e) => {
     e.preventDefault();
+    const files = e.target.files;
     const dataSrc = e.target.files[0];
     if (dataSrc) {
       setLoading(true);
-      const imageData = await uploadImage(dataSrc);
-      if (imageData.url) {
-        const newArticle = {
-          photo: imageData,
-        };
-        onChange(newArticle);
-      } else {
-        return;
+      try{
+        const imageData = await uploadImage(dataSrc);
+        if (imageData.url) {
+          const newArticle = {
+            photo: imageData,
+          };
+          handleImageValidation(files);
+          onChange(newArticle);
+        } else {
+          return;
+        }
+      }
+      catch(e){
+        setServerError(e?.response?.data?.message || e.message);
       }
       setLoading(false);
     } else {
@@ -176,8 +184,8 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
         <input type="file" onChange={handleFileChange} ref={inputRef} />
         {tooltipVisible && tooltip && <StyledFieldTooltip className="upload-tooltip">{tooltip}</StyledFieldTooltip>}
       </UploadInputLayout>
-      {contentType.image.required && !imageValidation?.valid && imageValidation?.errorType !== '' && (
-        <TextValidation>{imageValidation?.errorType}</TextValidation>
+      {((contentType.image.required && !imageValidation?.valid && imageValidation?.errorType !== '') || serverError) && (
+        <TextValidation>{serverError || imageValidation?.errorType}</TextValidation>
       )}
     </>
   ) : (

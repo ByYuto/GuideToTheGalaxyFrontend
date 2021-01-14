@@ -16,17 +16,17 @@ import {
 } from '../../redux/reducers/topbarSearch';
 import { SearchIcon, GoIcon } from '../../assets/icons/svg-icons';
 import { useHistory } from 'react-router-dom';
+import { startCase } from 'lodash';
 
 export default function HeaderSearchBar() {
-  const {
-    searchValue,
-    locationValue,
-    locationName,
-    searchSuggestions,
-    categoriesList,
-    categoryValue,
-    keywordsSelected,
-  } = useSelector((store) => store.topbarSearch);
+  const { searchValue, locationValue, locationName, searchSuggestions, categoryValue, keywordsSelected } = useSelector(
+    (store) => store.topbarSearch
+  );
+  let { categoriesList } = useSelector((store) => store.topbarSearch);
+  categoriesList = categoriesList.map((category) => ({
+    ...category,
+    label: startCase(category.label.toLowerCase()),
+  }));  
   const { articles } = useSelector((store) => store.articles);
   const dispatch = useDispatch();
   const history = useHistory();
