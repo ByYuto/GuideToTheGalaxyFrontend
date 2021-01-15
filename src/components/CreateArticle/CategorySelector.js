@@ -56,6 +56,7 @@ const StyledCategory = styled.div`
     height: 100px;
     background-color: ${(props) => (props.active ? '#6670F0' : '#151531')};
     white-space: pre-wrap;
+    vertical-align: top;
     
     & h6 {
       color: ${(props) => (props.active ? props.theme.baseColors.white : '#BDBFDF')};

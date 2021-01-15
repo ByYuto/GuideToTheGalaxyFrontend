@@ -13,7 +13,6 @@ const StyledArticleImage = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relativee;
 
   @media (max-width: ${screen.SM}) {
     min-height: 260px;
@@ -41,6 +40,7 @@ const StyledArticleData = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column;
+    display: block;
   }
 
   ${Caption} {

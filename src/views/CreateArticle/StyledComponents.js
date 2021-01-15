@@ -126,9 +126,7 @@ export const StyledView = styled(View)`
     margin-top: 0;
   }
 
-  & > * {
-    flex: 0;
-  }
+ 
 
   ${MaxWidthContainer} {
     flex-grow: 1;
@@ -148,5 +146,12 @@ export const CreateArticleContainerLayout = styled.div`
     height: calc(100vh - 131px) !important;
     overflow-y: auto;
     overflow-x: hidden;
+  }
+
+  @media(max-width: ${screen.SM}) {
+    display: block;
+    & .article-body-container {
+      display: block;
+    }
   }
 `;
