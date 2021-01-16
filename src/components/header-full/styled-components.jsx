@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import Button from '../../components/UI/Button';
 import HeaderBackground from '../../assets/images/home-bg.jpg';
+import { screen } from '../../utils/constants';
 
 export const customStyle = {
   indicatorsContainer: (provided, state) => ({ color: state.isFocused ? 'white' : '#BDBFDF' }),
@@ -51,6 +52,10 @@ export const Separator = styled.div`
   height: 56px;
   margin-left: 16px;
   margin-right: 16px;
+  @media (max-width: ${screen.SM}) {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
 `;
 
 export const AddContentButton = styled(Button)`
@@ -62,6 +67,14 @@ export const MenuButton = styled(Button)`
   margin-left: 16px;
   & svg:hover rect {
     fill: #cf92e5;
+  }
+
+  &.burger-btn {
+    @media (max-width: ${screen.SM}) {
+      display: block;
+      border-radius: 0;
+      padding-bottom: 1px;
+    }
   }
 `;
 

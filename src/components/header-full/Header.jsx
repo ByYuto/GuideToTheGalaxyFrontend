@@ -150,7 +150,7 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
                 </>
               }
             />
-            <MenuButton transparent secondary icon onClick={() => setMenuOpen(true)}>
+            <MenuButton className="burger-btn" transparent secondary icon onClick={() => setMenuOpen(true)}>
               <BurgerMenu />
             </MenuButton>
             <Sidebar shown={menuOpen} isShown={setMenuOpen} />

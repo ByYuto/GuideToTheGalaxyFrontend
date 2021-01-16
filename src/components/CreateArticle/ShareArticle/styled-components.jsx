@@ -27,8 +27,7 @@ export const ShareArticleLayout = styled.div`
 
   @media (max-width: ${screen.SM}) {
     .articles-container {
-      grid-template-columns: 100%;
-      grid-template-row: auto;
+      display: block;
     }
     padding-left: 0;
     padding-right: 0;
@@ -39,7 +38,7 @@ export const ShareArticleCardLayout = styled.div`
   margin-top: 15px;
   margin-left: 10px;
   height: 198px;
-  overflow: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
   @media (max-width: ${screen.SM}) {
     margin-left: 0;
   }
