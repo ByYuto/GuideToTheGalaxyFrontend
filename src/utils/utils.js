@@ -35,7 +35,8 @@ export const getDateFormatted = (rawDate) => {
     'November',
     'December',
   ];
-  const date = new Date(rawDate);
+  const dateSupportedForSafari = rawDate.replace(/\-/g, "/");
+  const date = new Date(dateSupportedForSafari);
   const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
   const dateFormatted = months[date.getMonth()] + ' ' + day + ', ' + date.getFullYear();
   return dateFormatted;
