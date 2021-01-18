@@ -80,6 +80,7 @@ export const HeaderSearchBarLayout = styled.div`
     margin-right: 10px;
     left: 90%;
     cursor: pointer;
+    padding: 0;
     & svg path {
       fill: white;
     }

@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 
 export const ImageMediaIcon = ({ color = '#1F1F3D', hover = '#9695B7', size }) => (
   <>
@@ -199,13 +200,24 @@ export const PDFIcon = () => (
   </svg>
 );
 
+const SvgSafari = styled.svg`
+  max-height: 2vh;
+  box-sizing: content-box;
+  margin: auto;
+  display: block;
+  height: auto;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 0;
+`;
+
 export const GoIcon = () => (
-  <svg width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <SvgSafari width="19" height="19" viewBox="0 0 19 19" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M1.67898 9.79545H16.4179L9.91101 16.257C9.61593 16.5521 9.61593 17.0287 9.91101 17.3238C10.2061 17.6189 10.6828 17.6189 10.9778 17.3238L18.6727 9.6744C18.8316 9.51551 18.9224 9.29609 18.9224 9.0691C18.9224 8.84211 18.8316 8.62269 18.6727 8.4638L10.9854 0.746275C10.8341 0.602518 10.6449 0.526855 10.4482 0.526855C10.2591 0.526855 10.0623 0.602518 9.91101 0.746275C9.61593 1.04136 9.61593 1.51803 9.91101 1.81311L16.3574 8.28221H1.67898C1.26284 8.28221 0.922363 8.62269 0.922363 9.03883C0.922363 9.45498 1.26284 9.79545 1.67898 9.79545Z"
       fill="#1F1F3D"
     />
-  </svg>
+  </SvgSafari>
 );
 
 export const SearchIcon = (props) => (

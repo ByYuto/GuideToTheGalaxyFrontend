@@ -100,6 +100,9 @@ export const LoginButton = styled.button`
   outline: 0;
   border: none;
   cursor: pointer;
+  @media (max-width: ${screen.SM}) {
+    padding: 0;
+  }
 `;
 
 export const StyledTopBar = styled.div`
