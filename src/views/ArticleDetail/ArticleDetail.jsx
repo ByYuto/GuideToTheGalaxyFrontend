@@ -130,7 +130,11 @@ export default function ArticleDetail() {
             <StyledView>
               <MaxWidthContainer>
                 {article?.pdf && article?.pdf.url && (
-                  <DownloadPdf fileName={article.pdf.filename} pdfUrl={article.pdf.url} />
+                  <DownloadPdf
+                    fileName={article.pdf.filename}
+                    pdfUrl={article.pdf.url}
+                    originalFilename={article.pdf.originalFilename}
+                  />
                 )}
                 {article && article.URL && article.categoryId === 'TOOLS' && (
                   <Button primary className="button-buy">
