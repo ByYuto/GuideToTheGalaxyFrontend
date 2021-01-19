@@ -17,6 +17,8 @@ import ArticleContentBody from './ArticleContentBody';
 import Button from '../../components/UI/Button';
 import { setSelectedKeyword } from '../../redux/reducers/topbarSearch';
 import { useHistory } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import { SITE_TITLE } from '../../utils/constants';
 
 export default function ArticleDetail() {
   const { id } = useParams();
@@ -36,6 +38,9 @@ export default function ArticleDetail() {
 
   return (
     <ArticleDetailContainer>
+      <Helmet>
+        <title>{'Article Detail'}</title>
+      </Helmet>
       {error && (
         <StyledView>
           <MaxWidthContainer>
@@ -46,6 +51,11 @@ export default function ArticleDetail() {
       {!error && !loading && (
         <>
           <ThemeProvider theme={{ isDark: true }}>
+            <Helmet>
+              <title>
+                {article?.title || 'Article Detail'} - {SITE_TITLE}
+              </title>
+            </Helmet>
             <StyledView className="header-content">
               <MaxWidthContainer>
                 <div className="breadcrumb">

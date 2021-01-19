@@ -65,5 +65,7 @@ export const generalTemplate = {
 
 export const KEYCODES = {
   SCAPE: 27,
-  ENTER: 13
-}
+  ENTER: 13,
+};
+
+export const SITE_TITLE = "Busker's Guide to the Galaxy";

@@ -6,15 +6,16 @@ import { getArticlesHome } from '../../redux/reducers/appState';
 import ArticleEmbedView from '../../components/CreateArticle/ShareArticle/ArticleEmbedView';
 import FlexContainer from '../../components/UI/FlexContainer';
 import Loader from '../../components/UI/Loader';
+import { Helmet } from 'react-helmet';
 
 export default function Home() {
   const { articles } = useSelector((store) => store.app);
   const { loading, error, keywordsSelected, keywordSuggestions } = useSelector((store) => store.topbarSearch);
   const { authorization } = useSelector((store) => store.auth);
 
-  useEffect(() => {
-    //dispatch(getArticlesHome(keywordsSelected.join(',')));
-  }, [authorization, keywordsSelected.join(','), keywordSuggestions.join(',')]);
+  // useEffect(() => {
+  //   //dispatch(getArticlesHome(keywordsSelected.join(',')));
+  // }, [authorization, keywordsSelected.join(','), keywordSuggestions.join(',')]);
   return (
     <ThemeProvider theme={{ isDark: false }}>
       <HomeLayout>
