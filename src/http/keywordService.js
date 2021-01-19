@@ -18,15 +18,17 @@ export const getRecommendedKeywordsService = async (categoryId, contentId) => {
   });
 };
 
-export const getKeywordsSuggestions = async (categoryId, placeId) => {
-  let params = '';
+export const getKeywordsSuggestions = async (categoryId, placeId, currentKeywords) => {
+  var searchParams = new URLSearchParams();
+
   if (categoryId.length > 0) {
-    params += `?categoryId=${categoryId}`;
+    searchParams.append('categoryId', categoryId);
   }
-  if (placeId.length > 0 && categoryId.length > 0) {
-    params += `&placeId=${placeId}`;
-  } else if (placeId.length > 0 && categoryId.length === 0) {
-    params += `?placeId=${placeId}`;
+  if (placeId.length > 0) {
+    searchParams.set('placeId', placeId);
   }
-  return axios.get(KEYWORDS_SEARCHBAR + params);
+  if (currentKeywords && currentKeywords.length > 0) {
+    searchParams.set('keywords', currentKeywords.join(','));
+  }
+  return axios.get(KEYWORDS_SEARCHBAR + '?' + searchParams);
 };

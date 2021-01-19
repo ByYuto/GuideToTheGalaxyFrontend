@@ -65,7 +65,7 @@ export default function KeywordsSection() {
   };
   const keywordsFiltered = buildKeywordsArr(keywordSuggestions, keywordsSelected);
   useEffect(() => {
-    dispatch(getKeywordsSuggested(categoryValue, locationValue));
+    dispatch(getKeywordsSuggested(categoryValue, locationValue, keywordsSelected));
     handleShowLeftArrow();
     handleShowRightArrow();
     keywordContainer.current.addEventListener('scroll', () => {
@@ -80,7 +80,16 @@ export default function KeywordsSection() {
         keywordContainerRef.scrollLeft = 0;
       });
     };
-  }, [categoryValue, locationValue, visibleRight, visibleLeft, currentPosition, keywordSuggestions.length]);
+  }, [
+    categoryValue,
+    locationValue,
+    visibleRight,
+    visibleLeft,
+    currentPosition,
+    keywordSuggestions.length,
+    keywordsSelected.length,
+  ]);
+
   return (
     <KeywordsSectionLayout className="keywords-container" align="center">
       <SorterContainer justify="flex-start">
