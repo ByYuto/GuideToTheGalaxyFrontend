@@ -6,7 +6,7 @@ import Tag from '../../UI/Tag';
 import { ShareArticleCardView, ShareArticleCardPreview } from './styled-components';
 import ToolbarReactions from '../../UI/reaction-toolbar/ToolbarReactions';
 import AuthorMeta from '../../UI/author-post/AuthorMeta';
-import { getDateFormatted } from '../../../utils/utils';
+import { generateSlug, getDateFormatted } from '../../../utils/utils';
 import { setSelectedKeyword } from '../../../redux/reducers/topbarSearch';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -136,7 +136,7 @@ export default function ArticleEmbedView({
   return (
     <div key={_id}>
       {!isPreview ? (
-        <ShareArticleCardView to={`/article/${_id}`}>{cardContent}</ShareArticleCardView>
+        <ShareArticleCardView to={`/article/${generateSlug(_id, title)}`}>{cardContent}</ShareArticleCardView>
       ) : (
         <ShareArticleCardPreview>{cardContent}</ShareArticleCardPreview>
       )}

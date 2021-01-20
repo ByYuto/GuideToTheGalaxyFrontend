@@ -1,4 +1,5 @@
 import { optionsLocationsAllowed } from './constants';
+import slugify from 'react-slugify';
 import _ from 'lodash';
 export const suggestionsFilter = (suggestions) => {
   const filteredSuggestion = suggestions.filter((suggestion) => {
@@ -7,7 +8,7 @@ export const suggestionsFilter = (suggestions) => {
     if (existInArray.length > 0) {
       return suggestion;
     } else {
-      return false
+      return false;
     }
   });
   return filteredSuggestion;
@@ -35,7 +36,7 @@ export const getDateFormatted = (rawDate) => {
     'November',
     'December',
   ];
-  const dateSupportedForSafari = rawDate.replace(/\-/g, "/");
+  const dateSupportedForSafari = rawDate.replace(/\-/g, '/');
   const date = new Date(dateSupportedForSafari);
   const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
   const dateFormatted = months[date.getMonth()] + ' ' + day + ', ' + date.getFullYear();
@@ -61,4 +62,13 @@ export const checkKeywordsLettersAllowed = (e) => {
   } else {
     return false;
   }
-}
+};
+
+export const getIdFromSlug = (slug) => {
+  const parts = slug.split('-');
+  return parts[parts.length - 1];
+};
+
+export const generateSlug = (id, title) => {
+  return `${slugify(title)}${title ? '-' : ''}${id}`;
+};

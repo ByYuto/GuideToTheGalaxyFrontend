@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getArticleDetail } from '../../redux/reducers/articleDetail';
 import Loader from '../../components/UI/Loader';
-import { getDateFormatted } from '../../utils/utils';
+import { getDateFormatted, getIdFromSlug } from '../../utils/utils';
 import ArticleContentBody from './ArticleContentBody';
 import Button from '../../components/UI/Button';
 import { setSelectedKeyword } from '../../redux/reducers/topbarSearch';
@@ -21,7 +21,8 @@ import { Helmet } from 'react-helmet';
 import { SITE_TITLE } from '../../utils/constants';
 
 export default function ArticleDetail() {
-  const { id } = useParams();
+  const { slug } = useParams();
+  const id = getIdFromSlug(slug);
   const articleExampleId = id;
   const dispatch = useDispatch();
   const { article, error, errorMessage, loading } = useSelector((store) => store.articleDetail);
