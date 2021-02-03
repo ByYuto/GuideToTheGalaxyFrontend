@@ -118,6 +118,10 @@ export const StyledTopBar = styled.div`
   margin-bottom: 5px;
   border-bottom: solid 1px ${(props) => (props.home === 'home' ? 'transparent' : '#151531')};
 
+  @media (max-width: ${screen.SM}) {
+    height: 64px;
+  }
+
   .left {
     display: flex;
     flex-direction: row;
@@ -125,7 +129,7 @@ export const StyledTopBar = styled.div`
 
     .dontpanic-logo {
       margin-left: 16px;
-      @media (max-width: 600px) {
+      @media (max-width: ${screen.SM}) {
         display: none;
       }
     }

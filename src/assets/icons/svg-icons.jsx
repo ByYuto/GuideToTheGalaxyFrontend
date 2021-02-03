@@ -631,8 +631,8 @@ export const DontPanicLogo = (props) => (
         y2="47.986"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#6271FF" />
-        <stop offset="0.976709" stop-color="#EFC0FF" />
+        <stop stopColor="#6271FF" />
+        <stop offset="0.976709" stopColor="#EFC0FF" />
       </linearGradient>
     </defs>
   </svg>

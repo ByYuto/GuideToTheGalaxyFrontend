@@ -21,7 +21,7 @@ export default function Home() {
         <StyledView>
           <MaxWidthContainer>
             {articles?.length > 0 ? (
-              articles.map((a, index) => <ArticleEmbedView className="articles-feed" key={index} {...a} />)
+              articles.map((a) => <ArticleEmbedView className="articles-feed" key={a._id} {...a} />)
             ) : (
               <FlexContainer align="center" justify="center" className="no-posts-container">
                 <div>No posts related on your search...</div>

@@ -183,6 +183,11 @@ const FeaturedImageContainer = styled.figure`
     width: 100%;
     height: auto;
     border-radius: 16px;
+    @media (max-width: ${screen.SM}) {
+      width: 100%;
+      height: 223px;
+      object-fit: cover;
+    }
   }
 `;
 
