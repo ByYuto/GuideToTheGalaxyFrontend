@@ -27,12 +27,8 @@ export const uploadImageRequest = async (formData) => {
 export const uploadFile = async (file) => {
   const formData = new FormData();
   formData.append('file', file);
-  try {
-    const dataImage = await uploadFileRequest(formData);
-    return { url: dataImage.data.url, fileId: dataImage.data._id };
-  } catch (e) {
-    return e;
-  }
+  const dataImage = await uploadFileRequest(formData);
+  return { url: dataImage.data.url, fileId: dataImage.data._id };
 };
 
 export const uploadFileRequest = async (formData) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { PDFUploaderLayout } from './styledComponents';
+import { PDFUploaderLayout, TextValidation } from './styledComponents';
 import { PDFIcon } from '../../../assets/icons/svg-icons';
 import PdfMountedImage from '../../../assets/icons/pdf-large.svg';
 import FlexContainer from '../FlexContainer';
@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 export default function UploadPdf() {
   const inputPdf = useRef(null);
   const [fileName, setFileName] = useState('');
+  const [error, setError] = useState('');
   const dispatch = useDispatch();
   const handleCleanInputFile = () => {
     dispatch(insertPdf(null));
@@ -17,10 +18,21 @@ export default function UploadPdf() {
   };
   const handleOnChange = async (e) => {
     e.preventDefault();
+    setError('');
     setFileName(e.target.files[0].name);
     const dataSrc = e.target.files[0];
-    const fileData = await uploadFile(dataSrc);
-    await dispatch(insertPdf(fileData.fileId));
+    console.log('subiendo archivo...');
+    let fileData;
+
+    try {
+      fileData = await uploadFile(dataSrc);
+      await dispatch(insertPdf(fileData.fileId));
+    } catch (e) {
+      console.log('paso por aqui', e.response.data);
+      setError(e.response.data?.message || e.message);
+      setFileName('');
+      await dispatch(insertPdf(null));
+    }
   };
 
   const handleLoadPdf = () => {
@@ -55,6 +67,7 @@ export default function UploadPdf() {
           </FlexContainer>
         </FlexContainer>
       )}
+      {error ? <TextValidation>ERROR: {error}</TextValidation> : null}
     </PDFUploaderLayout>
   );
 }

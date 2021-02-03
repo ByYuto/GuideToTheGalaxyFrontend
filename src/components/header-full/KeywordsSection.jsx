@@ -65,7 +65,7 @@ export default function KeywordsSection({ isMobile }) {
   };
   const keywordsFiltered = buildKeywordsArr(keywordSuggestions, keywordsSelected);
   useEffect(() => {
-    dispatch(getKeywordsSuggested(categoryValue, locationValue));
+    dispatch(getKeywordsSuggested(categoryValue, locationValue, keywordsSelected));
     handleShowLeftArrow();
     handleShowRightArrow();
     let keywordContainerRef;

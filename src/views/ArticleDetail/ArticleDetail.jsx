@@ -12,14 +12,17 @@ import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getArticleDetail } from '../../redux/reducers/articleDetail';
 import Loader from '../../components/UI/Loader';
-import { getDateFormatted } from '../../utils/utils';
+import { getDateFormatted, getIdFromSlug } from '../../utils/utils';
 import ArticleContentBody from './ArticleContentBody';
 import Button from '../../components/UI/Button';
 import { setSelectedKeyword } from '../../redux/reducers/topbarSearch';
 import { useHistory } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import { SITE_TITLE } from '../../utils/constants';
 
 export default function ArticleDetail() {
-  const { id } = useParams();
+  const { slug } = useParams();
+  const id = getIdFromSlug(slug);
   const articleExampleId = id;
   const dispatch = useDispatch();
   const { article, error, errorMessage, loading } = useSelector((store) => store.articleDetail);
@@ -36,6 +39,9 @@ export default function ArticleDetail() {
 
   return (
     <ArticleDetailContainer>
+      <Helmet>
+        <title>{'Article Detail'}</title>
+      </Helmet>
       {error && (
         <StyledView>
           <MaxWidthContainer>
@@ -46,6 +52,11 @@ export default function ArticleDetail() {
       {!error && !loading && (
         <>
           <ThemeProvider theme={{ isDark: true }}>
+            <Helmet>
+              <title>
+                {article?.title || 'Article Detail'} - {SITE_TITLE}
+              </title>
+            </Helmet>
             <StyledView className="header-content">
               <MaxWidthContainer>
                 <div className="breadcrumb">
@@ -130,7 +141,11 @@ export default function ArticleDetail() {
             <StyledView>
               <MaxWidthContainer>
                 {article?.pdf && article?.pdf.url && (
-                  <DownloadPdf fileName={article.pdf.filename} pdfUrl={article.pdf.url} />
+                  <DownloadPdf
+                    fileName={article.pdf.filename}
+                    pdfUrl={article.pdf.url}
+                    originalFilename={article.pdf.originalFilename}
+                  />
                 )}
                 {article && article.URL && article.categoryId === 'TOOLS' && (
                   <Button primary className="button-buy">

@@ -51,8 +51,8 @@ export const getArticlesFiltered = (text, location, category, keywords) => async
     // TO DO handle unauthorized
     if (e.response?.status === 401) {
       window.localStorage.removeItem('_token');
-        dispatch(setAuthorization(false));
-        getArticlesFiltered(text, location, category, keywords);
+      dispatch(setAuthorization(false));
+      getArticlesFiltered(text, location, category, keywords);
     }
     console.log(e.response);
   }
@@ -72,9 +72,9 @@ export const getSearchSuggestion = (value, location, category, keywords) => asyn
 
 export const setSearchSuggestion = (suggestions) => ({ type: SET_SEARCH_SUGGESTION, payload: suggestions });
 
-export const getKeywordsSuggested = (categoryId, placeId) => async (dispatch) => {
+export const getKeywordsSuggested = (categoryId, placeId, currentKeywords) => async (dispatch) => {
   try {
-    const response = await getKeywordsSuggestions(categoryId, placeId);
+    const response = await getKeywordsSuggestions(categoryId, placeId, currentKeywords);
     dispatch(setSuggestedKeywords(response.data));
   } catch (e) {
     console.log(e.response);
