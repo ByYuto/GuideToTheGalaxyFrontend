@@ -62,7 +62,7 @@ export default function Modal({
 }
 
 Modal.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   footer: PropTypes.element,
   visible: PropTypes.bool.isRequired,
   setVisibility: PropTypes.func.isRequired,

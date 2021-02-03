@@ -189,7 +189,7 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
           ) : null}
           {!noKeywords && (
             <StyledView className="header-keywords">
-              <KeywordsSection />
+              <KeywordsSection isMobile={isMobile} />
             </StyledView>
           )}
         </ThemeProvider>

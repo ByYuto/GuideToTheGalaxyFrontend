@@ -43,7 +43,7 @@ export default function InsertLink({ setLink, handleLink, setUrl, url, editor })
         placeholder={'Paste your link'}
         value={url}
         block
-        onChange={(value) => handleEmbedValue(value)}
+        onChange={(value) => handleEmbedValue(value.toLowerCase())}
         readOnly={false}
         onBlur={null}
         onFocus={null}

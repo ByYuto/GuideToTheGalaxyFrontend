@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CheckIcon, LinkIcon } from '../../../../../assets/icons/svg-icons';
 import { InputLinkLayout, ClearButton } from './styled-components';
-import { validateEmbed } from '../../../../../utils/validations';
+import { validateUrl } from '../../../../../utils/validations';
 import { IoIosClose } from 'react-icons/io';
 import FlexContainer from '../../../../UI/FlexContainer';
 export default function InsertLink({
@@ -16,7 +16,7 @@ export default function InsertLink({
   const [validEmbed, setValidEmbed] = useState(false);
 
   useEffect(() => {
-    const isValid = validateEmbed(url, true);
+    const isValid = validateUrl(url, true);
     setValidEmbed(isValid.valid);
   }, [url]);
 

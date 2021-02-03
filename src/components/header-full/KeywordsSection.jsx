@@ -10,7 +10,7 @@ import { IoIosClose } from 'react-icons/io';
 import { LeftArrowIcon, RightArrowIcon, SortIcon, PlusIcon } from '../../assets/icons/svg-icons';
 import { setVisibleSearch } from '../../redux/reducers/appState';
 
-export default function KeywordsSection() {
+export default function KeywordsSection({ isMobile }) {
   const { keywordSuggestions, keywordsSelected, categoryValue, locationValue } = useSelector(
     (store) => store.topbarSearch
   );
@@ -68,17 +68,23 @@ export default function KeywordsSection() {
     dispatch(getKeywordsSuggested(categoryValue, locationValue, keywordsSelected));
     handleShowLeftArrow();
     handleShowRightArrow();
-    keywordContainer.current.addEventListener('scroll', () => {
-      handleShowLeftArrow();
-      handleShowRightArrow();
-    });
-    const keywordContainerRef = keywordContainer.current;
-    return () => {
-      keywordContainerRef.removeEventListener('scroll', () => {
+    let keywordContainerRef;
+    if (keywordContainer && keywordContainer.current) {
+      keywordContainer.current.addEventListener('scroll', () => {
         handleShowLeftArrow();
         handleShowRightArrow();
-        keywordContainerRef.scrollLeft = 0;
       });
+      keywordContainerRef = keywordContainer.current;
+    }
+
+    return () => {
+      if (keywordContainerRef) {
+        keywordContainerRef.removeEventListener('scroll', () => {
+          handleShowLeftArrow();
+          handleShowRightArrow();
+          keywordContainerRef.scrollLeft = 0;
+        });
+      }
     };
   }, [
     categoryValue,
@@ -87,9 +93,9 @@ export default function KeywordsSection() {
     visibleLeft,
     currentPosition,
     keywordSuggestions.length,
-    keywordsSelected.length,
+    showSearch,
+    isMobile,
   ]);
-
   return (
     <KeywordsSectionLayout className="keywords-container" align="center">
       <SorterContainer justify="flex-start">
@@ -108,43 +114,45 @@ export default function KeywordsSection() {
           </button>
         )}
       </SorterContainer>
-      <KeywordsContainer className="keywords-hidden">
-        {visibleLeft && keywordsFiltered?.length > 0 && (
-          <>
-            <div className="left-arrow">
-              <button onClick={handleLeftScroll}>
-                <LeftArrowIcon />
-              </button>
-            </div>
-            <div className="left-arrow-blurred"></div>
-          </>
-        )}
-        <div ref={keywordContainer} className="keywords">
-          {keywordsSelected?.length > 0 &&
-            keywordsSelected.map((tag, index) => (
-              <Tag className="selected-keywords" key={index} mt tagType="primary">
-                {tag}
-                <IoIosClose className="closable" size={24} onClick={() => dispatch(removeKeyword(tag))} />
-              </Tag>
-            ))}
-          {keywordsFiltered?.length > 0 &&
-            keywordsFiltered.map((tag, index) => (
-              <Tag key={index} mt tagType="secondary" onClick={() => addTag(tag)}>
-                {tag}
-              </Tag>
-            ))}
-        </div>
-        {visibleRight && keywordsFiltered?.length > 0 && (
-          <>
-            <div className="right-arrow">
-              <button onClick={handleRightScroll}>
-                <RightArrowIcon />
-              </button>
-            </div>
-            <div className="right-arrow-blurred"></div>
-          </>
-        )}
-      </KeywordsContainer>
+      {(isMobile && showSearch) || !isMobile ? (
+        <KeywordsContainer className="keywords-hidden">
+          {visibleLeft && keywordsFiltered?.length > 0 && (
+            <>
+              <div className="left-arrow">
+                <button onClick={handleLeftScroll}>
+                  <LeftArrowIcon />
+                </button>
+              </div>
+              <div className="left-arrow-blurred"></div>
+            </>
+          )}
+          <div ref={keywordContainer} className="keywords">
+            {keywordsSelected?.length > 0 &&
+              keywordsSelected.map((tag, index) => (
+                <Tag className="selected-keywords" key={index} mt tagType="primary">
+                  {tag}
+                  <IoIosClose className="closable" size={24} onClick={() => dispatch(removeKeyword(tag))} />
+                </Tag>
+              ))}
+            {keywordsFiltered?.length > 0 &&
+              keywordsFiltered.map((tag, index) => (
+                <Tag key={index} mt tagType="secondary" onClick={() => addTag(tag)}>
+                  {tag}
+                </Tag>
+              ))}
+          </div>
+          {visibleRight && keywordsFiltered?.length > 0 && (
+            <>
+              <div className="right-arrow">
+                <button onClick={handleRightScroll}>
+                  <RightArrowIcon />
+                </button>
+              </div>
+              <div className="right-arrow-blurred"></div>
+            </>
+          )}
+        </KeywordsContainer>
+      ) : null}
     </KeywordsSectionLayout>
   );
 }
