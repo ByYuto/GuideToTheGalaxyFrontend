@@ -35,7 +35,7 @@ export default function LocationAutocomplete(props) {
         onChange={handleChange}
         onSelect={handleChangeValidations}
         debounce={300}
-        shouldFetchSuggestions={address.length > 1}
+        shouldFetchSuggestions={address && address.length > 1}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => {
           const filteredSuggestions = suggestionsFilter(suggestions);

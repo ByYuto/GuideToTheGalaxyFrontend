@@ -43,7 +43,7 @@ export default function LocationAutocomplete(props) {
       const validationsUpdate = dataType.required ? [isRequired, ...validations] : validations;
       const isValid = validate(placeId, validationsUpdate);
       const fieldValidation = {};
-      fieldValidation[field] = isValid.length > 0 ? isValid[0] : { valid: true, errorType: '' };
+      fieldValidation[field] = isValid && isValid.length > 0 ? isValid[0] : { valid: true, errorType: '' };
       await dispatch(validateField(fieldValidation));
     }
     setAddress(address);
@@ -57,7 +57,7 @@ export default function LocationAutocomplete(props) {
         onChange={handleChange}
         onSelect={handleChangeValidations}
         debounce={500}
-        shouldFetchSuggestions={address.length > 1}
+        shouldFetchSuggestions={address && addressLength > 1}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => {
           const filteredSuggestions = suggestionsFilter(suggestions);
@@ -73,7 +73,7 @@ export default function LocationAutocomplete(props) {
                   onFocus={() => setTooltipVisible(true)}
                   onBlur={() => setTooltipVisible(false)}
                 />
-                {address.length > 0 ? <IoIosClose onClick={clearValue} className="clear-element" size={30} /> : null}
+                {address ? <IoIosClose onClick={clearValue} className="clear-element" size={30} /> : null}
               </div>
               {tooltipVisible ? (
                 <div className="autocomplete-dropdown-container">

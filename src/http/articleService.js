@@ -17,37 +17,27 @@ export const getArticleService = async (keywords) => {
   }
 };
 
-export const getArticlesFilteredService = async (text, location, category, keywords) => {
+export const getArticlesFilteredService = async (text, location, category, keywords, sort) => {
   const token = await localStorage.getItem('_token');
-  let params = '';
-  if (text.length > 0) {
-    params += `?text=${text}`;
+  const params = new URLSearchParams();
+  if (text) {
+    params.set('text', text);
   }
-
-  if (category.length > 0 && params.includes('?')) {
-    params += `&categoryId=${category}`;
+  if (category) {
+    params.set('categoryId', category);
   }
-  if (category.length > 0 && !params.includes('?')) {
-    params += `?categoryId=${category}`;
+  if (location) {
+    params.set('placeId', location);
   }
-  if (location.length > 0 && params.includes('?')) {
-    params += `&placeId=${location}`;
-  }
-
-  if (location.length > 0 && !params.includes('?')) {
-    params += `?placeId=${location}`;
-  }
-  if (keywords.length > 0 && params.includes('?')) {
-    params += `&keywords=${keywords}`;
-  }
-  if (keywords.length > 0 && !params.includes('?')) {
-    params += `?keywords=${keywords}`;
+  if (keywords && keywords.lenght) {
+    console.log('Keywords es', keywords);
+    params.set('keywords', keywords);
   }
 
   if (token !== null) {
-    return axios.get(GET_ARTICLES_BY_SEARCH + params, { headers: { Authorization: `Bearer ${token}` } });
+    return axios.get(GET_ARTICLES_BY_SEARCH + '?' + params, { headers: { Authorization: `Bearer ${token}` } });
   } else {
-    return axios.get(GET_ARTICLES_BY_SEARCH + params);
+    return axios.get(GET_ARTICLES_BY_SEARCH + '?' + params);
   }
 };
 

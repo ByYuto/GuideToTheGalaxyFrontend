@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import LocationAutoComplete from './Location/LocationAutocomplete';
 import Autocomplete from '../UI/autocomplete/Autocomplete';
 import { ThemeProvider } from 'styled-components';
@@ -7,15 +7,17 @@ import { HeaderSearchBarLayout, customStyle, SearchInputsContainer } from './sty
 import { useSelector, useDispatch } from 'react-redux';
 import {
   onSearchValueChange,
-  clearSearchValue,
   getCategories,
   setCategoryValue,
   setPlaceId,
-  getArticlesFiltered,
+  //getArticlesFiltered,
   getSearchSuggestion,
+  getArticlesFiltered,
+  getArticles,
+  //getArticles,
 } from '../../redux/reducers/topbarSearch';
 import { SearchIcon, GoIcon } from '../../assets/icons/svg-icons';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { startCase } from 'lodash';
 
 export default function HeaderSearchBar() {
@@ -26,61 +28,74 @@ export default function HeaderSearchBar() {
   categoriesList = categoriesList.map((category) => ({
     ...category,
     label: startCase(category.label.toLowerCase()),
-  }));  
-  const { articles } = useSelector((store) => store.articles);
+  }));
+  //const { articles } = useSelector((store) => store.articles);
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
+
+  const params = new URLSearchParams(location.search);
+  const isSearch = location.pathname === '/search';
+  const searchParam = params.get('search') || '';
+  const locationParam = params.get('location') || '';
+  const categoryParam = params.get('category') || '';
+  const keywordsParam = params.get('keywords') || '';
+
+  const keywordsSelectedValue = keywordsSelected.join(',');
   const handleSearchChange = (e) => {
+    console.log('Cambiado por aqui 2');
     dispatch(onSearchValueChange(e.target.value));
   };
   const handleClearSearch = (e) => {
-    dispatch(clearSearchValue());
-    dispatch(getArticlesFiltered('', locationValue || '', categoryValue || '', keywordsSelected.join(',')));
+    console.log('Limpiado el valor');
+    updateSearchURL('');
   };
   const handleSearchSelection = (val) => {
+    console.log('Cambiado por aqui 3');
     dispatch(onSearchValueChange(val));
   };
-  const handleSearchArticles = () => {
-    if (!searchValue) {
-      return;
-    }
+  const updateSearchURL = useCallback(
+    (forceSearchValue) => {
+      let params = new URLSearchParams();
+      let searchParam = forceSearchValue !== undefined ? forceSearchValue : searchValue;
+      if (searchParam) {
+        params.set('search', searchParam);
+      }
 
-    dispatch(
-      getArticlesFiltered(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
-    );
+      if (locationValue) {
+        params.set('location', locationValue);
+      }
+      console.log({ categoryValue });
+      if (categoryValue) {
+        params.set('category', categoryValue);
+      }
+      if (keywordsSelectedValue) {
+        params.set('keywords', keywordsSelectedValue);
+      }
 
-    let params = '';
-    if (searchValue && searchValue.length > 0) {
-      params += `?search=${searchValue}`;
-    }
+      const strParams = params.toString();
+      console.log('Seteando URL a ', '/search' + (strParams ? `?${strParams}` : ''));
+      history.push('/search' + (strParams ? `?${strParams}` : ''));
+    },
+    [searchValue, locationValue, categoryValue, keywordsSelectedValue, history]
+  );
 
-    if (locationValue && locationValue.length > 0) {
-      params += `&location=${locationValue}`;
-    }
-    if (categoryValue && categoryValue.length > 0) {
-      params += `&category=${categoryValue}`;
-    }
-
-    history.push('/search' + params);
-  };
-
+  //Load Categories if not loaded
   useEffect(() => {
     if (categoriesList.length < 1) {
+      console.log('No hay categorias, cargando...');
       dispatch(getCategories());
     }
-    if (articles.length < 1) {
-      dispatch(
-        getArticlesFiltered(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
-      );
-    }
-  }, []);
+  }, [dispatch, categoriesList.length]);
 
+  //Update Search "Suggestions"
   useEffect(() => {
     let timeout = null;
     if (searchValue && searchValue.length > 2) {
       timeout = setTimeout(() => {
+        console.log('Actualizando sugerencias de busqueda');
         dispatch(
-          getSearchSuggestion(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
+          getSearchSuggestion(searchValue || '', locationValue || '', categoryValue || '', keywordsSelectedValue)
         );
       }, 300);
     }
@@ -90,21 +105,31 @@ export default function HeaderSearchBar() {
         clearTimeout(timeout);
       }
     };
-  }, [searchValue, locationValue, categoryValue, keywordsSelected.join(',')]);
+  }, [searchValue, locationValue, categoryValue, keywordsSelectedValue, dispatch]);
+
+  
+  useEffect(() => {
+    if (isSearch && (locationValue || categoryValue || keywordsSelectedValue)) {
+      updateSearchURL();
+    }
+  }, [isSearch, locationValue, categoryValue, keywordsSelectedValue, updateSearchURL]);
+  
 
   useEffect(() => {
-    let timeout = setTimeout(() => {
-      dispatch(
-        getArticlesFiltered(searchValue || '', locationValue || '', categoryValue || '', keywordsSelected.join(','))
-      );
-    }, 300);
-
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-    };
-  }, [locationValue, categoryValue, keywordsSelected.join(',')]);
+    console.log('Ejecutando Efecto1');
+    if (isSearch) {
+      console.log('IsSearch', isSearch);
+      //if (searchParam || locationParam || categoryParam || keywordsParam) {
+      //console.log('Hay parametros, modificando estado y consultando');
+      dispatch(onSearchValueChange(searchParam));
+      dispatch(setPlaceId(locationParam));
+      dispatch(setCategoryValue(categoryParam));
+      //if(keywordsParam){}
+      dispatch(getArticlesFiltered(searchParam, locationParam, categoryParam, keywordsParam));
+    }
+    //}
+    //if(!$search)
+  }, [dispatch, searchParam, locationParam, categoryParam, keywordsParam, isSearch]);
 
   return (
     <ThemeProvider theme={{ isDark: true }}>
@@ -122,12 +147,12 @@ export default function HeaderSearchBar() {
             handleKeydown={(e) => {
               if (e.keyCode === 13) {
                 e.preventDefault();
-                handleSearchArticles();
+                updateSearchURL();
               }
             }}
             actionButton={
               searchValue.length > 0 ? (
-                <button className="action-button" onClick={() => handleSearchArticles()}>
+                <button className="action-button" onClick={() => updateSearchURL()}>
                   <GoIcon />
                 </button>
               ) : null
@@ -149,8 +174,11 @@ export default function HeaderSearchBar() {
             className="select-category"
             classNamePrefix="category"
             isSearchable={false}
-            onChange={(val) => dispatch(setCategoryValue(val.value))}
-            defaultValue={categoriesList.filter((c) => c.value === categoryValue)}
+            onChange={(val) => {
+              dispatch(setCategoryValue(val.value));
+            }}
+            //defaultValue={categoriesList.filter((c) => c.value === categoryValue)}
+            value={categoriesList.filter((c) => c.value === categoryValue)}
           />
         </SearchInputsContainer>
       </HeaderSearchBarLayout>
