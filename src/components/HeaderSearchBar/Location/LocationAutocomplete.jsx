@@ -51,7 +51,9 @@ export default function LocationAutocomplete(props) {
                   onFocus={() => setTooltipVisible(true)}
                   onBlur={() => setTooltipVisible(false)}
                 />
-                {address.length > 0 ? <IoIosClose onClick={clearValue} className="clear-element" size={30} /> : null}
+                {address && address.length > 0 ? (
+                  <IoIosClose onClick={clearValue} className="clear-element" size={30} />
+                ) : null}
               </div>
               {tooltipVisible ? (
                 <div className="autocomplete-dropdown-container">

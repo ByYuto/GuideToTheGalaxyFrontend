@@ -31,6 +31,7 @@ const SET_SEARCH_SUGGESTION = 'SET_SEARCH_SUGGESTION';
 const SET_SUGGESTED_KEYWORDS = 'SET_SUGGESTED_KEYWORDS';
 const REMOVE_SELECTED_KEYWORD = 'REMOVE_SELECTED_KEYWORD';
 const SET_SELECTED_KEYWORD = 'SET_SELECTED_KEYWORD';
+const SET_SELECTED_KEYWORDS = 'SET_SELECTED_KEYWORDS';
 const SET_SORT = 'SET_SORT';
 
 export const onSearchValueChange = (value) => ({ type: CHANGE_SEARCH_VALUE, payload: value });
@@ -109,6 +110,7 @@ export const getKeywordsSuggested = (categoryId, placeId, currentKeywords) => as
 
 export const setSuggestedKeywords = (keywords) => ({ type: SET_SUGGESTED_KEYWORDS, payload: keywords });
 export const setSelectedKeyword = (tag) => ({ type: SET_SELECTED_KEYWORD, payload: tag });
+export const setSelectedKeywords = (tags) => ({ type: SET_SELECTED_KEYWORDS, payload: tags });
 export const removeKeyword = (tag) => ({ type: REMOVE_SELECTED_KEYWORD, payload: tag });
 
 export const setSort = (value) => ({ type: SET_SORT, payload: value });
@@ -155,6 +157,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         keywordsSelected: [payload, ...state.keywordsSelected],
+      };
+    case SET_SELECTED_KEYWORDS:
+      return {
+        ...state,
+        keywordsSelected: payload,
       };
     case REMOVE_SELECTED_KEYWORD:
       const newArr = state.keywordsSelected.filter((elm) => elm !== payload);
