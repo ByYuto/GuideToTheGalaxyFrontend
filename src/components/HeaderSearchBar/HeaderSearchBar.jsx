@@ -43,6 +43,7 @@ export default function HeaderSearchBar() {
 
   const params = new URLSearchParams(location.search);
   const isHome = location.pathname === '/';
+
   const searchParam = params.get('search') || '';
   const locationParam = params.get('location') || '';
   const categoryParam = params.get('category') || '';
@@ -84,7 +85,7 @@ export default function HeaderSearchBar() {
 
       history.push(newURL);
     },
-    [searchValue, locationValue, categoryValue, keywordsSelectedValue]
+    [locationValue, categoryValue, keywordsSelectedValue, isHome, history]
   );
   useEffect(() => {
     // console.log('Ejecutando Efecto para setear estado desde los parametros de la URL', {
@@ -170,12 +171,12 @@ export default function HeaderSearchBar() {
             handleKeydown={(e) => {
               if (e.keyCode === 13) {
                 e.preventDefault();
-                updateSearchURL();
+                updateSearchURL(searchValue);
               }
             }}
             actionButton={
               searchValue.length > 0 ? (
-                <button className="action-button" onClick={() => updateSearchURL()}>
+                <button className="action-button" onClick={() => updateSearchURL(searchValue)}>
                   <GoIcon />
                 </button>
               ) : null
