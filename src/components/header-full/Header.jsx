@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { GoPlus } from 'react-icons/go';
 import Link from '../UI/Link';
 import { useHistory } from 'react-router-dom';
@@ -30,13 +30,15 @@ import { AiOutlineUser } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVisibleSearch } from '../../redux/reducers/appState';
 
-const TOP_DISTANCE_STICKY = 291;
+const TOP_DISTANCE_STICKY = 206;
 const TOP_DISTANCE_SEARCH = 0;
 
 const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
   const history = useHistory();
   const [menuOpen, setMenuOpen] = useState(false);
   const { showSearch } = useSelector((store) => store.app);
+  const headerRef = useRef(null);
+  const [headerHeight, setHeaderHeight] = useState(null);
   const dispatch = useDispatch();
   const onAddContentClick = () => {
     history.push('/create');
@@ -45,7 +47,7 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
   const modal = useModal();
   useEffect(() => {
     window.addEventListener('scroll', () => {
-      const headerHeight = home === 'home' ? TOP_DISTANCE_STICKY : TOP_DISTANCE_SEARCH;
+      const headerHeight = home === 'home' && showSearch ? TOP_DISTANCE_STICKY : TOP_DISTANCE_SEARCH;
       setStickyNav(window.scrollY > headerHeight);
     });
 
@@ -61,9 +63,14 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
     if (view === 'detail') {
       dispatch(setVisibleSearch(false));
     }
-  }, []);
+  }, [history]);
 
-  const setHeightHelper = () => {
+  useEffect(() => {
+    const currentHeight = headerRef.current.offsetHeight;
+    setHeaderHeight(currentHeight);
+  }, [showSearch, isMobile]);
+
+  /* const setHeightHelper = () => {
     if (isMobile && home === 'home') {
       return '500px';
     }
@@ -76,17 +83,18 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
     if (isMobile && home !== 'home') {
       return '174px';
     }
-  };
+  }; */
   return (
     <>
-      {stickyNav && <div style={{ height: setHeightHelper() }}></div>}
+      {stickyNav && <div style={{ height: headerHeight - 5 }}></div>}
       <FullHeaderLayout
         isMobile={isMobile ? 1 : 0}
         home={home}
         isSticky={stickyNav ? 1 : 0}
         noKeywords={noKeywords ? 1 : 0}
+        ref={headerRef}
       >
-        <StyledTopBar home={home} isSticky={stickyNav ? 1 : 0}>
+        <StyledTopBar home={home} isSticky={stickyNav ? 1 : 0} isMobile={isMobile ? 1 : 0}>
           <div className="left">
             <Link to="/">
               <Logo />
@@ -156,6 +164,7 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
             <Sidebar shown={menuOpen} isShown={setMenuOpen} />
           </div>
         </StyledTopBar>
+        {home === 'home' && !stickyNav && <div style={{ height: isMobile ? 64 : 88 }}></div>}
         <ThemeProvider theme={{ isDark: true }}>
           {(isMobile && showSearch) || !isMobile ? (
             <>

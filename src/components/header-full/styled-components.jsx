@@ -106,7 +106,7 @@ export const LoginButton = styled.button`
 `;
 
 export const StyledTopBar = styled.div`
-  background: ${(props) => (props.home === 'home' ? 'transparent' : props.theme.baseColors.dark)};
+  background: ${(props) => (props.home === 'home' && !props.isMobile ? 'transparent' : props.theme.baseColors.dark)};
   height: 88px;
   display: flex;
   flex-grow: 1;
@@ -114,7 +114,10 @@ export const StyledTopBar = styled.div`
   align-items: center;
   flex-direction: row;
   padding: 0 24px 0 24px;
-  ${(props) => (props.home === 'home' && !props.isSticky ? '' : 'box-shadow: 0px 1px 10px 0px #14144f;')};
+  ${(props) => (props.home === 'home' && !props.isSticky ? '' : 'box-shadow: 0px 1px 10px 0px #14144f;')}
+  ${(props) => (props.home === 'home' && !props.isSticky ? 'position: fixed;' : '')}
+  width: 100%;
+  z-index: 20;
   margin-bottom: 5px;
   border-bottom: solid 1px ${(props) => (props.home === 'home' ? 'transparent' : '#151531')};
 
@@ -209,6 +212,7 @@ export const FullHeaderLayout = styled.div`
   background-image: ${(props) => (props.home === 'home' && !props.isSticky ? `url('${HeaderBackground}')` : 'none')};
   background-size: cover;
   background-repeat: no-repeat;
+
   position: ${(props) => (props.isSticky ? 'fixed' : 'relative')};
   ${(props) =>
     props.isSticky &&
@@ -232,7 +236,7 @@ export const FullHeaderLayout = styled.div`
             height: auto;
           `
         : css`
-            height: 76px;
+            height: ${(props) => (props.isMobile ? '64px' : '76px')};
           `;
     }
   }}
