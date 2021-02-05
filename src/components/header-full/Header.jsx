@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GoPlus } from 'react-icons/go';
 import Link from '../UI/Link';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import Modal from '../UI/modal/Modal';
 import Sidebar from '../UI/Sidebar';
 import { useModal } from '../UI/modal/useModal';
@@ -29,6 +29,7 @@ import { Avatar } from 'rsuite';
 import { AiOutlineUser } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import { setVisibleSearch } from '../../redux/reducers/appState';
+import Config from '../../lib/Config';
 
 const TOP_DISTANCE_STICKY = 291;
 const TOP_DISTANCE_SEARCH = 0;
@@ -42,7 +43,12 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
     history.push('/create');
   };
   const [stickyNav, setStickyNav] = useState(false);
-  const modal = useModal();
+  //Open popup dialog if query param login=true
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+
+  const modal = useModal(params.get('login') === 'true');
+
   useEffect(() => {
     window.addEventListener('scroll', () => {
       const headerHeight = home === 'home' ? TOP_DISTANCE_STICKY : TOP_DISTANCE_SEARCH;
@@ -104,24 +110,27 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
             </div>
           )}
           <div className="right">
-            <WithAuth
-              component={
-                <>
-                  <AddContentButton secondary circle onClick={onAddContentClick} icon>
-                    <GoPlus />
-                  </AddContentButton>
-                </>
-              }
-              componentReplacement={
-                <>
-                  <AddContentButton secondary circle onClick={modal.handleClick} icon>
-                    <GoPlus />
-                  </AddContentButton>
-                </>
-              }
-            />
-            <Separator />
-
+            {!Config.HIDE_WHILE_LAUNCH ? (
+              <>
+                <WithAuth
+                  component={
+                    <>
+                      <AddContentButton secondary circle onClick={onAddContentClick} icon>
+                        <GoPlus />
+                      </AddContentButton>
+                    </>
+                  }
+                  componentReplacement={
+                    <>
+                      <AddContentButton secondary circle onClick={modal.handleClick} icon>
+                        <GoPlus />
+                      </AddContentButton>
+                    </>
+                  }
+                />
+                <Separator />
+              </>
+            ) : null}
             <WithAuth
               component={
                 <>
@@ -135,7 +144,7 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
               }
               componentReplacement={
                 <>
-                  <LoginButton onClick={modal.handleClick}>Log in</LoginButton>
+                  {!Config.HIDE_WHILE_LAUNCH ? <LoginButton onClick={modal.handleClick}>Log in</LoginButton> : null}
                   <ThemeProvider theme={{ isDark: true }}>
                     <Modal
                       setVisibility={modal.handleClick}
@@ -150,9 +159,11 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
                 </>
               }
             />
-            <MenuButton className="burger-btn" transparent secondary icon onClick={() => setMenuOpen(true)}>
-              <BurgerMenu />
-            </MenuButton>
+            {!Config.HIDE_WHILE_LAUNCH ? (
+              <MenuButton className="burger-btn" transparent secondary icon onClick={() => setMenuOpen(true)}>
+                <BurgerMenu />
+              </MenuButton>
+            ) : null}
             <Sidebar shown={menuOpen} isShown={setMenuOpen} />
           </div>
         </StyledTopBar>

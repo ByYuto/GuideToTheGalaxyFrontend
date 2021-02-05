@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-export function useModal() {
-  const [visible, setVisibility] = useState(false);
+export function useModal(initialState) {
+  const [visible, setVisibility] = useState(initialState || false);
   const handleClick = (e) => {
     setVisibility(!visible);
   };

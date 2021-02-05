@@ -43,6 +43,7 @@ export default function HeaderSearchBar() {
 
   const params = new URLSearchParams(location.search);
   const isHome = location.pathname === '/';
+  const isSearch = location.pathname === '/search';
 
   const searchParam = params.get('search') || '';
   const locationParam = params.get('location') || '';
@@ -77,6 +78,10 @@ export default function HeaderSearchBar() {
       }
       if (keywordsSelectedValue) {
         params.set('keywords', keywordsSelectedValue);
+      }
+
+      if (!isHome && !isSearch) {
+        return;
       }
 
       const strParams = params.toString();
