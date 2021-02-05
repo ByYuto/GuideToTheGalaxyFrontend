@@ -45,30 +45,37 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
   };
   const [stickyNav, setStickyNav] = useState(false);
   const modal = useModal();
+  const getStickyHeightDistance = () => {
+    if (isMobile) {
+      return home === 'home' && showSearch ? TOP_DISTANCE_STICKY : TOP_DISTANCE_SEARCH;
+    } else {
+      return home === 'home' ? TOP_DISTANCE_STICKY : TOP_DISTANCE_SEARCH;
+    }
+  };
   useEffect(() => {
     window.addEventListener('scroll', () => {
-      const headerHeight = home === 'home' && showSearch ? TOP_DISTANCE_STICKY : TOP_DISTANCE_SEARCH;
+      const headerHeight = getStickyHeightDistance();
       setStickyNav(window.scrollY > headerHeight);
     });
 
     return () => {
       window.removeEventListener('scroll', () => {
-        const headerHeight = home === 'home' ? TOP_DISTANCE_STICKY : TOP_DISTANCE_SEARCH;
+        const headerHeight = getStickyHeightDistance();
         setStickyNav(window.scrollY > headerHeight);
       });
     };
-  }, [window.scrollY]);
+  }, [window.scrollY, history.location.pathname]);
 
   useEffect(() => {
     if (view === 'detail') {
       dispatch(setVisibleSearch(false));
     }
-  }, [history]);
+  }, [history.location.pathname]);
 
   useEffect(() => {
     const currentHeight = headerRef.current.offsetHeight;
     setHeaderHeight(currentHeight);
-  }, [showSearch, isMobile]);
+  }, [showSearch, isMobile, history.location.pathname]);
 
   /* const setHeightHelper = () => {
     if (isMobile && home === 'home') {
@@ -84,6 +91,7 @@ const Header = ({ home = 'home', noKeywords, isMobile, view = '' }) => {
       return '174px';
     }
   }; */
+
   return (
     <>
       {stickyNav && <div style={{ height: headerHeight - 5 }}></div>}
