@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyledView, MaxWidthContainer, HomeLayout } from './styled-components';
 import { ThemeProvider } from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,10 +12,6 @@ export default function Home() {
   const { articles } = useSelector((store) => store.app);
   const { loading, error, keywordsSelected, keywordSuggestions } = useSelector((store) => store.topbarSearch);
   const { authorization } = useSelector((store) => store.auth);
-
-  // useEffect(() => {
-  //   //dispatch(getArticlesHome(keywordsSelected.join(',')));
-  // }, [authorization, keywordsSelected.join(','), keywordSuggestions.join(',')]);
   return (
     <ThemeProvider theme={{ isDark: false }}>
       <HomeLayout>
