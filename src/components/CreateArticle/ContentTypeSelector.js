@@ -166,25 +166,18 @@ const CustomContentType = ({
     onBlur && onBlur(value.toUpperCase());
   };
   const _onKeyDown = (e) => {
+    const allowedChars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789--& ';
     if (
-      (e.keyCode >= 65 && e.keyCode <= 90) || //Uppercase letters
-      (e.keyCode >= 97 && e.keyCode <= 122) || //Lowercase letters
-      e.keyCode === 32 || //SPACE
+      allowedChars.indexOf(e.key) !== -1 ||
       e.keyCode === 8 || //BACKSPACE
-      //e.keyCode === 45 || //MINUS
-      e.keyCode === 189 || //HYPEN
       e.keyCode === 46 || //SUPR/DELETE
       e.keyCode === 37 || //LEFT ARROW
       e.keyCode === 39 || // RIGHT ARROW
       e.keyCode === 35 || // END
-      e.keyCode === 36 || // HOME
-      e.key === '&' //Ampersand
+      e.keyCode === 36 // HOME
     ) {
+      console.log('Valido', 'KeyCode', e.keyCode, 'Key', e.key);
       //Valid
-      if (previousLetter === 32 && e.keyCode === 32) {
-        e.preventDefault();
-        return;
-      }
       if (previousLetter === 32 && e.keyCode === 32) {
         e.preventDefault();
         return;
