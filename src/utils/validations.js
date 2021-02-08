@@ -1,5 +1,5 @@
 export const isRequired = (value) =>
-  value.trim() !== '' ? { valid: true, errorType: '' } : { valid: false, errorType: 'This field is required' };
+  value && value.trim() !== '' ? { valid: true, errorType: '' } : { valid: false, errorType: 'This field is required' };
 
 export const requiredDate = (date) => {
   const isValid = date instanceof Date;
