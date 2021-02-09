@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import Config from '../lib/Config';
 
 const FooterLayout = styled.footer`
   display: flex;
@@ -17,10 +18,11 @@ const FooterLayout = styled.footer`
     line-height: 14px;
   }
 `;
-const Footer = () => (
-  <FooterLayout>
-    <Link to="/about">About</Link> -<Link to="/help">Help</Link> -<Link to="/legal">Legal</Link>
-  </FooterLayout>
-);
+const Footer = () =>
+  !Config.HIDE_WHILE_LAUNCH ? (
+    <FooterLayout>
+      <Link to="/about">About</Link> -<Link to="/help">Help</Link> -<Link to="/legal">Legal</Link>
+    </FooterLayout>
+  ) : null;
 
 export default Footer;

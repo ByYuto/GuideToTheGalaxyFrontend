@@ -11,6 +11,7 @@ import FlexContainer from '../FlexContainer';
 import { ReactionLayout } from './styled-components';
 import { setLikeService, unsetLikeService } from '../../../http/likeService';
 import { useSelector } from 'react-redux';
+import Config from '../../../lib/Config';
 
 export default function ToolbarReactions({ articleId, postDetail, liked, likes }) {
   const [reactions, setReactions] = useState({ like: liked, numLikes: likes });
@@ -41,41 +42,43 @@ export default function ToolbarReactions({ articleId, postDetail, liked, likes }
   };
   return (
     <ReactionLayout postDetail={postDetail ? 1 : 0}>
-      <FlexContainer justify="flex-end" align="center" className="reactions-toolbar" elmWidth="100%">
-        <FlexContainer elmWidth="100%">
-          <FlexContainer align="center" elmWidth="100%">
-            {reactions.like ? <PunchIconFilled onClick={unsetLike} /> : <PunchIcon onClick={setLike} />}
-            <span>{reactions.numLikes}</span>
-          </FlexContainer>
-        </FlexContainer>
-        <FlexContainer elmWidth="100%">
-          <FlexContainer align="center" elmWidth="100%">
-            <CommentsIconUnfilled className="comment-icon" />
-            <span>0</span>
-          </FlexContainer>
-        </FlexContainer>
-        {postDetail && !isMobile && (
-          <>
-            <FlexContainer elmWidth="100%">
-              <FlexContainer className="share-btn" align="center" elmWidth="100%">
-                <ShareIcon />
-                <span>SHARE</span>
-              </FlexContainer>
-            </FlexContainer>
-            <FlexContainer elmWidth="100%">
-              <FlexContainer className="report-btn" align="center" elmWidth="100%">
-                <FlagIcon />
-                <span>REPORT</span>
-              </FlexContainer>
-            </FlexContainer>
-          </>
-        )}
-        {!postDetail || (postDetail && isMobile) ? (
+      {!Config.HIDE_WHILE_LAUNCH ? (
+        <FlexContainer justify="flex-end" align="center" className="reactions-toolbar" elmWidth="100%">
           <FlexContainer elmWidth="100%">
-            <SubMenuIcon />
+            <FlexContainer align="center" elmWidth="100%">
+              {reactions.like ? <PunchIconFilled onClick={unsetLike} /> : <PunchIcon onClick={setLike} />}
+              <span>{reactions.numLikes}</span>
+            </FlexContainer>
           </FlexContainer>
-        ) : null}
-      </FlexContainer>
+          <FlexContainer elmWidth="100%">
+            <FlexContainer align="center" elmWidth="100%">
+              <CommentsIconUnfilled className="comment-icon" />
+              <span>0</span>
+            </FlexContainer>
+          </FlexContainer>
+          {postDetail && !isMobile && (
+            <>
+              <FlexContainer elmWidth="100%">
+                <FlexContainer className="share-btn" align="center" elmWidth="100%">
+                  <ShareIcon />
+                  <span>SHARE</span>
+                </FlexContainer>
+              </FlexContainer>
+              <FlexContainer elmWidth="100%">
+                <FlexContainer className="report-btn" align="center" elmWidth="100%">
+                  <FlagIcon />
+                  <span>REPORT</span>
+                </FlexContainer>
+              </FlexContainer>
+            </>
+          )}
+          {!postDetail || (postDetail && isMobile) ? (
+            <FlexContainer elmWidth="100%">
+              <SubMenuIcon />
+            </FlexContainer>
+          ) : null}
+        </FlexContainer>
+      ) : null}
     </ReactionLayout>
   );
 }
