@@ -6,7 +6,7 @@ import Tag from '../../UI/Tag';
 import { ShareArticleCardView } from './styled-components';
 import ToolbarReactions from '../../UI/reaction-toolbar/ToolbarReactions';
 import AuthorMeta from '../../UI/author-post/AuthorMeta';
-import { generateSlug, getDateFormatted } from '../../../utils/utils';
+import { getDateFormatted } from '../../../utils/utils';
 export default function ArticleEmbedView({
   _id,
   categoryId,
@@ -21,11 +21,12 @@ export default function ArticleEmbedView({
   updated_at,
   liked,
   likes,
+  slug,
 }) {
   //const dispatch = useDispatch();
   const keyWordsCutted = keywords?.slice(0, 10) || [];
   return (
-    <ShareArticleCardView to={`/article/${generateSlug(_id, title)}`} className="article-container">
+    <ShareArticleCardView to={`/${categoryId.toLowerCase()}/${slug}`} className="article-container">
       <Card fullWidth>
         <FlexContainer justify="space-between" align="center">
           <div className="breadcrumb">

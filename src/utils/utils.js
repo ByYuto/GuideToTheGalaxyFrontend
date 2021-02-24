@@ -1,5 +1,4 @@
 import { optionsLocationsAllowed } from './constants';
-import slugify from 'react-slugify';
 import _ from 'lodash';
 export const suggestionsFilter = (suggestions) => {
   const filteredSuggestion = suggestions.filter((suggestion) => {
@@ -62,13 +61,4 @@ export const checkKeywordsLettersAllowed = (e) => {
   } else {
     return false;
   }
-};
-
-export const getIdFromSlug = (slug) => {
-  const parts = slug.split('-');
-  return parts[parts.length - 1];
-};
-
-export const generateSlug = (id, title) => {
-  return `${slugify(title)}${title ? '-' : ''}${id}`;
 };

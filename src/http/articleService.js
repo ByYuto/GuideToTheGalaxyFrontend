@@ -29,10 +29,13 @@ export const getArticlesFilteredService = async (text, location, category, keywo
   if (location) {
     params.set('placeId', location);
   }
-  if (keywords && keywords.lenght) {
-    console.log('Keywords es', keywords);
+  //console.log('Keywords es', keywords, keywords.lenght, keywords[2]);
+
+  if (keywords && keywords.length) {
     params.set('keywords', keywords);
   }
+
+  //console.log('Consultando articulos', params.toString());
 
   if (token !== null) {
     return axios.get(GET_ARTICLES_BY_SEARCH + '?' + params, { headers: { Authorization: `Bearer ${token}` } });
@@ -107,6 +110,15 @@ export const getEmbedArticleService = async (id) => {
 export const getArticleByIdService = async (id) => {
   const token = await localStorage.getItem('_token');
   return axios.get(`${GET_ARTICLES}/${id}`, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
+};
+
+export const getArticleBySlugService = async (slug) => {
+  const token = await localStorage.getItem('_token');
+  return axios.get(`${GET_ARTICLES}/by-slug/${slug}`, {
     headers: {
       Authorization: token ? `Bearer ${token}` : undefined,
     },

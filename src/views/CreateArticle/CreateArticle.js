@@ -64,7 +64,7 @@ const CreateArticle = () => {
   const refContentContainer = useRef(null);
   const refParentContainer = useRef(null);
   const [contentHeight, setContentHeight] = useState(100);
-  const { newArticle, step, articleValidations, error, errorMessage, success, loading } = useSelector(
+  const { newArticle, step, articleValidations, error, errorMessage, savedArticle, loading } = useSelector(
     (state) => state.newArticle
   );
   const [customContent, setCustomContent] = useState(null);
@@ -186,14 +186,14 @@ const CreateArticle = () => {
   };
   return (
     <ThemeProvider theme={{ isDark: true }}>
-      {success && (
+      {savedArticle && (
         <Notice
           duration={2000}
           type="success"
           text="Your article has been Published"
           callBack={() => {
             dispatch(clearArticleData());
-            history.push(`/article/${success}`);
+            history.push(`/${savedArticle.categoryId.toLowerCase()}/${savedArticle.slug}`);
             dispatch(successSavedArticle(false));
           }}
         />
@@ -243,8 +243,7 @@ const CreateArticle = () => {
                         )}
                         {step === 1 ? (
                           <StyledCategorySelectorTooltip className="subcategory-tooltip">
-                            Select a Content Type for your post to help other users find it, and for them to quickly
-                            identify what kind of content it is.
+                            Select a Content Type for your post to help other users find and identify it
                           </StyledCategorySelectorTooltip>
                         ) : null}
                       </div>

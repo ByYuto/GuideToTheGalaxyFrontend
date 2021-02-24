@@ -10,27 +10,38 @@ import Tag from '../../components/UI/Tag';
 import AuthorMeta from '../../components/UI/author-post/AuthorMeta';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getArticleDetail } from '../../redux/reducers/articleDetail';
+import { clearArticleDetails, getArticleDetailBySlug } from '../../redux/reducers/articleDetail';
 import Loader from '../../components/UI/Loader';
-import { getDateFormatted, getIdFromSlug } from '../../utils/utils';
+import { getDateFormatted } from '../../utils/utils';
 import ArticleContentBody from './ArticleContentBody';
 import Button from '../../components/UI/Button';
 import { setSelectedKeyword } from '../../redux/reducers/topbarSearch';
 import { useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { SITE_TITLE } from '../../utils/constants';
+import { setArticles } from '../../redux/reducers/articles';
 
 export default function ArticleDetail() {
-  const { slug } = useParams();
-  const id = getIdFromSlug(slug);
-  const articleExampleId = id;
+  const { categoryId, slug } = useParams();
   const dispatch = useDispatch();
   const { article, error, errorMessage, loading } = useSelector((store) => store.articleDetail);
   const { isMobile } = useSelector((store) => store.app);
   const history = useHistory();
   useEffect(() => {
-    dispatch(getArticleDetail(articleExampleId));
-  }, [id]);
+    return () => {
+      dispatch(clearArticleDetails());
+    };
+  }, []);
+  useEffect(() => {
+    dispatch(getArticleDetailBySlug(slug));
+  }, [categoryId, slug, dispatch]);
+
+  useEffect(() => {
+    if (article && article.categoryId.toLowerCase() !== categoryId) {
+      console.log(`Reemplazando url por /${article.categoryId.toLowerCase()}/${slug}`);
+      history.replace(`/${article.categoryId.toLowerCase()}/${slug}`);
+    }
+  }, [article, categoryId, history]);
 
   const handleTagClick = (tag) => {
     dispatch(setSelectedKeyword(tag));

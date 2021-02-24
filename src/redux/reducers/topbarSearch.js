@@ -50,6 +50,7 @@ export const setCategoryValue = (val) => ({ type: SET_CATEGORY_VALUE, payload: v
 export const setPlaceId = (id, addr) => ({ type: SET_PLACE_ID, payload: { id, addr } });
 export const getArticlesFiltered = (text, location, category, keywords) => async (dispatch) => {
   try {
+    //console.log('Consultando con estos valores', text, location, category, keywords);
     const response = await getArticlesFilteredService(text, location, category, keywords);
     dispatch(setArticlesHome(response.data));
   } catch (e) {
@@ -118,6 +119,7 @@ export const setSort = (value) => ({ type: SET_SORT, payload: value });
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case CHANGE_SEARCH_VALUE:
+      //console.log('****Setting search value to', payload);
       return {
         ...state,
         searchValue: payload,

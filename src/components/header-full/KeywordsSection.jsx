@@ -93,6 +93,7 @@ export default function KeywordsSection({ isMobile }) {
     visibleLeft,
     currentPosition,
     keywordSuggestions.length,
+    keywordsSelected,
     showSearch,
     isMobile,
   ]);

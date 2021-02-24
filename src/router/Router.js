@@ -48,7 +48,7 @@ const RouterApp = () => {
             <ContentEditor />
           </div>
         </Route>
-        <Route path="/article/:slug" exact>
+        <Route path="/:categoryId/:slug" exact>
           <Layout home="search" noKeywords={true} view="detail">
             <ArticleDetail />
           </Layout>

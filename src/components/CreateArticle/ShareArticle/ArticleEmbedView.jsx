@@ -6,7 +6,7 @@ import Tag from '../../UI/Tag';
 import { ShareArticleCardView, ShareArticleCardPreview } from './styled-components';
 import ToolbarReactions from '../../UI/reaction-toolbar/ToolbarReactions';
 import AuthorMeta from '../../UI/author-post/AuthorMeta';
-import { generateSlug, getDateFormatted } from '../../../utils/utils';
+import { getDateFormatted } from '../../../utils/utils';
 import { setSelectedKeyword } from '../../../redux/reducers/topbarSearch';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -31,6 +31,7 @@ export default function ArticleEmbedView({
   likes,
   isPreview,
   className,
+  slug,
 }) {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -68,29 +69,20 @@ export default function ArticleEmbedView({
                   <div style={{ flexGrow: 1 }}>
                     <KeywordsContainer justify="space-around" inline className="keywords-container">
                       {keyWordsCutted && keyWordsCutted.length > 0
-                        ? keyWordsCutted.map((k, index) => (
-                            <>
-                              {isPreview ? (
-                                <Tag tagType="primary" sm key={index} className="tag-embed-post">
-                                  {k}
-                                </Tag>
-                              ) : (
-                                <Tag
-                                  tagType="primary"
-                                  sm
-                                  key={index}
-                                  className="tag-embed-post"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    handleTagClick(k);
-                                  }}
-                                >
-                                  {k}
-                                </Tag>
-                              )}
-                            </>
-                          ))
+                        ? keyWordsCutted.map((k, index) => {
+                            const onClick = isPreview
+                              ? null
+                              : (e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleTagClick(k);
+                                };
+                            return (
+                              <Tag tagType="primary" sm key={index} className="tag-embed-post" onClick={onClick}>
+                                {k}
+                              </Tag>
+                            );
+                          })
                         : null}
                     </KeywordsContainer>
                   </div>
@@ -136,7 +128,7 @@ export default function ArticleEmbedView({
   return (
     <div key={_id}>
       {!isPreview ? (
-        <ShareArticleCardView to={`/article/${generateSlug(_id, title)}`}>{cardContent}</ShareArticleCardView>
+        <ShareArticleCardView to={`/${categoryId.toLowerCase()}/${slug}`}>{cardContent}</ShareArticleCardView>
       ) : (
         <ShareArticleCardPreview>{cardContent}</ShareArticleCardPreview>
       )}
