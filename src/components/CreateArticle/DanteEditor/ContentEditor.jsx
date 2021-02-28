@@ -13,6 +13,7 @@ import FlexContainer from '../../UI/FlexContainer';
 import Popover from 'react-text-selection-popover';
 import { useDispatch, useSelector } from 'react-redux';
 import { onChangeArticleContent } from '../../../redux/reducers/newArticleState';
+import { useCallback } from 'react';
 
 const EDITOR_VISIBLE_DISTANCE = 153;
 const styles = {
@@ -77,7 +78,9 @@ function ContentEditor() {
   const [selectionState, setSelectionState] = useState(null);
   const editorRef = useRef(null);
   const editorDraftRef = useRef(null);
+  const urlInputRef = useRef(null);
   const makeFocus = () => editorDraftRef.current.focus();
+  const urlMakeFocus = () => (urlInputRef.current ? urlInputRef.current.focus() : null);
   const styledToolbarRef = useRef(null);
   const mediaToolbarRef = useRef(null);
   const [topDistance, setTopDistance] = useState(0);
@@ -108,14 +111,14 @@ function ContentEditor() {
     }
   };
 
-  const _confirmLink = async (editorState) => {
+  const _confirmLink = (editorState) => {
     const currentSelection = selectionState;
     const currentUrlValue = urlValue;
     const contentState = editorState.getCurrentContent();
     const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: currentUrlValue });
     const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const newEditorState = await EditorState.set(editorState, { currentContent: contentStateWithEntity });
-    await setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
+    const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+    setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
     setLinkEntityKey(entityKey);
   };
 
@@ -172,12 +175,12 @@ function ContentEditor() {
     }
 
     const selection = editorState.getSelection();
-    const isCollapse = selection.isCollapsed();
-    if (isCollapse) {
+    const isCollapsed = selection.isCollapsed();
+    if (isCollapsed) {
       setLinkInputActive('disabled');
     }
 
-    if (!isCollapse && linkInputActive === 'disabled') {
+    if (!isCollapsed && linkInputActive === 'disabled') {
       setLinkInputActive('inactive');
     }
     if (newLinkEntityKey && linkInputActive === 'active') {
@@ -232,10 +235,11 @@ function ContentEditor() {
       }
     });
   };
-  const urlInput = (
+  const urlInput = (inputRef) => (
     <Popover isOpen={linkInputActive === 'active'}>
       <div style={{ zIndex: 999 }}>
         <InsertLink
+          inputRef={urlInputRef}
           onKeyDown={_onLinkInputKeyDown}
           url={urlValue}
           onClickBtn={_confirmLink}
@@ -249,11 +253,52 @@ function ContentEditor() {
       </div>
     </Popover>
   );
+
   useEffect(() => {
     if (step === 3) {
       makeFocus();
     }
   }, [step]);
+
+  useEffect(() => {
+    if (linkInputActive === 'active') {
+      urlMakeFocus(linkInputActive);
+    }
+  }, [linkInputActive]);
+
+  const handleUserKeyPress = useCallback((event) => {
+    const { key, keyCode, ctrlKey } = event;
+
+    //console.log({ key, keyCode, ctrlKey });
+    if (keyCode === 75 && ctrlKey === true) {
+      /*
+      const contentState = editorState.getCurrentContent();
+      const selection = editorState.getSelection();
+      let startKey = selection.getStartKey();
+      const startOffset = selection.getStartOffset();
+      const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
+      console.log('Block content', blockWithLinkAtBeginning.toObject());
+      const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
+      console.log({ selection, startKey, startOffset, blockWithLinkAtBeginning, linkKey });
+      if (linkKey) {
+        const linkInstance = contentState.getEntity(linkKey);
+        const url = linkInstance.getData().url;
+        console.log('La url actual  para la seleccion es', url);
+      }*/
+
+      event.preventDefault();
+      setLinkInputActive('active');
+      return false;
+    }
+  }, []);
+  useEffect(() => {
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [handleUserKeyPress]);
+
   return (
     <EditorLayout
       ref={editorContainer}
@@ -293,7 +338,7 @@ function ContentEditor() {
         />
       </TextToolbarFixed>
       <div>
-        {urlInput}
+        {urlInput()}
         <div
           ref={editorRef}
           onClick={makeFocus}

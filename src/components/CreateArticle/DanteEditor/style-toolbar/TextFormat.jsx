@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MediaToolbarLayout } from './styled-components';
 import { BoldIcon, ItalicIcon, UnderlineIcon, LinkIcon } from '../../../../assets/icons/svg-icons';
 import { RichUtils } from 'draft-js';
@@ -26,7 +26,7 @@ export default function TextFormat({
     <>
       <MediaToolbarLayout ref={styledToolbarRef} linkInputActive={linkInputActive}>
         <button
-          onMouseDown={(event) => {
+          onClick={(event) => {
             event.preventDefault();
             _onBoldClick(editorState);
           }}
@@ -35,7 +35,7 @@ export default function TextFormat({
           <BoldIcon />
         </button>
         <button
-          onMouseDown={(event) => {
+          onClick={(event) => {
             event.preventDefault();
             _onItalicClick(editorState);
           }}
@@ -44,7 +44,7 @@ export default function TextFormat({
           <ItalicIcon />
         </button>
         <button
-          onMouseDown={(event) => {
+          onClick={(event) => {
             event.preventDefault();
             _onUnderlineClick(editorState);
           }}
@@ -54,7 +54,7 @@ export default function TextFormat({
         </button>
 
         <button
-          onMouseDown={(event) => {
+          onClick={(event) => {
             event.preventDefault();
             setSelectionState(editorState.getSelection());
             setLinkInputActive('active');

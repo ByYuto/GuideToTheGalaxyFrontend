@@ -12,6 +12,7 @@ export default function InsertLink({
   onChangeInput,
   onClear,
   setLinkInputActive,
+  inputRef,
 }) {
   const [validEmbed, setValidEmbed] = useState(false);
 
@@ -44,6 +45,7 @@ export default function InsertLink({
         onKeyDown={(e) => {
           handleEnterSubmit(e);
         }}
+        ref={inputRef}
       />
       <FlexContainer align="center">
         {url && (

@@ -17,7 +17,7 @@ export const getArticleService = async (keywords) => {
   }
 };
 
-export const getArticlesFilteredService = async (text, location, category, keywords, sort) => {
+export const getArticlesFilteredService = async (text, location, category, sort, keywords) => {
   const token = await localStorage.getItem('_token');
   const params = new URLSearchParams();
   if (text) {
@@ -28,6 +28,9 @@ export const getArticlesFilteredService = async (text, location, category, keywo
   }
   if (location) {
     params.set('placeId', location);
+  }
+  if (sort) {
+    params.set('sortBy', sort);
   }
   //console.log('Keywords es', keywords, keywords.lenght, keywords[2]);
 

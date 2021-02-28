@@ -16,6 +16,7 @@ import {
   getArticles,
   setSelectedKeyword,
   setSelectedKeywords,
+  setSort,
   //getArticles,
 } from '../../redux/reducers/topbarSearch';
 import { SearchIcon, GoIcon } from '../../assets/icons/svg-icons';
@@ -25,9 +26,15 @@ import { useState } from 'react';
 
 export default function HeaderSearchBar() {
   //console.log('************ start rendering header search bar ***************');
-  const { searchValue, locationValue, locationName, searchSuggestions, categoryValue, keywordsSelected } = useSelector(
-    (store) => store.topbarSearch
-  );
+  const {
+    searchValue,
+    locationValue,
+    locationName,
+    searchSuggestions,
+    categoryValue,
+    keywordsSelected,
+    sortValue,
+  } = useSelector((store) => store.topbarSearch);
   const keywordsSelectedValue = keywordsSelected ? keywordsSelected.join(',') : '';
 
   let { categoriesList } = useSelector((store) => store.topbarSearch);
@@ -49,6 +56,7 @@ export default function HeaderSearchBar() {
   const locationParam = params.get('location') || '';
   const categoryParam = params.get('category') || '';
   const keywordsParam = params.get('keywords') || '';
+  const sortParam = params.get('sort') || '';
   //console.log('CurrentLocation is', location);
   //console.log('UrlParams', { searchParam, locationParam, categoryParam, keywordsParam });
   //console.log('Values in Store', { searchValue, locationValue, categoryValue, keywordsSelectedValue });
@@ -70,10 +78,17 @@ export default function HeaderSearchBar() {
       const search = forcedValues.searchValue !== undefined ? forcedValues.searchValue : searchValue;
       const location = forcedValues.locationValue !== undefined ? forcedValues.locationValue : locationValue;
       const category = forcedValues.categoryValue !== undefined ? forcedValues.categoryValue : categoryValue;
+      const sort = forcedValues.sortValue !== undefined ? forcedValues.sortValue : sortValue;
       const keywordsSelected =
         forcedValues.keywordsSelectedValue !== undefined ? forcedValues.keywordsSelectedValue : keywordsSelectedValue;
 
-      console.log('Calling a updateSearchURL', { searchParam, locationValue, categoryValue, keywordsSelectedValue });
+      console.log('Calling a updateSearchURL', {
+        searchParam,
+        locationValue,
+        categoryValue,
+        keywordsSelectedValue,
+        sort,
+      });
       if (search) {
         params.set('search', search);
       }
@@ -85,6 +100,9 @@ export default function HeaderSearchBar() {
       }
       if (keywordsSelected) {
         params.set('keywords', keywordsSelected);
+      }
+      if (sort) {
+        params.set('sort', sort);
       }
 
       console.log('initialized', initialized);
@@ -99,7 +117,7 @@ export default function HeaderSearchBar() {
 
       history.push(newURL);
     },
-    [searchValue, locationValue, categoryValue, keywordsSelectedValue, isHome, history, initialized]
+    [searchValue, locationValue, categoryValue, keywordsSelectedValue, isHome, history, initialized, sortValue]
   );
   /*
   useEffect(() => {
@@ -128,14 +146,12 @@ export default function HeaderSearchBar() {
       //  keywordsSelectedValue,
       //  initialized,
       //});
-
-      const keywordsInParams = keywordsParam ? keywordsParam.split(',') : '';
-      console.log('Ejecutando busqueda', { searchParam, locationParam, categoryParam, keywordsInParams });
-      dispatch(getArticlesFiltered(searchParam, locationValue, categoryValue, keywordsSelectedValue));
+      //console.log('Actualizando Busqueda porque cambio un parametro');
+      dispatch(getArticlesFiltered(searchParam, locationValue, categoryValue, sortValue, keywordsSelectedValue));
     } else {
       console.log('Aun no está inicializado... esperando...');
     }
-  }, [locationValue, categoryValue, keywordsSelectedValue, initialized, dispatch, getArticlesFiltered]);
+  }, [locationValue, categoryValue, sortValue, keywordsSelectedValue, initialized, dispatch, getArticlesFiltered]);
 
   useEffect(() => {
     /*console.log(
@@ -165,6 +181,12 @@ export default function HeaderSearchBar() {
       //console.log('CategoryValues are different', categoryParam, categoryValue);
       dispatch(setCategoryValue(categoryParam));
     }
+    if (sortParam !== sortValue && sortParam !== '') {
+      //console.log('Paso por aqui', sortParam);
+      //console.log('KeywordsValues are different');
+      dispatch(setSort(sortParam));
+    }
+
     if (keywordsParam !== keywordsSelectedValue) {
       //console.log('KeywordsValues are different');
       dispatch(setSelectedKeywords(keywordsInParams));
@@ -174,7 +196,7 @@ export default function HeaderSearchBar() {
     //dispatch(getArticlesFiltered(searchParam, locationParam, categoryParam, keywordsInParams));
 
     //console.log('Terminó el efecto para setear estado desde los parametros de la URL');
-  }, [dispatch, searchParam, locationParam, categoryParam, keywordsParam, isHome, isSearch]);
+  }, [dispatch, searchParam, locationParam, categoryParam, sortParam, keywordsParam, isHome, isSearch]);
 
   //Load Categories if not loaded
   useEffect(() => {

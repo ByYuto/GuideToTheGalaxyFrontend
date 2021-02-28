@@ -4,16 +4,17 @@ import Tag from '../UI/Tag';
 import Dropdown from '../UI/dropdown/Dropdown';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { getKeywordsSuggested, setSelectedKeyword, removeKeyword } from '../../redux/reducers/topbarSearch';
+import { getKeywordsSuggested, setSelectedKeyword, removeKeyword, setSort } from '../../redux/reducers/topbarSearch';
 import _ from 'lodash';
 import { IoIosClose } from 'react-icons/io';
 import { LeftArrowIcon, RightArrowIcon, SortIcon, PlusIcon } from '../../assets/icons/svg-icons';
 import { setVisibleSearch } from '../../redux/reducers/appState';
 
 export default function KeywordsSection({ isMobile }) {
-  const { keywordSuggestions, keywordsSelected, categoryValue, locationValue } = useSelector(
+  const { keywordSuggestions, keywordsSelected, categoryValue, locationValue, sortValue } = useSelector(
     (store) => store.topbarSearch
   );
+
   const { showSearch } = useSelector((store) => store.app);
   const dispatch = useDispatch();
 
@@ -96,14 +97,26 @@ export default function KeywordsSection({ isMobile }) {
     keywordsSelected,
     showSearch,
     isMobile,
+    dispatch,
   ]);
+
+  const onSortOptionSelect = (option) => {
+    //console.log('Paso por aqui a ', option);
+    dispatch(setSort(option.value));
+    //dispatch(getArticlesFiltered(searchParam, locationValue, categoryValue, sortValue, keywordsSelectedValue));
+  };
   return (
     <KeywordsSectionLayout className="keywords-container" align="center">
       <SorterContainer justify="flex-start">
         <SorterDropdown
           icon={<SortIcon className="location-icon" />}
-          options={[{ description: 'Sort by popular' }, { description: 'Sort by recent' }]}
-          defaultOption={'Sort by popular'}
+          options={[
+            { description: 'Sort by Popular', value: 'popularity' },
+            { description: 'Sort by Recent', value: 'created_at' },
+            { description: 'Sort by Best', value: 'best' },
+          ]}
+          value={sortValue}
+          onOptionSelect={onSortOptionSelect}
         />
         {!showSearch ? (
           <button onClick={() => dispatch(setVisibleSearch(true))}>

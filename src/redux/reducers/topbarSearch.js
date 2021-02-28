@@ -19,7 +19,7 @@ const initialState = {
   loading: false,
   error: false,
   errorMessage: '',
-  sort: 'created_at',
+  sortValue: 'created_at',
 };
 
 const CHANGE_SEARCH_VALUE = 'CHANGE_SEARCH_VALUE';
@@ -174,7 +174,7 @@ export default (state = initialState, { type, payload }) => {
     case SET_SORT: {
       return {
         ...state,
-        sort: payload,
+        sortValue: payload,
       };
     }
     default:
