@@ -77,23 +77,22 @@ export default function Login({ handleCancel }) {
         <MdClose size={24} onClick={handleCancel} />
       </div>
       <LoginLayout>
+        <div>
+          <GoogleLogin
+            clientId={GOOGLE_CLIENT_KEY}
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            cookiePolicy={'single_host_origin'}
+            render={(renderProps) => (
+              <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
+                <img src={GoogleLogo} alt="Sign up with google" />
+                {displayRegister ? 'Sign up' : 'Log in'} with Google
+              </Button>
+            )}
+          />
+        </div>
         {!Config.HIDE_WHILE_LAUNCH ? (
           <>
-            <div>
-              <GoogleLogin
-                clientId={GOOGLE_CLIENT_KEY}
-                onSuccess={responseGoogle}
-                onFailure={responseGoogle}
-                cookiePolicy={'single_host_origin'}
-                render={(renderProps) => (
-                  <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
-                    <img src={GoogleLogo} alt="Sign up with google" />
-                    {displayRegister ? 'Sign up' : 'Log in'} with Google
-                  </Button>
-                )}
-              />
-            </div>
-
             <div>
               <FacebookLogin
                 appId={FACEBOOK_CLIENT_KEY}
