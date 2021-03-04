@@ -12,7 +12,7 @@ export const EditorLayout = styled.div`
     margin-top: 16px;
 
     position: relative;
-    z-index: ${(props) => (props.linkInputActive ? 0 : 1)};
+    z-index: ${(props) => (props.linkPopupOpened ? 0 : 1)};
   }
   & .d-none {
     display: none;

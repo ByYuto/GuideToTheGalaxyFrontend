@@ -11,8 +11,8 @@ export default function InsertLink({
   editorState,
   onChangeInput,
   onClear,
-  setLinkInputActive,
   inputRef,
+  onBlur,
 }) {
   const [validEmbed, setValidEmbed] = useState(false);
 
@@ -34,7 +34,7 @@ export default function InsertLink({
   };
 
   return (
-    <InputLinkLayout disabled={!validEmbed} onKeyDown={handleEnterSubmit} onBlur={() => setLinkInputActive('inactive')}>
+    <InputLinkLayout disabled={!validEmbed} onKeyDown={handleEnterSubmit} onBlur={onBlur}>
       <>
         <LinkIcon className="icon-search" />
       </>

@@ -9,8 +9,8 @@ export default function TextFormat({
   promptLink,
   activeLink = false,
   styledToolbarRef,
-  linkInputActive,
-  setLinkInputActive,
+  linkButtonState,
+  onLinkButtonClick,
   setSelectionState,
 }) {
   const _onBoldClick = (editorState) => {
@@ -24,7 +24,7 @@ export default function TextFormat({
   };
   return (
     <>
-      <MediaToolbarLayout ref={styledToolbarRef} linkInputActive={linkInputActive}>
+      <MediaToolbarLayout ref={styledToolbarRef} linkButtonState={linkButtonState}>
         <button
           onClick={(event) => {
             event.preventDefault();
@@ -54,14 +54,9 @@ export default function TextFormat({
         </button>
 
         <button
-          onClick={(event) => {
-            event.preventDefault();
-            setSelectionState(editorState.getSelection());
-            setLinkInputActive('active');
-            //promptLink();
-          }}
-          className={linkInputActive === 'active' ? 'active' : ''}
-          disabled={linkInputActive === 'disabled'}
+          onClick={onLinkButtonClick}
+          className={linkButtonState === 'active' ? 'active' : ''}
+          disabled={linkButtonState === 'disabled'}
         >
           <LinkIcon className="link-icon" />
         </button>

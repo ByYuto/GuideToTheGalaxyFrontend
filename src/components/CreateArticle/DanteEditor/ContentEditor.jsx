@@ -14,6 +14,8 @@ import Popover from 'react-text-selection-popover';
 import { useDispatch, useSelector } from 'react-redux';
 import { onChangeArticleContent } from '../../../redux/reducers/newArticleState';
 import { useCallback } from 'react';
+import { getEntityFromCursor, getEntityKeyFromCursor, getURLFromCursor } from './util';
+import { startsWith } from 'lodash';
 
 const EDITOR_VISIBLE_DISTANCE = 153;
 const styles = {
@@ -68,7 +70,8 @@ function ContentEditor() {
   const [styledToolbarOut, setStyledToolbarOut] = useState(false);
   const [mediaToolbarOut, setMediaToolbarOut] = useState(false);
   const [editorOut, setEditorOut] = useState(false);
-  const [linkInputActive, setLinkInputActive] = useState('disabled');
+  const [linkPopupOpened, setLinkPopupOpened] = useState(false);
+  const [linkButtonState, setLinkButtonState] = useState('disabled');
   const [newLinkEntityKey, setLinkEntityKey] = useState(null);
   const imageInputRef = useRef(null);
   const editorContainer = useRef(null);
@@ -85,6 +88,7 @@ function ContentEditor() {
   const mediaToolbarRef = useRef(null);
   const [topDistance, setTopDistance] = useState(0);
   const [embedActive, setEmbedActivation] = useState(false);
+  const [linkButtonActive, setLinkButtonActive] = useState(false);
 
   const mediaBlockRenderer = (block) => {
     if (block.getType() === 'atomic') {
@@ -107,20 +111,35 @@ function ContentEditor() {
   const _promptForLink = () => {
     const selection = editorState.getSelection();
     if (!selection.isCollapsed()) {
-      setLinkInputActive('inactive');
+      linkPopupOpened(false);
     }
   };
 
-  const _confirmLink = (editorState) => {
-    const currentSelection = selectionState;
-    const currentUrlValue = urlValue;
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: currentUrlValue });
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
-    setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
-    setLinkEntityKey(entityKey);
+  const fixUrl = (url) => {
+    if (!startsWith(url, 'https://') && !startsWith(url, 'http://')) {
+      return 'http://' + url;
+    }
+    return url;
   };
+  const _confirmLink = useCallback(() => {
+    const currentSelection = editorState.getSelection(); //selectionState;
+    const contentState = editorState.getCurrentContent();
+    const currentUrlValue = fixUrl(urlValue);
+    if (currentSelection.isCollapsed()) {
+      const entityKey = getEntityKeyFromCursor(editorState, 'LINK');
+      if (entityKey) {
+        const newContentState = contentState.replaceEntityData(entityKey, { url: currentUrlValue });
+        const newEditorState = EditorState.set(editorState, { currentContent: newContentState });
+        setEditorState(newEditorState);
+      }
+    } else {
+      const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: currentUrlValue });
+      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+      const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+      setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
+      setLinkEntityKey(entityKey);
+    }
+  }, [editorState, urlValue]);
 
   const _onLinkInputKeyDown = (e, editorState) => {
     if (e.which === 13) {
@@ -176,19 +195,22 @@ function ContentEditor() {
 
     const selection = editorState.getSelection();
     const isCollapsed = selection.isCollapsed();
+    console.log({ isCollapsed, urlValue });
     if (isCollapsed) {
-      setLinkInputActive('disabled');
+      setLinkButtonState(!urlValue ? 'disabled' : 'active');
+    } else {
+      setLinkButtonState('inactive');
     }
 
-    if (!isCollapsed && linkInputActive === 'disabled') {
-      setLinkInputActive('inactive');
-    }
-    if (newLinkEntityKey && linkInputActive === 'active') {
-      setLinkInputActive('inactive');
-      setUrlValue('');
-      setSelectionState(null);
-      setLinkEntityKey(null);
-    }
+    //if (!isCollapsed && linkInputActive === 'disabled') {
+    //setLinkButtonState('inactive');
+    //}
+    //if (newLinkEntityKey && linkInputActive === 'active') {
+    //setLinkInputActive('inactive');
+    //setUrlValue('');
+    //setSelectionState(null);
+    //setLinkEntityKey(null);
+    //}
 
     Promise.resolve(
       typeof window.IntersectionObserver !== 'undefined' ? window.IntersectionObserver : import('intersection-observer')
@@ -221,7 +243,7 @@ function ContentEditor() {
         setTopDistance(scrollElm.scrollTop);
       });
     };
-  }, [urlValue, editorState, linkInputActive, newLinkEntityKey, topDistance]);
+  }, [urlValue, editorState, newLinkEntityKey, topDistance]);
 
   const observerHandler = (entries, observer) => {
     entries.forEach((elm) => {
@@ -235,8 +257,15 @@ function ContentEditor() {
       }
     });
   };
+
+  const onUrlInputBlur = () => {
+    setLinkPopupOpened(false);
+  };
+  const onUrlInputClear = () => {
+    setUrlValue('');
+  };
   const urlInput = (inputRef) => (
-    <Popover isOpen={linkInputActive === 'active'}>
+    <Popover isOpen={linkPopupOpened}>
       <div style={{ zIndex: 999 }}>
         <InsertLink
           inputRef={urlInputRef}
@@ -245,10 +274,9 @@ function ContentEditor() {
           onClickBtn={_confirmLink}
           editorState={editorState}
           onChangeInput={onURLChange}
-          onClear={() => {
-            setUrlValue('');
-          }}
-          setLinkInputActive={setLinkInputActive}
+          onClear={onUrlInputClear}
+          onBlur={onUrlInputBlur}
+          //setLinkInputActive={setLinkInputActive}
         />
       </div>
     </Popover>
@@ -261,36 +289,40 @@ function ContentEditor() {
   }, [step]);
 
   useEffect(() => {
-    if (linkInputActive === 'active') {
-      urlMakeFocus(linkInputActive);
+    if (linkPopupOpened) {
+      urlMakeFocus();
     }
-  }, [linkInputActive]);
+  }, [linkPopupOpened]);
+
+  useEffect(() => {
+    const url = getURLFromCursor(editorState);
+    //if (url) {
+    setUrlValue(url);
+    //}
+  }, [editorState]);
+
+  useEffect(() => {
+    const entity = getEntityFromCursor(editorState, 'LINK');
+    if (entity) {
+      console.log(entity.toObject());
+    }
+  }, [editorState]);
 
   const handleUserKeyPress = useCallback((event) => {
     const { key, keyCode, ctrlKey } = event;
 
     //console.log({ key, keyCode, ctrlKey });
     if (keyCode === 75 && ctrlKey === true) {
-      /*
-      const contentState = editorState.getCurrentContent();
-      const selection = editorState.getSelection();
-      let startKey = selection.getStartKey();
-      const startOffset = selection.getStartOffset();
-      const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
-      console.log('Block content', blockWithLinkAtBeginning.toObject());
-      const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
-      console.log({ selection, startKey, startOffset, blockWithLinkAtBeginning, linkKey });
-      if (linkKey) {
-        const linkInstance = contentState.getEntity(linkKey);
-        const url = linkInstance.getData().url;
-        console.log('La url actual  para la seleccion es', url);
-      }*/
-
       event.preventDefault();
-      setLinkInputActive('active');
-      return false;
+      //const url = getURLFromCursor(editorState);
+      //if (url) {
+      //setUrlValue(url);
+      setLinkPopupOpened(true);
+
+      //}
     }
   }, []);
+
   useEffect(() => {
     window.addEventListener('keydown', handleUserKeyPress);
 
@@ -299,12 +331,14 @@ function ContentEditor() {
     };
   }, [handleUserKeyPress]);
 
+  const onLinkButtonClick = (event) => {
+    event.preventDefault();
+    setSelectionState(editorState.getSelection());
+    setLinkPopupOpened(true);
+    //promptLink();
+  };
   return (
-    <EditorLayout
-      ref={editorContainer}
-      className="editor-parent-container"
-      linkInputActive={linkInputActive === 'active' ? 1 : 0}
-    >
+    <EditorLayout ref={editorContainer} className="editor-parent-container" linkPopupOpened={linkPopupOpened ? 1 : 0}>
       <div
         style={{ width: '180px', opacity: isFocusEditor || embedActive ? 1 : 0 }}
         ref={styledToolbarRef}
@@ -315,9 +349,10 @@ function ContentEditor() {
           setEditorState={setEditorState}
           promptLink={_promptForLink}
           imageInputRef={imageInputRef}
-          linkInputActive={linkInputActive}
-          setLinkInputActive={setLinkInputActive}
+          linkButtonState={linkButtonState}
+          setLinkButtonState={setLinkButtonState}
           setSelectionState={setSelectionState}
+          onLinkButtonClick={onLinkButtonClick}
         />
       </div>
       <TextToolbarFixed
@@ -332,9 +367,11 @@ function ContentEditor() {
           editorState={editorState}
           setEditorState={setEditorState}
           promptLink={_promptForLink}
-          linkInputActive={linkInputActive}
-          setLinkInputActive={setLinkInputActive}
+          imageInputRef={imageInputRef}
+          linkButtonState={linkButtonState}
+          setLinkButtonState={setLinkButtonState}
           setSelectionState={setSelectionState}
+          onLinkButtonClick={onLinkButtonClick}
         />
       </TextToolbarFixed>
       <div>
@@ -353,7 +390,7 @@ function ContentEditor() {
             placeholder="Enter some text..."
             blockRendererFn={mediaBlockRenderer}
             handleKeyCommand={handleKeyCommand}
-            readOnly={linkInputActive === 'active'}
+            readOnly={false}
             onFocus={() => setFocusEditor(true)}
             onBlur={() => setFocusEditor(false)}
             ref={editorDraftRef}
