@@ -309,10 +309,10 @@ function ContentEditor() {
   }, [editorState]);
 
   const handleUserKeyPress = useCallback((event) => {
-    const { key, keyCode, ctrlKey } = event;
+    const { key, keyCode, ctrlKey, metaKey } = event;
 
-    console.log({ key, keyCode, ctrlKey });
-    if (keyCode === 75 && ctrlKey === true) {
+    console.log({ key, keyCode, ctrlKey, metaKey });
+    if (keyCode === 75 && (ctrlKey === true || metaKey === true)) {
       event.preventDefault();
       console.log('Detected CMD + K, Opening link input');
       //const url = getURLFromCursor(editorState);
