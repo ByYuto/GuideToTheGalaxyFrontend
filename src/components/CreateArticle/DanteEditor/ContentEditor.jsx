@@ -311,7 +311,7 @@ function ContentEditor() {
   const handleUserKeyPress = useCallback((event) => {
     const { key, keyCode, ctrlKey } = event;
 
-    //console.log({ key, keyCode, ctrlKey });
+    console.log({ key, keyCode, ctrlKey });
     if (keyCode === 75 && ctrlKey === true) {
       event.preventDefault();
       //const url = getURLFromCursor(editorState);
