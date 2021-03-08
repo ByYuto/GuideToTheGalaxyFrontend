@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { EditorLayout, TextToolbarFixed, MediaToolbarFixed } from './styled-components';
-import { Editor, EditorState, RichUtils } from 'draft-js';
+import { Editor, EditorState, Modifier, RichUtils, SelectionState } from 'draft-js';
 import TextFormat from './style-toolbar/TextFormat';
 import 'draft-js/dist/Draft.css';
 import InsertLink from './widgets/link/InsertLink';
@@ -122,28 +122,71 @@ function ContentEditor() {
     return url;
   };
   const _confirmLink = useCallback(() => {
-    const currentSelection = editorState.getSelection(); //selectionState;
-    const contentState = editorState.getCurrentContent();
-    const currentUrlValue = fixUrl(urlValue);
-    if (currentSelection.isCollapsed()) {
-      const entityKey = getEntityKeyFromCursor(editorState, 'LINK');
-      if (entityKey) {
-        const newContentState = contentState.replaceEntityData(entityKey, { url: currentUrlValue });
-        const newEditorState = EditorState.set(editorState, { currentContent: newContentState });
-        setEditorState(newEditorState);
-      }
+    if (urlValue === '') {
+      console.log('Removiendo link');
+      const selection = editorState.getSelection();
+      const content = editorState.getCurrentContent();
+      const startKey = selection.getStartKey();
+      const startOffset = selection.getStartOffset();
+      const block = content.getBlockForKey(startKey);
+      const linkKey = block.getEntityAt(startOffset);
+
+      let contentWithRemovedLink = content;
+      block.findEntityRanges(
+        (charData) => {
+          //You need to use block.findEntityRanges() API to get the whole range of link
+
+          const entityKey = charData.getEntity();
+          if (!entityKey) return false;
+          return entityKey === linkKey; //Need to return TRUE only for your specific link.
+        },
+        (start, end) => {
+          const entitySelection = new SelectionState({
+            anchorKey: block.getKey(), //You already have the block key
+            focusKey: block.getKey(),
+            anchorOffset: start, //Just use the start/end provided by the API
+            focusOffset: end,
+          });
+          contentWithRemovedLink = Modifier.applyEntity(content, entitySelection, null);
+
+          return;
+        }
+      );
+
+      //Remove link from entity
+      /*
+      const contentState = editorState.getCurrentContent();
+      const contentWithoutEntities = Modifier.applyEntity(contentState, editorState.getSelection(), null);
+      
+      */
+
+      const newEditorState = EditorState.set(editorState, { currentContent: contentWithRemovedLink });
+      setEditorState(newEditorState);
     } else {
-      const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: currentUrlValue });
-      const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-      const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
-      setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
-      setLinkEntityKey(entityKey);
+      const currentSelection = editorState.getSelection(); //selectionState;
+      const contentState = editorState.getCurrentContent();
+      const currentUrlValue = fixUrl(urlValue);
+      if (currentSelection.isCollapsed()) {
+        const entityKey = getEntityKeyFromCursor(editorState, 'LINK');
+        if (entityKey) {
+          const newContentState = contentState.replaceEntityData(entityKey, { url: currentUrlValue });
+          const newEditorState = EditorState.set(editorState, { currentContent: newContentState });
+          setEditorState(newEditorState);
+        }
+      } else {
+        const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: currentUrlValue });
+        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+        const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+        setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
+        setLinkEntityKey(entityKey);
+      }
     }
-  }, [editorState, urlValue]);
+    setLinkPopupOpened(false);
+  }, [editorState, urlValue, setEditorState]);
 
   const _onLinkInputKeyDown = (e, editorState) => {
     if (e.which === 13) {
-      _confirmLink(editorState);
+      _confirmLink();
     }
   };
 

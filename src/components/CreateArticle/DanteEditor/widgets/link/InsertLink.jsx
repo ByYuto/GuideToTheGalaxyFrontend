@@ -18,7 +18,7 @@ export default function InsertLink({
 
   useEffect(() => {
     const isValid = validateUrl(url, true);
-    setValidEmbed(isValid.valid);
+    setValidEmbed(isValid.valid || url === '');
   }, [url]);
 
   const handleSubmitValue = async (e, editorState) => {
