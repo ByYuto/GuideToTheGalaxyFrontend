@@ -25,7 +25,7 @@ export const resetBlockWithType = (editorState, newType = 'unstyled') => {
 export const getURLFromCursor = (editorState) => {
   const entity = getEntityFromCursor(editorState, 'LINK');
   if (!entity) {
-    return null;
+    return '';
   }
   return entity.getData().url;
 };

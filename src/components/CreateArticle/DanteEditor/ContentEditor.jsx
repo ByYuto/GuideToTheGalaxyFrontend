@@ -195,7 +195,7 @@ function ContentEditor() {
 
     const selection = editorState.getSelection();
     const isCollapsed = selection.isCollapsed();
-    console.log({ isCollapsed, urlValue });
+    //console.log({ isCollapsed, urlValue });
     if (isCollapsed) {
       setLinkButtonState(!urlValue ? 'disabled' : 'active');
     } else {
@@ -314,6 +314,7 @@ function ContentEditor() {
     console.log({ key, keyCode, ctrlKey });
     if (keyCode === 75 && ctrlKey === true) {
       event.preventDefault();
+      console.log('Detected CMD + K, Opening link input');
       //const url = getURLFromCursor(editorState);
       //if (url) {
       //setUrlValue(url);
