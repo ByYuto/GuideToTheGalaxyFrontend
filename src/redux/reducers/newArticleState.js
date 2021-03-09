@@ -2,12 +2,21 @@ import uid from 'uid';
 import { uploadImage, createArticle } from '../../http/createArticleService';
 import { setAuthorization } from './authState';
 import { EditorState, CompositeDecorator } from 'draft-js';
-import { Link, findLinkEntities } from '../../components/CreateArticle/DanteEditor/ContentEditor';
+import {
+  Link,
+  findLinkEntities,
+  findFakeLinkEntities,
+  FakeLink,
+} from '../../components/CreateArticle/DanteEditor/ContentEditor';
 
 export const decorator = new CompositeDecorator([
   {
     strategy: findLinkEntities,
     component: Link,
+  },
+  {
+    strategy: findFakeLinkEntities,
+    component: FakeLink,
   },
 ]);
 
