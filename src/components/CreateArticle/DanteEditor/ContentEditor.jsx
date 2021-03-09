@@ -89,7 +89,7 @@ function ContentEditor() {
   const [currentBlockKey, setBlockKey] = useState(null);
   const [imagesGallery, setImagesGallery] = useState([]);
   const [urlValue, setUrlValue] = useState('');
-  //const [selectionState, setSelectionState] = useState(null);
+  const [selectionState, setSelectionState] = useState(null);
   const editorRef = useRef(null);
   const editorDraftRef = useRef(null);
   const urlInputRef = useRef(null);
