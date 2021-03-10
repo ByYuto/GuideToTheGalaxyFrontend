@@ -26,7 +26,7 @@ export default function TextFormat({
     <>
       <MediaToolbarLayout ref={styledToolbarRef} linkButtonState={linkButtonState}>
         <button
-          onClick={(event) => {
+          onMouseDown={(event) => {
             event.preventDefault();
             _onBoldClick(editorState);
           }}
@@ -35,7 +35,7 @@ export default function TextFormat({
           <BoldIcon />
         </button>
         <button
-          onClick={(event) => {
+          onMouseDown={(event) => {
             event.preventDefault();
             _onItalicClick(editorState);
           }}
@@ -44,7 +44,7 @@ export default function TextFormat({
           <ItalicIcon />
         </button>
         <button
-          onClick={(event) => {
+          onMouseDown={(event) => {
             event.preventDefault();
             _onUnderlineClick(editorState);
           }}
@@ -54,7 +54,7 @@ export default function TextFormat({
         </button>
 
         <button
-          onClick={onLinkButtonClick}
+          onMouseDown={onLinkButtonClick}
           className={linkButtonState === 'active' ? 'active' : ''}
           disabled={linkButtonState === 'disabled'}
         >
