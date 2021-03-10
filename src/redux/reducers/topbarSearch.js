@@ -2,6 +2,7 @@ import { setArticlesHome } from './appState';
 import { getArticlesFilteredService, getCategoriesList, getSuggestedSearches } from '../../http/articleService';
 import { getKeywordsSuggestions } from '../../http/keywordService';
 import { setAuthorization } from './authState';
+import { get } from 'lodash';
 
 const initialState = {
   searchValue: '',
@@ -17,7 +18,8 @@ const initialState = {
   keywordsSelected: [],
   loading: false,
   error: false,
-  errrorMessage: '',
+  errorMessage: '',
+  sortValue: 'created_at',
 };
 
 const CHANGE_SEARCH_VALUE = 'CHANGE_SEARCH_VALUE';
@@ -29,6 +31,9 @@ const SET_SEARCH_SUGGESTION = 'SET_SEARCH_SUGGESTION';
 const SET_SUGGESTED_KEYWORDS = 'SET_SUGGESTED_KEYWORDS';
 const REMOVE_SELECTED_KEYWORD = 'REMOVE_SELECTED_KEYWORD';
 const SET_SELECTED_KEYWORD = 'SET_SELECTED_KEYWORD';
+const SET_SELECTED_KEYWORDS = 'SET_SELECTED_KEYWORDS';
+const SET_SORT = 'SET_SORT';
+
 export const onSearchValueChange = (value) => ({ type: CHANGE_SEARCH_VALUE, payload: value });
 export const clearSearchValue = () => ({ type: CLEAR_SEARCH_VALUE, payload: '' });
 export const setCategories = (categories) => ({ type: SET_CATEGORIES, payload: categories });
@@ -45,14 +50,37 @@ export const setCategoryValue = (val) => ({ type: SET_CATEGORY_VALUE, payload: v
 export const setPlaceId = (id, addr) => ({ type: SET_PLACE_ID, payload: { id, addr } });
 export const getArticlesFiltered = (text, location, category, keywords) => async (dispatch) => {
   try {
+    //console.log('Consultando con estos valores', text, location, category, keywords);
     const response = await getArticlesFilteredService(text, location, category, keywords);
     dispatch(setArticlesHome(response.data));
   } catch (e) {
     // TO DO handle unauthorized
     if (e.response?.status === 401) {
       window.localStorage.removeItem('_token');
-        dispatch(setAuthorization(false));
-        getArticlesFiltered(text, location, category, keywords);
+      dispatch(setAuthorization(false));
+      getArticlesFiltered(text, location, category, keywords);
+    }
+    console.log(e.response);
+  }
+};
+export const getArticles = () => async (dispatch, getState) => {
+  const state = getState();
+  const text = get(state, 'topbarSearch.searchValue');
+  const location = get(state, 'topbarSearch.locationValue');
+  const category = get(state, 'topbarSearch.categories');
+  const keywords = get(state, 'topbarSearch.keywordsSelected');
+  //console.log('***Searching for', text, location, category, keywords.join(','));
+  try {
+    //console.log('Despacho 9');
+    const response = await getArticlesFilteredService(text, location, category, keywords);
+    dispatch(setArticlesHome(response.data));
+  } catch (e) {
+    // TO DO handle unauthorized
+    if (e.response?.status === 401) {
+      window.localStorage.removeItem('_token');
+      dispatch(setAuthorization(false));
+      //console.log('Despacho 10');
+      getArticlesFiltered(text, location, category, keywords);
     }
     console.log(e.response);
   }
@@ -72,9 +100,9 @@ export const getSearchSuggestion = (value, location, category, keywords) => asyn
 
 export const setSearchSuggestion = (suggestions) => ({ type: SET_SEARCH_SUGGESTION, payload: suggestions });
 
-export const getKeywordsSuggested = (categoryId, placeId) => async (dispatch) => {
+export const getKeywordsSuggested = (categoryId, placeId, currentKeywords) => async (dispatch) => {
   try {
-    const response = await getKeywordsSuggestions(categoryId, placeId);
+    const response = await getKeywordsSuggestions(categoryId, placeId, currentKeywords);
     dispatch(setSuggestedKeywords(response.data));
   } catch (e) {
     console.log(e.response);
@@ -83,10 +111,15 @@ export const getKeywordsSuggested = (categoryId, placeId) => async (dispatch) =>
 
 export const setSuggestedKeywords = (keywords) => ({ type: SET_SUGGESTED_KEYWORDS, payload: keywords });
 export const setSelectedKeyword = (tag) => ({ type: SET_SELECTED_KEYWORD, payload: tag });
+export const setSelectedKeywords = (tags) => ({ type: SET_SELECTED_KEYWORDS, payload: tags });
 export const removeKeyword = (tag) => ({ type: REMOVE_SELECTED_KEYWORD, payload: tag });
+
+export const setSort = (value) => ({ type: SET_SORT, payload: value });
+
 export default (state = initialState, { type, payload }) => {
   switch (type) {
     case CHANGE_SEARCH_VALUE:
+      //console.log('****Setting search value to', payload);
       return {
         ...state,
         searchValue: payload,
@@ -127,12 +160,23 @@ export default (state = initialState, { type, payload }) => {
         ...state,
         keywordsSelected: [payload, ...state.keywordsSelected],
       };
+    case SET_SELECTED_KEYWORDS:
+      return {
+        ...state,
+        keywordsSelected: payload,
+      };
     case REMOVE_SELECTED_KEYWORD:
       const newArr = state.keywordsSelected.filter((elm) => elm !== payload);
       return {
         ...state,
         keywordsSelected: newArr,
       };
+    case SET_SORT: {
+      return {
+        ...state,
+        sortValue: payload,
+      };
+    }
     default:
       return {
         ...state,

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import Caption from '../UI/Caption';
+import {screen} from '../../utils/constants'
+import {useSelector} from 'react-redux';
 
 const StyledCategory = styled.div`
   background: ${(props) => (props.active ? props.theme.accentColors.primary.color : props.theme.baseColors.darkMiddle)};
@@ -47,6 +49,34 @@ const StyledCategory = styled.div`
     color: ${(props) => (props.active ? props.theme.baseColors.light : props.theme.baseColors.middleLight)};
     padding: 10px 0;
   }
+
+  @media(max-width: 864px) {
+    width: 116px;
+    display: inline-block;
+    height: 100px;
+    background-color: ${(props) => (props.active ? '#6670F0' : '#151531')};
+    white-space: pre-wrap;
+    vertical-align: top;
+    
+    & h6 {
+      color: ${(props) => (props.active ? props.theme.baseColors.white : '#BDBFDF')};
+      &:hover {
+        color: ${props => props.theme.baseColors.white};
+      }
+    }
+
+    ${Caption} {
+      color: ${(props) => (props.active ? "#1F1F3D" : props.theme.baseColors.middleLight)};
+      padding: 10px 0;
+    }
+
+    &:first-child {
+      border-radius: 0;
+    }
+    &:last-child {
+      border-radius: 0;
+    }
+  }
 `;
 //TODO: Ask lily for hover state
 
@@ -56,14 +86,20 @@ const StyledCategorySelector = styled.div`
   border-radius: 10px;
   width: 100%;
   margin: 8px 0;
+  @media(max-width:${screen.SM}) {
+    display: block;
+    overflow: scroll;
+    border-radius: 0;
+    width: 100%;
+  }
 `;
 
-const Category = ({ className, title, description, value, active, onClick, showDescription, readOnly }) => {
+const Category = ({ className, title, description, value, active, onClick, showDescription, readOnly, altText }) => {
   const _onClick = () => {
     !readOnly && onClick && onClick(value);
   };
   return (
-    <StyledCategory className={className} onClick={_onClick} active={active} readOnly={readOnly}>
+    <StyledCategory className={className} onClick={_onClick} active={active} readOnly={readOnly} alt={altText}>
       <h6>{title}</h6>
       {showDescription ? <Caption>{description}</Caption> : null}
     </StyledCategory>
@@ -73,18 +109,29 @@ const CategorySelector = ({ categories, value, onChange, showDescriptions, readO
   const onCategoryClick = (category) => {
     !readOnly && onChange && onChange(category);
   };
+  const {isMobile} = useSelector(store => store.app);
+  const cutDescription = (description) => {
+    if(isMobile) {
+      /* const descriptionArray = description.split(" ", 4);
+      const descriptionCutted = descriptionArray.join(" "); */
+
+      return description.slice(0, 20) + "..."
+    }
+    return description;
+  }
   return (
     <StyledCategorySelector>
       {categories.map((category) => (
         <Category
           key={category.name}
           title={category.name}
-          description={category.description}
+          description={cutDescription(category.description)}
           value={category.name}
           active={category.name === value}
           onClick={onCategoryClick}
           showDescription={showDescriptions}
           readOnly={readOnly}
+          altText={category.description}
         />
       ))}
     </StyledCategorySelector>

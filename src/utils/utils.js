@@ -7,7 +7,7 @@ export const suggestionsFilter = (suggestions) => {
     if (existInArray.length > 0) {
       return suggestion;
     } else {
-      return false
+      return false;
     }
   });
   return filteredSuggestion;
@@ -35,8 +35,30 @@ export const getDateFormatted = (rawDate) => {
     'November',
     'December',
   ];
-  const date = new Date(rawDate);
+  const dateSupportedForSafari = rawDate.replace(/\-/g, '/');
+  const date = new Date(dateSupportedForSafari);
   const day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
   const dateFormatted = months[date.getMonth()] + ' ' + day + ', ' + date.getFullYear();
   return dateFormatted;
+};
+
+export const checkKeywordsLettersAllowed = (e) => {
+  if (
+    (e.keyCode >= 65 && e.keyCode <= 90) || //Uppercase letters
+    (e.keyCode >= 97 && e.keyCode <= 122) || //Lowercase letters
+    e.keyCode === 32 || //SPACE
+    e.keyCode === 8 || //BACKPSPACE
+    e.keyCode === 46 || //SUPR/DELETE
+    e.keyCode === 37 || //LEFT ARROW
+    e.keyCode === 39 || // RIGHT ARROW
+    e.keyCode === 35 || // END
+    e.keyCode === 36 || // HOME
+    e.key === '&' || //Ampersand
+    e.key === '-' ||
+    e.key === '#'
+  ) {
+    return true;
+  } else {
+    return false;
+  }
 };

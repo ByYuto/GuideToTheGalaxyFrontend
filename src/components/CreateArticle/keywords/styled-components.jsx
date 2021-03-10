@@ -1,20 +1,39 @@
 import styled, { css } from 'styled-components';
+import { screen } from '../../../utils/constants';
 
 export const KeywordSelectorLayout = styled.div`
   min-height: 253px;
   display: flex;
 
-  @media (max-width: 600px) {
+  @media (max-width: ${screen.SM}) {
     flex-direction: column;
+    height: auto;
+
+    & .recommended-keywords-parent {
+      background-color: #151531;
+      border-radius: 16px;
+    }
   }
 
   & .add-keyword-container {
     border-right: solid 1px #151531;
     padding-right: 15px;
+    width: 50%;
+    @media (max-width: ${screen.SM}) {
+      width: 100%;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
   }
 
   & .recommend-keyword-container {
     padding-left: 30px;
+    width: 50%;
+    @media (max-width: ${screen.SM}) {
+      width: 100%;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
   }
 
   & h5 {
@@ -27,7 +46,7 @@ export const KeywordSelectorLayout = styled.div`
     align-items: center;
     color: #6670f0;
     margin-bottom: 16px;
-    margin-top: 16px;
+    margin-top: 24px;
   }
 `;
 
@@ -60,6 +79,7 @@ export const SearchKeywordLayout = styled.div`
 
   @media (max-width: 600px) {
     width: 95%;
+    padding-left: 0;
   } 
 
   & .close-btn {

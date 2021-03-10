@@ -1,5 +1,8 @@
 import styled from 'styled-components';
+import FlexContainer from '../UI/FlexContainer';
+import { screen } from '../../utils/constants';
 
+const MOBILE_SIZE = 864;
 export const customStyle = {
   indicatorsContainer: (provided, state) => ({ color: state.isFocused ? 'white' : '#BDBFDF' }),
   indicatorSeparator: () => ({ display: 'none' }),
@@ -40,6 +43,8 @@ export const customStyle = {
     color: '#f6f8ff',
     zIndex: 99,
     position: 'absolute',
+    borderRadius: '0 0 8px 8px',
+    boxShadow: '0px 0px 7px #151531',
   }),
   menuList: (provided, state) => ({ ...provided, color: '#BDBFDF', fontSize: '14px', background: state.isHover }),
 };
@@ -57,6 +62,11 @@ export const HeaderSearchBarLayout = styled.div`
     left: 1.5%;
   }
 
+  @media (max-width: 600px) {
+    width: auto;
+    border-radius: 8px;
+  }
+
   & .action-button {
     width: 25px;
     height: 25px;
@@ -70,6 +80,7 @@ export const HeaderSearchBarLayout = styled.div`
     margin-right: 10px;
     left: 90%;
     cursor: pointer;
+    padding: 0;
     & svg path {
       fill: white;
     }
@@ -81,12 +92,32 @@ export const HeaderSearchBarLayout = styled.div`
 
   & .search-autocomplete {
     margin: 0;
+    border-radius: 8px 8px 0 0;
+
     & input {
       border-radius: 50px 0 0 50px;
+      @media (max-width: ${screen.SM}) {
+        border-radius: 8px 8px 0 0;
+      }
     }
   }
   & .css-1wa3eu0-placeholder {
-    color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
+    color: #bdbfdf;
+  }
+
+  & .select-category.css-2b097c-container {
+    @media (max-width: ${screen.SM}) {
+      width: 99%;
+      margin: 0;
+    }
+  }
+
+  & .category__control.css-14xdnlq-Control,
+  .category__control--is-focused {
+    @media (max-width: ${screen.SM}) {
+      width: 100%;
+      margin: 0;
+    }
   }
 
   & .category__option {
@@ -117,10 +148,17 @@ export const HeaderSearchBarLayout = styled.div`
     fill: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
   }
 
-  & .search-inputs-container {
-    @media (max-width: 600px) {
-      background-color: #151531;
-      padding: 10px;
+  & .category__control {
+    @media (max-width: ${screen.SM}) {
+      border-radius: 0 0 8px 8px !important;
+      width: 100%;
     }
+  }
+`;
+
+export const SearchInputsContainer = styled(FlexContainer)`
+  @media (max-width: 600px) {
+    background-color: #151531;
+    border-radius: 8px;
   }
 `;

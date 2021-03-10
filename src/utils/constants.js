@@ -47,7 +47,7 @@ export const generalTemplate = {
     tooltip: 'Put in a URL to help us verify this post',
   },
   location: {
-    placeholder: 'Where did they used to busk?',
+    placeholder: 'Location',
     required: false,
     tooltip: 'Place a location (optional)',
   },
@@ -65,5 +65,7 @@ export const generalTemplate = {
 
 export const KEYCODES = {
   SCAPE: 27,
-  ENTER: 13
-}
+  ENTER: 13,
+};
+
+export const SITE_TITLE = "Busker's Guide to the Galaxy";

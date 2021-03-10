@@ -16,6 +16,7 @@ import GoogleLogin from 'react-google-login';
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
 import RegisterForm from './RegisterForm';
 import { MdClose } from 'react-icons/md';
+import Config from '../../lib/Config';
 
 const GOOGLE_CLIENT_KEY = process.env.REACT_APP_GOOGLE_CLIENT_KEY;
 const FACEBOOK_CLIENT_KEY = process.env.REACT_APP_FACEBOOK_CLIENT_KEY;
@@ -85,29 +86,32 @@ export default function Login({ handleCancel }) {
             render={(renderProps) => (
               <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
                 <img src={GoogleLogo} alt="Sign up with google" />
-                Sign up with Google
+                {displayRegister ? 'Sign up' : 'Log in'} with Google
               </Button>
             )}
           />
         </div>
-
-        <div>
-          <FacebookLogin
-            appId={FACEBOOK_CLIENT_KEY}
-            fields="name,email,picture"
-            render={(renderProps) => (
-              <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
-                <img src={FacebookLogo} alt="Sign up with Facebook" />
-                Sign up with Facebook
-              </Button>
-            )}
-            callback={responseFacebook}
-          />
-        </div>
-        <Divider />
+        {!Config.HIDE_WHILE_LAUNCH ? (
+          <>
+            <div>
+              <FacebookLogin
+                appId={FACEBOOK_CLIENT_KEY}
+                fields="name,email,picture"
+                render={(renderProps) => (
+                  <Button onClick={renderProps.onClick} span="24px" darker elmWidth="232px" elmHeight="40px">
+                    <img src={FacebookLogo} alt="Sign up with Facebook" />
+                    {displayRegister ? 'Sign up' : 'Log in'} with Facebook
+                  </Button>
+                )}
+                callback={responseFacebook}
+              />
+            </div>
+            <Divider />
+          </>
+        ) : null}
         {!displayRegister ? (
           <FlexContainer className="form-container" direction="column" align="center" justify="space-between" span="0">
-            <p className="form-title">Sign in with an email</p>
+            <p className="form-title">{displayRegister ? 'Sign up' : 'Log in'} with an email</p>
             <form onSubmit={handleSubmit} style={{ width: '100%' }}>
               <FlexContainer className="form-inside" direction="column" justify="space-evenly">
                 <div>
@@ -133,11 +137,13 @@ export default function Login({ handleCancel }) {
                     isSubmitted={form.submit}
                   />
                 </div>
-                <div style={{ width: '100%' }}>
-                  <p>
-                    Forgot your password? <Link to="/forget-password">Recover it</Link>
-                  </p>
-                </div>
+                {!Config.HIDE_WHILE_LAUNCH ? (
+                  <div style={{ width: '100%' }}>
+                    <p>
+                      Forgot your password? <Link to="/forget-password">Recover it</Link>
+                    </p>
+                  </div>
+                ) : null}
               </FlexContainer>
               {!loading ? (
                 <FlexContainer span="0" padding="0" justify="center">
@@ -155,15 +161,19 @@ export default function Login({ handleCancel }) {
               )}
               {error && <div className="error-message">{errorMessage}</div>}
             </form>
-            <Divider />
-            <div style={{ textAlign: 'center' }}>
-              <p>
-                Don’t have an account yet?{' '}
-                <button className="btn-like-link" onClick={(e) => setDisplayRegister(true)}>
-                  SIGN UP
-                </button>
-              </p>
-            </div>
+            {!Config.HIDE_WHILE_LAUNCH ? (
+              <>
+                <Divider />
+                <div style={{ textAlign: 'center' }}>
+                  <p>
+                    Don’t have an account yet?{' '}
+                    <button className="btn-like-link" onClick={(e) => setDisplayRegister(true)}>
+                      SIGN UP
+                    </button>
+                  </p>
+                </div>
+              </>
+            ) : null}
           </FlexContainer>
         ) : (
           <RegisterForm setDisplayRegister={setDisplayRegister} />

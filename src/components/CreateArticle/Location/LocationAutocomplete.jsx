@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { suggestionsFilter, getPlaceHolderText } from '../../../utils/utils';
 import { isRequired } from '../../../utils/validations';
@@ -13,8 +13,9 @@ import { validateField } from '../../../redux/reducers/newArticleState';
 
 export default function LocationAutocomplete(props) {
   const [address, setAddress] = useState('');
-  const [placeId] = useState('');
+  const [placeId, setPlaceId] = useState(null);
   const [tooltipVisible, setTooltipVisible] = useState(false);
+
   const dispatch = useDispatch();
 
   const handleChange = async (address) => {
@@ -26,10 +27,12 @@ export default function LocationAutocomplete(props) {
       await dispatch(validateField(fieldValidation));
     }
     setAddress(address);
+    setPlaceId(null);
   };
 
   const clearValue = (address) => {
     setAddress('');
+    setPlaceId(null);
   };
   const { contentType, field, placeholderText, validations, validate, validateError, onChangeData } = props;
   const dataType = contentType[field];
@@ -40,10 +43,11 @@ export default function LocationAutocomplete(props) {
       const validationsUpdate = dataType.required ? [isRequired, ...validations] : validations;
       const isValid = validate(placeId, validationsUpdate);
       const fieldValidation = {};
-      fieldValidation[field] = isValid.length > 0 ? isValid[0] : { valid: true, errorType: '' };
+      fieldValidation[field] = isValid && isValid.length > 0 ? isValid[0] : { valid: true, errorType: '' };
       await dispatch(validateField(fieldValidation));
     }
     setAddress(address);
+    setPlaceId(placeId);
     return onChangeData(field, placeId);
   };
   return (
@@ -53,7 +57,7 @@ export default function LocationAutocomplete(props) {
         onChange={handleChange}
         onSelect={handleChangeValidations}
         debounce={500}
-        shouldFetchSuggestions={address.length > 3}
+        shouldFetchSuggestions={address && address.length > 1}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => {
           const filteredSuggestions = suggestionsFilter(suggestions);
@@ -69,7 +73,7 @@ export default function LocationAutocomplete(props) {
                   onFocus={() => setTooltipVisible(true)}
                   onBlur={() => setTooltipVisible(false)}
                 />
-                {address.length > 0 ? <IoIosClose onClick={clearValue} className="clear-element" size={30} /> : null}
+                {address ? <IoIosClose onClick={clearValue} className="clear-element" size={30} /> : null}
               </div>
               {tooltipVisible ? (
                 <div className="autocomplete-dropdown-container">
@@ -80,7 +84,7 @@ export default function LocationAutocomplete(props) {
                       getSuggestionItemProps={getSuggestionItemProps}
                     />
                   ))}
-                  {!dataType.required ? (
+                  {placeId === null && !dataType.required ? (
                     <SuggestionOptions
                       getSuggestionItemProps={getSuggestionItemProps}
                       suggestion={{ active: false, description: 'Worldwide', placeId: '' }}

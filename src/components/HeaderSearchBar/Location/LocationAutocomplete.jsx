@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { suggestionsFilter } from '../../../utils/utils';
 import SuggestionOptions from './SuggestionsOptions';
@@ -9,13 +9,15 @@ import { BlueLocationIcon } from '../../../assets/icons/svg-icons';
 export default function LocationAutocomplete(props) {
   const [address, setAddress] = useState(props.value);
   const [tooltipVisible, setTooltipVisible] = useState(false);
-
+  const [placeId, setPlaceId] = useState(null);
   const handleChange = async (address) => {
     setAddress(address);
+    setPlaceId(null);
   };
 
   const clearValue = (address) => {
     setAddress('');
+    setPlaceId(null);
     props.clearValueAction();
   };
   const { placeholderText = 'Select a location' } = props;
@@ -23,15 +25,17 @@ export default function LocationAutocomplete(props) {
   const handleChangeValidations = async (address, placeId) => {
     setAddress(address);
     props.setPlaceId(placeId, address);
+    setPlaceId(placeId);
   };
+
   return (
     <PlacesAutocompleteContainerLayout>
       <PlacesAutocomplete
         value={address}
         onChange={handleChange}
         onSelect={handleChangeValidations}
-        debounce={500}
-        shouldFetchSuggestions={address.length > 3}
+        debounce={300}
+        shouldFetchSuggestions={address && address.length > 1}
       >
         {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => {
           const filteredSuggestions = suggestionsFilter(suggestions);
@@ -47,7 +51,9 @@ export default function LocationAutocomplete(props) {
                   onFocus={() => setTooltipVisible(true)}
                   onBlur={() => setTooltipVisible(false)}
                 />
-                {address.length > 0 ? <IoIosClose onClick={clearValue} className="clear-element" size={30} /> : null}
+                {address && address.length > 0 ? (
+                  <IoIosClose onClick={clearValue} className="clear-element" size={30} />
+                ) : null}
               </div>
               {tooltipVisible ? (
                 <div className="autocomplete-dropdown-container">
@@ -59,10 +65,12 @@ export default function LocationAutocomplete(props) {
                     />
                   ))}
 
-                  <SuggestionOptions
-                    getSuggestionItemProps={getSuggestionItemProps}
-                    suggestion={{ active: false, description: 'Worldwide', placeId: '' }}
-                  />
+                  {!placeId && address !== 'Worldwide' ? (
+                    <SuggestionOptions
+                      getSuggestionItemProps={getSuggestionItemProps}
+                      suggestion={{ active: false, description: 'Worldwide', placeId: '' }}
+                    />
+                  ) : null}
                 </div>
               ) : null}
             </AutocompleteLayout>

@@ -44,8 +44,10 @@ const MediaToolbar = ({ editorState, index = 0, onChangeEditor, isFixed, embedAc
     e.preventDefault();
     const files = Array.from(e.target.files);
     if (files && files.length && MAX_IMAGES - files.length >= 0) {
-      const imageResponse = await Promise.all(files.map(uploadImage));
-      imageWidget.confirmMedia(editorState, onChangeEditor, imageResponse);
+      try {
+        const imageResponse = await Promise.all(files.map(uploadImage));
+        imageWidget.confirmMedia(editorState, onChangeEditor, imageResponse);
+      } catch (e) {}
     }
   };
 

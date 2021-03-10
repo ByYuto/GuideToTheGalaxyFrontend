@@ -7,10 +7,17 @@ const View = styled.div`
   color: ${(props) => (props.theme.isDark ? props.theme.baseColors.white : props.theme.baseColors.dark)};
 `;
 
+export const SearchResultsLayout = styled.div`
+  & .articles-feed {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+`;
 export const MaxWidthContainer = styled.div`
   max-width: 900px;
   width: 100%;
   margin: auto;
+  padding-bottom: 10px;
   background-color: ${(props) => (props.theme.isDark ? props.theme.baseColors.dark : props.theme.baseColors.white)};
   color: ${(props) => (props.theme.isDark ? props.theme.baseColors.white : props.theme.baseColors.dark)};
 `;

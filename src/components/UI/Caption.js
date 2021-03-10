@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-
+import {screen} from '../../utils/constants';
 const Caption = styled.span`
   font-family: Lato;
   font-style: normal;
@@ -23,6 +23,7 @@ const Caption = styled.span`
           line-height: 12px;
         `
       : null}
+
 `;
 
 export default Caption;

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Button from './Button';
 import { IoIosClose } from 'react-icons/io';
 import Menu from './Menu';
+import {screen} from '../../utils/constants';
 
 /*
 const AutocompleteMenu = styled(Menu)`
@@ -304,6 +305,16 @@ export const PickerLayout = styled.div`
     padding: 9px 35px 9px 26px;
     background: #151531;
     border-radius: 8px;
+    @media(max-width: ${screen.SM}) {
+      all: inherit;
+      font-family: 'Open Sans';
+      font-size: 14px;
+      line-height: 22px;
+      width: 100%;
+      padding: 9px 35px 9px 26px;
+      background: #151531;
+      border-radius: 8px;
+    }
   }
 
   & .react-datepicker__day--selected,
@@ -319,6 +330,16 @@ export const PickerLayout = styled.div`
   .react-datepicker__year-text--in-selecting-range,
   .react-datepicker__year-text--in-range {
     background-color: #6670f0;
+  }
+
+  & .react-datepicker-wrapper {
+    @media(max-width: ${screen.SM}) {
+      width: 100%;
+    }
+  }
+
+  @media(max-width: ${screen.SM}) {
+    width: 100%;
   }
 `;
 

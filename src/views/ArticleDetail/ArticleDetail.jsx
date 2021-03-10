@@ -10,23 +10,38 @@ import Tag from '../../components/UI/Tag';
 import AuthorMeta from '../../components/UI/author-post/AuthorMeta';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getArticleDetail } from '../../redux/reducers/articleDetail';
+import { clearArticleDetails, getArticleDetailBySlug } from '../../redux/reducers/articleDetail';
 import Loader from '../../components/UI/Loader';
 import { getDateFormatted } from '../../utils/utils';
 import ArticleContentBody from './ArticleContentBody';
 import Button from '../../components/UI/Button';
 import { setSelectedKeyword } from '../../redux/reducers/topbarSearch';
 import { useHistory } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import { SITE_TITLE } from '../../utils/constants';
+import { setArticles } from '../../redux/reducers/articles';
 
 export default function ArticleDetail() {
-  const { id } = useParams();
-  const articleExampleId = id;
+  const { categoryId, slug } = useParams();
   const dispatch = useDispatch();
   const { article, error, errorMessage, loading } = useSelector((store) => store.articleDetail);
+  const { isMobile } = useSelector((store) => store.app);
   const history = useHistory();
   useEffect(() => {
-    dispatch(getArticleDetail(articleExampleId));
-  }, [id]);
+    return () => {
+      dispatch(clearArticleDetails());
+    };
+  }, []);
+  useEffect(() => {
+    dispatch(getArticleDetailBySlug(slug));
+  }, [categoryId, slug, dispatch]);
+
+  useEffect(() => {
+    if (article && article.categoryId.toLowerCase() !== categoryId) {
+      console.log(`Reemplazando url por /${article.categoryId.toLowerCase()}/${slug}`);
+      history.replace(`/${article.categoryId.toLowerCase()}/${slug}`);
+    }
+  }, [article, categoryId, history]);
 
   const handleTagClick = (tag) => {
     dispatch(setSelectedKeyword(tag));
@@ -35,6 +50,9 @@ export default function ArticleDetail() {
 
   return (
     <ArticleDetailContainer>
+      <Helmet>
+        <title>{'Article Detail'}</title>
+      </Helmet>
       {error && (
         <StyledView>
           <MaxWidthContainer>
@@ -45,6 +63,11 @@ export default function ArticleDetail() {
       {!error && !loading && (
         <>
           <ThemeProvider theme={{ isDark: true }}>
+            <Helmet>
+              <title>
+                {article?.title || 'Article Detail'} - {SITE_TITLE}
+              </title>
+            </Helmet>
             <StyledView className="header-content">
               <MaxWidthContainer>
                 <div className="breadcrumb">
@@ -54,12 +77,22 @@ export default function ArticleDetail() {
                 <FlexContainer className="metadata-container" align="stretch">
                   <FlexContainer elmWidth="80%" column align="stretch">
                     <h2>{article?.title}</h2>
+
                     {article?.date && (
                       <div className="metadata-date">
                         <CalendarIcon className="head-article-content-icon" />
                         <span>Passed: {getDateFormatted(article.date)}</span>
                         {article?.other && <span className="discontinued-date-label">Discontinued</span>}
                       </div>
+                    )}
+                    {isMobile && (
+                      <FlexContainer align="center" className="featured-img-container">
+                        {article?.image?.content?.featured_m && (
+                          <figure className="featured-img">
+                            <img src={article.image.content.featured_m} alt={article?.title || ''} />
+                          </figure>
+                        )}
+                      </FlexContainer>
                     )}
                     <div className="metadata-url">
                       {article && article.URL && article.categoryId !== 'TOOLS' && (
@@ -77,13 +110,15 @@ export default function ArticleDetail() {
                       )}
                     </div>
                   </FlexContainer>
-                  <FlexContainer elmWidth="20%" align="center">
-                    {article?.image?.content?.featured_m && (
-                      <figure className="featured-img">
-                        <img src={article.image.content.featured_m} alt={article?.title || ''} />
-                      </figure>
-                    )}
-                  </FlexContainer>
+                  {!isMobile && (
+                    <FlexContainer elmWidth="20%" align="center" className="featured-img-container">
+                      {article?.image?.content?.featured_m && (
+                        <figure className="featured-img">
+                          <img src={article.image.content.featured_m} alt={article?.title || ''} />
+                        </figure>
+                      )}
+                    </FlexContainer>
+                  )}
                 </FlexContainer>
               </MaxWidthContainer>
             </StyledView>
@@ -97,13 +132,13 @@ export default function ArticleDetail() {
                     <div>
                       <strong>{article?.user?.name}</strong>
                     </div>
-                    <div>
+                    <div className="post-metadata-date">
                       <span>{article?.updated_at && getDateFormatted(article.updated_at)}</span>
                     </div>
                   </div>
                 </FlexContainer>
                 <FlexContainer align="center">
-                  <ToolbarReactions articleId={article?._id} />
+                  <ToolbarReactions articleId={article?._id} liked={article?.liked} likes={article?.likes} />
                 </FlexContainer>
               </MaxWidthContainer>
             </StyledView>
@@ -117,7 +152,11 @@ export default function ArticleDetail() {
             <StyledView>
               <MaxWidthContainer>
                 {article?.pdf && article?.pdf.url && (
-                  <DownloadPdf fileName={article.pdf.filename} pdfUrl={article.pdf.url} />
+                  <DownloadPdf
+                    fileName={article.pdf.filename}
+                    pdfUrl={article.pdf.url}
+                    originalFilename={article.pdf.originalFilename}
+                  />
                 )}
                 {article && article.URL && article.categoryId === 'TOOLS' && (
                   <Button primary className="button-buy">
@@ -151,22 +190,22 @@ export default function ArticleDetail() {
               <MaxWidthContainer className="reactions-column">
                 <FlexContainer align="stretch" elmWidth="100%" justify="space-between">
                   {article?.communityEditsAllowed ? (
-                    <FlexContainer align="center" elmWidth="30%" className="contributions-bar">
+                    <FlexContainer align="center" elmWidth="40%" className="contributions-bar">
                       <FlexContainer elmWidth="100%">
-                        <FlexContainer justify="space-evenly" align="center" elmWidth="100%">
-                          <span>0</span>
+                        <FlexContainer align="center" elmWidth="100%" className="contributions-counter">
+                          <span className="contributions-number">0</span>
                           <span>CONTRIBUTIONS</span>
                         </FlexContainer>
                       </FlexContainer>
                       <FlexContainer elmWidth="100%">
-                        <FlexContainer justify="space-evenly" align="center" elmWidth="100%">
-                          <EditIcon />
+                        <FlexContainer align="center" elmWidth="100%">
+                          <EditIcon className="contributions-number" />
                           <span>SUGGEST EDIT</span>
                         </FlexContainer>
                       </FlexContainer>
                     </FlexContainer>
                   ) : (
-                    <FlexContainer align="center" elmWidth="70%">
+                    <FlexContainer align="center" elmWidth="60%">
                       <span className="edit-lock">
                         <LockIcon />
                         EDIT LOCKED
@@ -175,7 +214,12 @@ export default function ArticleDetail() {
                   )}
 
                   <FlexContainer align="center" elmWidth="30%" justify="flex-end">
-                    <ToolbarReactions postDetail articleId={article?._id} />
+                    <ToolbarReactions
+                      postDetail
+                      articleId={article?._id}
+                      liked={article?.liked}
+                      likes={article?.likes}
+                    />
                   </FlexContainer>
                 </FlexContainer>
               </MaxWidthContainer>

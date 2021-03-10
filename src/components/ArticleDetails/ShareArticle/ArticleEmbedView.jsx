@@ -21,10 +21,12 @@ export default function ArticleEmbedView({
   updated_at,
   liked,
   likes,
+  slug,
 }) {
   //const dispatch = useDispatch();
+  const keyWordsCutted = keywords?.slice(0, 10) || [];
   return (
-    <ShareArticleCardView to={`/article/${_id}`} className="article-container">
+    <ShareArticleCardView to={`/${categoryId.toLowerCase()}/${slug}`} className="article-container">
       <Card fullWidth>
         <FlexContainer justify="space-between" align="center">
           <div className="breadcrumb">
@@ -40,9 +42,9 @@ export default function ArticleEmbedView({
             </div>
             <div style={{ flexGrow: 1 }}>
               <FlexContainer justify="space-around" inline>
-                {keywords && keywords.length > 0
-                  ? keywords.map((k, index) => (
-                      <Tag tagType="primary" sm key={index}>
+                {keyWordsCutted && keyWordsCutted.length > 0
+                  ? keyWordsCutted.map((k, index) => (
+                      <Tag tagType="primary" sm key={index} className="tag-embed-post">
                         {k}
                       </Tag>
                     ))

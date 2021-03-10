@@ -8,6 +8,9 @@ import { validateField } from '../../../redux/reducers/newArticleState';
 import { TextValidation } from './styledComponents';
 import { CameraIcon } from '../../../assets/icons/svg-icons';
 import { uploadImage } from '../../../http/createArticleService';
+import { FlexboxGrid } from 'rsuite';
+import Loader from '../Loader';
+import { screen } from '../../../utils/constants';
 
 const UploadInputLayout = styled.div`
   display: flex;
@@ -17,6 +20,11 @@ const UploadInputLayout = styled.div`
   height: 74%;
   cursor: pointer;
   ${(props) => props.isRequired && 'margin-top: 2em;'}
+
+  @media(max-width: ${screen.SM}) {
+    display: block;
+    margin-bottom: 24px;
+  }
   & .upload-tooltip {
     left: 0;
     top: 100%;
@@ -70,6 +78,10 @@ const UploadInputLayout = styled.div`
     & svg {
       margin-bottom: 5px;
     }
+    @media (max-width: ${screen.SM}) {
+      bottom: 35%;
+      left: 40%;
+    }
   }
 
   & img {
@@ -77,19 +89,35 @@ const UploadInputLayout = styled.div`
     width: 100%;
     height: auto;
     z-index: 2;
+    @media (max-width: ${screen.SM}) {
+      position: static;
+      margin-top: 24px;
+    }
   }
 
   & input {
     z-index: -1;
+    @media (max-width: ${screen.SM}) {
+      position: relative;
+      bottom: 50%;
+      left: 10%;
+      opacity: 0;
+    }
   }
+`;
+
+const LoaderContainer = styled.div`
+  margin-top: 16px;
 `;
 
 export default function UploadInput({ contentType, onChange, readOnly, srcImg = PlaceholderImg }) {
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const tooltip = contentType ? contentType['image']?.tooltip : 'Select an Image';
   const inputRef = useRef(null);
   const dispatch = useDispatch();
   const { articleValidations } = useSelector((store) => store.newArticle);
+  const [serverError, setServerError] = useState(null);
   const imageValidation = articleValidations.image;
   //handle image validations
   const handleImageValidation = async (value) => {
@@ -110,17 +138,26 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
   };
   const handleFileChange = async (e) => {
     e.preventDefault();
+    const files = e.target.files;
     const dataSrc = e.target.files[0];
     if (dataSrc) {
-      const imageData = await uploadImage(dataSrc);
-      if (imageData.url) {
-        const newArticle = {
-          photo: imageData,
-        };
-        onChange(newArticle);
-      } else {
-        return;
+      setLoading(true);
+      try{
+        const imageData = await uploadImage(dataSrc);
+        if (imageData.url) {
+          const newArticle = {
+            photo: imageData,
+          };
+          handleImageValidation(files);
+          onChange(newArticle);
+        } else {
+          return;
+        }
       }
+      catch(e){
+        setServerError(e?.response?.data?.message || e.message);
+      }
+      setLoading(false);
     } else {
       return;
     }
@@ -131,7 +168,7 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
       handleImageValidation(inputRef.current.files);
     }
   }, [srcImg]);
-  return (
+  return !loading ? (
     <>
       <UploadInputLayout onClick={handleImgSelect} isRequired={contentType.image.required}>
         <img
@@ -147,9 +184,15 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
         <input type="file" onChange={handleFileChange} ref={inputRef} />
         {tooltipVisible && tooltip && <StyledFieldTooltip className="upload-tooltip">{tooltip}</StyledFieldTooltip>}
       </UploadInputLayout>
-      {contentType.image.required && !imageValidation?.valid && imageValidation?.errorType !== '' && (
-        <TextValidation>{imageValidation?.errorType}</TextValidation>
+      {((contentType.image.required && !imageValidation?.valid && imageValidation?.errorType !== '') || serverError) && (
+        <TextValidation>{serverError || imageValidation?.errorType}</TextValidation>
       )}
     </>
+  ) : (
+    <LoaderContainer className="laoder-container">
+      <FlexboxGrid justify="center" align="stretch">
+        <Loader />
+      </FlexboxGrid>
+    </LoaderContainer>
   );
 }

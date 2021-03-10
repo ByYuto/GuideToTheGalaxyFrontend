@@ -9,43 +9,41 @@ const GET_SEARCH_SUGGESTIONS = api + '/search/suggestions';
 export const getArticleService = async (keywords) => {
   const token = await localStorage.getItem('_token');
   if (token !== null) {
-    return axios.get(`${GET_ARTICLES}${keywords ? '?keywords=' + keywords : '' }`, { headers: { Authorization: `Bearer ${token}` } });
+    return axios.get(`${GET_ARTICLES}${keywords ? '?keywords=' + keywords : ''}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   } else {
-    return axios.get(`${GET_ARTICLES}${keywords ? '?keywords=' + keywords : '' }`);
+    return axios.get(`${GET_ARTICLES}${keywords ? '?keywords=' + keywords : ''}`);
   }
 };
 
-export const getArticlesFilteredService = async (text, location, category, keywords) => {
+export const getArticlesFilteredService = async (text, location, category, sort, keywords) => {
   const token = await localStorage.getItem('_token');
-  let params = '';
-  if (text.length > 0) {
-    params += `?text=${text}`;
+  const params = new URLSearchParams();
+  if (text) {
+    params.set('text', text);
   }
-  
-  if (category.length > 0 && params.includes("?")) {
-    params += `&categoryId=${category}`;
+  if (category) {
+    params.set('categoryId', category);
   }
-  if(category.length > 0 && !params.includes("?"))  {
-    params += `?categoryId=${category}`;
+  if (location) {
+    params.set('placeId', location);
   }
-  if (location.length > 0  && params.includes("?")) {
-    params += `&placeId=${location}`;
+  if (sort) {
+    params.set('sortBy', sort);
   }
-  
-  if (location.length > 0 && !params.includes("?")) {
-    params += `?placeId=${location}`;
-  }
-  if (keywords.length > 0 && params.includes("?")) {
-    params += `&keywords=${keywords}`;
-  } 
-  if (keywords.length > 0 && !params.includes("?")) {
-    params += `?keywords=${keywords}`;
+  //console.log('Keywords es', keywords, keywords.lenght, keywords[2]);
+
+  if (keywords && keywords.length) {
+    params.set('keywords', keywords);
   }
 
+  //console.log('Consultando articulos', params.toString());
+
   if (token !== null) {
-    return axios.get(GET_ARTICLES_BY_SEARCH + params, { headers: { Authorization: `Bearer ${token}` } });
+    return axios.get(GET_ARTICLES_BY_SEARCH + '?' + params, { headers: { Authorization: `Bearer ${token}` } });
   } else {
-    return axios.get(GET_ARTICLES_BY_SEARCH + params);
+    return axios.get(GET_ARTICLES_BY_SEARCH + '?' + params);
   }
 };
 
@@ -66,23 +64,23 @@ export const getSuggestedSearches = async (text, location, category, keywords) =
   if (text.length > 0) {
     params += `?text=${text}`;
   }
-  if (category.length > 0 && params.includes("?")) {
+  if (category.length > 0 && params.includes('?')) {
     params += `&categoryId=${category}`;
   }
-  if(category.length > 0 && !params.includes("?"))  {
+  if (category.length > 0 && !params.includes('?')) {
     params += `?categoryId=${category}`;
   }
-  if (location.length > 0  && params.includes("?")) {
+  if (location.length > 0 && params.includes('?')) {
     params += `&placeId=${location}`;
   }
-  
-  if (location.length > 0 && !params.includes("?")) {
+
+  if (location.length > 0 && !params.includes('?')) {
     params += `?placeId=${location}`;
   }
-  if (keywords.length > 0 && params.includes("?")) {
+  if (keywords.length > 0 && params.includes('?')) {
     params += `&keywords=${keywords}`;
-  } 
-  if (keywords.length > 0 && !params.includes("?")) {
+  }
+  if (keywords.length > 0 && !params.includes('?')) {
     params += `?keywords=${keywords}`;
   }
 
@@ -96,17 +94,45 @@ export const getSuggestedSearches = async (text, location, category, keywords) =
 export const getEmbedArticlesService = async (filter) => {
   const token = await localStorage.getItem('_token');
   const param = filter === '' ? '' : `?text=${filter}`;
-  return axios.get(GET_EMBED_ARTICLES + param, { headers: { Authorization: `Bearer ${token}` } });
+  return axios.get(GET_EMBED_ARTICLES + param, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
 };
 
 export const getEmbedArticleService = async (id) => {
-  return axios.get(`${GET_EMBED_ARTICLES}/${id}`);
+  const token = await localStorage.getItem('_token');
+  return axios.get(`${GET_EMBED_ARTICLES}/${id}`, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
 };
 
 export const getArticleByIdService = async (id) => {
-  return axios.get(`${GET_ARTICLES}/${id}`);
+  const token = await localStorage.getItem('_token');
+  return axios.get(`${GET_ARTICLES}/${id}`, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
+};
+
+export const getArticleBySlugService = async (slug) => {
+  const token = await localStorage.getItem('_token');
+  return axios.get(`${GET_ARTICLES}/by-slug/${slug}`, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
 };
 
 export const getCategoriesList = async () => {
-  return axios.get(GET_CATEGORY_LIST);
+  const token = await localStorage.getItem('_token');
+  return axios.get(GET_CATEGORY_LIST, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
 };

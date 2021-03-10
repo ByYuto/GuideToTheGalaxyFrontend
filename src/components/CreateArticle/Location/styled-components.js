@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {screen } from '../../../utils/constants'
 
 export const AutocompleteLayout = styled.div`
   position: relative;
@@ -29,6 +30,24 @@ export const AutocompleteLayout = styled.div`
     &::placeholder {
       color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
     }
+
+    @media(max-width: ${screen.SM}) {
+      all: inherit;
+      font-family: 'Open Sans';
+      font-size: 14px;
+      line-height: 22px;
+      padding: 9px 25px 9px 30px;
+      background: #151531;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      border: 1px solid transparent;
+      color: #f6f8ff;
+      border-radius: 8px;
+      width:100%;
+      z-index:1;
+    }
   }
 
   & .clear-element {
@@ -50,15 +69,22 @@ export const AutocompleteLayout = styled.div`
     position: absolute;
     top: 28%;
     left: 10px;
+    @media(max-width: ${screen.SM}) {
+      z-index: 5;
+    }
   }
 
   & .autocomplete-dropdown-container {
-    boder-radius-bottom: 8px;
+    border-radius: 0 0 8px 8px;
     background-color: #151531;
     color: #bdbfdf;
     position: absolute;
     z-index: 99;
     width: 100%;
+    box-shadow: 0px 1px 7px 0px #151531;
+    & .suggestion-item:last-child {
+      border-radius: 0 0 8px 8px;
+    }
   }
 `;
 

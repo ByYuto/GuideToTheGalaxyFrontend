@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CheckIcon, LinkIcon } from '../../../../../assets/icons/svg-icons';
 import { InputLinkLayout, ClearButton } from './styled-components';
-import { validateEmbed } from '../../../../../utils/validations';
+import { validateUrl } from '../../../../../utils/validations';
 import { IoIosClose } from 'react-icons/io';
 import FlexContainer from '../../../../UI/FlexContainer';
 export default function InsertLink({
@@ -11,13 +11,14 @@ export default function InsertLink({
   editorState,
   onChangeInput,
   onClear,
-  setLinkInputActive,
+  inputRef,
+  onBlur,
 }) {
   const [validEmbed, setValidEmbed] = useState(false);
 
   useEffect(() => {
-    const isValid = validateEmbed(url, true);
-    setValidEmbed(isValid.valid);
+    const isValid = validateUrl(url, true);
+    setValidEmbed(isValid.valid || url === '');
   }, [url]);
 
   const handleSubmitValue = async (e, editorState) => {
@@ -33,7 +34,7 @@ export default function InsertLink({
   };
 
   return (
-    <InputLinkLayout disabled={!validEmbed} onKeyDown={handleEnterSubmit} onBlur={() => setLinkInputActive('inactive')}>
+    <InputLinkLayout disabled={!validEmbed} onKeyDown={handleEnterSubmit} onBlur={onBlur}>
       <>
         <LinkIcon className="icon-search" />
       </>
@@ -44,6 +45,7 @@ export default function InsertLink({
         onKeyDown={(e) => {
           handleEnterSubmit(e);
         }}
+        ref={inputRef}
       />
       <FlexContainer align="center">
         {url && (

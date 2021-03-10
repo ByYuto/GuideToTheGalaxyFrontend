@@ -3,8 +3,13 @@ import styled from 'styled-components';
 import 'rsuite/dist/styles/rsuite-default.css';
 import { Drawer } from 'rsuite';
 import { Link } from 'react-router-dom';
+import { screen } from '../../utils/constants';
 
 const SidebarLayout = styled(Drawer)`
+  @media (max-width: ${screen.SM}) {
+    width: 300px !important;
+  }
+
   & .rs-drawer-content {
     color: #bdbfdf;
     background-color: #151531;

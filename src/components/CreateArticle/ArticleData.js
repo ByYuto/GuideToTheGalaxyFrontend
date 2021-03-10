@@ -7,17 +7,17 @@ import { useSelector, useDispatch } from 'react-redux';
 import { makeFormDraft, updateValidationTemplate } from '../../redux/reducers/newArticleState';
 import PlaceholderImg from '../../assets/images/Rectangle.png';
 import { generalTemplate } from '../../utils/constants';
-
+import {screen} from '../../utils/constants'
 const StyledArticleImage = styled.div`
   padding: 0 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relativee;
 
-  @media (max-width: 600px) {
-    min-height: 360px;
+  @media (max-width: ${screen.SM}) {
+    min-height: 260px;
     justify-content: space-around;
+    margin-top: 24px;
   }
 
   & .no-margin {
@@ -40,6 +40,7 @@ const StyledArticleData = styled.div`
 
   @media (max-width: 768px) {
     flex-direction: column;
+    display: block;
   }
 
   ${Caption} {

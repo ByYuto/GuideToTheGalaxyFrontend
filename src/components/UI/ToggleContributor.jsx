@@ -30,10 +30,11 @@ export default function ToggleContributor() {
   const dispatch = useDispatch();
   return (
     <ToggleContributorLayout>
-      <span>Edits from the community LOCKED</span>
+      <span>Edits from the community {newArticle.contributions ? 'ALLOWED' : 'LOCKED'}</span>
       <Toggle
         checked={newArticle.contributions}
         onChange={() => dispatch(activateContributions(!newArticle.contributions))}
+        tooltipText="Allow/Lock community contributions"
       />
     </ToggleContributorLayout>
   );

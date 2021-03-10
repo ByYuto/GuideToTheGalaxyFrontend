@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { screen } from '../../../utils/constants';
 
 export const ShareArticleLayout = styled.div`
   padding: 16px;
@@ -24,11 +25,12 @@ export const ShareArticleLayout = styled.div`
     `}
   }
 
-  @media (max-width: 600px) {
+  @media (max-width: ${screen.SM}) {
     .articles-container {
-      grid-template-columns: 100%;
-      grid-template-row: auto;
+      display: block;
     }
+    padding-left: 0;
+    padding-right: 0;
   }
 `;
 
@@ -36,7 +38,10 @@ export const ShareArticleCardLayout = styled.div`
   margin-top: 15px;
   margin-left: 10px;
   height: 198px;
-  overflow: hidden;
+  -webkit-transform: translate3d(0, 0, 0);
+  @media (max-width: ${screen.SM}) {
+    margin-left: 0;
+  }
   & .article-card {
     height: 198px;
     overflow: hidden;
@@ -126,6 +131,17 @@ export const ShareArticleCardView = styled(Link)`
   text-decoration: none;
   outline: 0;
 
+  & .keywords-container {
+    overflow-x: hidden;
+    max-width: 808px;
+  }
+
+  & .tag-embed-post {
+    &:first-child {
+      margin-left: 0 !important;
+    }
+  }
+
   &:hover {
     cursor: pointer;
     color: inherit;
@@ -135,7 +151,7 @@ export const ShareArticleCardView = styled(Link)`
 
   & h4 {
     margin: 0;
-    padding: 5px;
+    padding: 5px 5px 5px 1px;
     font-family: Lato;
     font-style: normal;
     font-weight: bold;
@@ -152,23 +168,11 @@ export const ShareArticleCardView = styled(Link)`
     color: #1f1f3d;
     margin-right: 10px;
     margin-top: 0;
-    font-size: 15px;
-    line-height: 22px;
-    min-height: ;
-  }
-
-  & figure {
-    margin: 0;
-    width: 169px;
-    height: 138px;
-    overflow: hidden;
-    border-radius: 16px;
-    margin-bottom: 16px;
-    & img {
-      width: 169px;
-      height: auto;
-      border-radius: 16px;
-    }
+    font-family: Open Sans !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    line-height: 22px !important;
   }
 
   & .reactions-toolbar svg {
@@ -218,8 +222,11 @@ export const ShareArticleCardView = styled(Link)`
   }
 
   & .post-content {
-    min-height: 165px;
+    height: 138px;
     margin-top: 16px;
+    @media (max-width: ${screen.SM}) {
+      height: auto;
+    }
   }
 `;
 export const ShareArticleCardPreview = styled.div`
@@ -228,9 +235,14 @@ export const ShareArticleCardPreview = styled.div`
   color: inherit;
   cursor: pointer;
   outline: 0;
+  & .tag-embed-post {
+    &:first-child {
+      margin-left: 0 !important;
+    }
+  }
   & h4 {
     margin: 0;
-    padding: 5px;
+    padding: 5px 5px 5px 0;
     font-family: Lato;
     font-style: normal;
     font-weight: bold;
@@ -247,23 +259,11 @@ export const ShareArticleCardPreview = styled.div`
     color: #1f1f3d;
     margin-right: 10px;
     margin-top: 0;
-    font-size: 15px;
-    line-height: 22px;
-    min-height: ;
-  }
-
-  & figure {
-    margin: 0;
-    width: 169px;
-    height: 138px;
-    overflow: hidden;
-    border-radius: 16px;
-    margin-bottom: 16px;
-    & img {
-      width: 169px;
-      height: auto;
-      border-radius: 16px;
-    }
+    font-family: Open Sans !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    line-height: 22px !important;
   }
 
   & .reactions-toolbar svg {
@@ -313,8 +313,11 @@ export const ShareArticleCardPreview = styled.div`
   }
 
   & .post-content {
-    min-height: 165px;
+    height: 138px;
     margin-top: 16px;
+    @media (max-width: ${screen.SM}) {
+      height: auto;
+    }
   }
 
   & a {

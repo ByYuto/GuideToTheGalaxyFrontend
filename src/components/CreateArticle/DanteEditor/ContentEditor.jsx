@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { EditorLayout } from './styled-components';
-import { Editor, EditorState, CompositeDecorator, RichUtils } from 'draft-js';
+import { EditorLayout, TextToolbarFixed, MediaToolbarFixed } from './styled-components';
+import { Editor, EditorState, Modifier, RichUtils, SelectionState } from 'draft-js';
 import TextFormat from './style-toolbar/TextFormat';
 import 'draft-js/dist/Draft.css';
 import InsertLink from './widgets/link/InsertLink';
@@ -13,6 +13,9 @@ import FlexContainer from '../../UI/FlexContainer';
 import Popover from 'react-text-selection-popover';
 import { useDispatch, useSelector } from 'react-redux';
 import { onChangeArticleContent } from '../../../redux/reducers/newArticleState';
+import { useCallback } from 'react';
+import { getEntityFromCursor, getEntityKeyFromCursor, getURLFromCursor } from './util';
+import { startsWith } from 'lodash';
 
 const EDITOR_VISIBLE_DISTANCE = 153;
 const styles = {
@@ -59,14 +62,16 @@ export function findLinkEntities(contentBlock, callback, contentState) {
 
 function ContentEditor() {
   const dispatch = useDispatch();
-  const { newArticle } = useSelector((store) => store.newArticle);
+  const { newArticle, step } = useSelector((store) => store.newArticle);
+  const { isMobile } = useSelector((store) => store.app);
   const editorState = newArticle.content;
   const setEditorState = (editorData) => dispatch(onChangeArticleContent(editorData));
   const [isFocusEditor, setFocusEditor] = useState(false);
   const [styledToolbarOut, setStyledToolbarOut] = useState(false);
   const [mediaToolbarOut, setMediaToolbarOut] = useState(false);
   const [editorOut, setEditorOut] = useState(false);
-  const [linkInputActive, setLinkInputActive] = useState('disabled');
+  const [linkPopupOpened, setLinkPopupOpened] = useState(false);
+  const [linkButtonState, setLinkButtonState] = useState('disabled');
   const [newLinkEntityKey, setLinkEntityKey] = useState(null);
   const imageInputRef = useRef(null);
   const editorContainer = useRef(null);
@@ -75,11 +80,15 @@ function ContentEditor() {
   const [urlValue, setUrlValue] = useState('');
   const [selectionState, setSelectionState] = useState(null);
   const editorRef = useRef(null);
-  const makeFocus = () => editorRef.current.focus();
+  const editorDraftRef = useRef(null);
+  const urlInputRef = useRef(null);
+  const makeFocus = () => editorDraftRef.current.focus();
+  const urlMakeFocus = () => (urlInputRef.current ? urlInputRef.current.focus() : null);
   const styledToolbarRef = useRef(null);
   const mediaToolbarRef = useRef(null);
   const [topDistance, setTopDistance] = useState(0);
   const [embedActive, setEmbedActivation] = useState(false);
+  const [linkButtonActive, setLinkButtonActive] = useState(false);
 
   const mediaBlockRenderer = (block) => {
     if (block.getType() === 'atomic') {
@@ -102,24 +111,82 @@ function ContentEditor() {
   const _promptForLink = () => {
     const selection = editorState.getSelection();
     if (!selection.isCollapsed()) {
-      setLinkInputActive('inactive');
+      linkPopupOpened(false);
     }
   };
 
-  const _confirmLink = async (editorState) => {
-    const currentSelection = selectionState;
-    const currentUrlValue = urlValue;
-    const contentState = editorState.getCurrentContent();
-    const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: currentUrlValue });
-    const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-    const newEditorState = await EditorState.set(editorState, { currentContent: contentStateWithEntity });
-    await setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
-    setLinkEntityKey(entityKey);
+  const fixUrl = (url) => {
+    if (!startsWith(url, 'https://') && !startsWith(url, 'http://')) {
+      return 'http://' + url;
+    }
+    return url;
   };
+  const _confirmLink = useCallback(() => {
+    if (urlValue === '') {
+      console.log('Removiendo link');
+      const selection = editorState.getSelection();
+      const content = editorState.getCurrentContent();
+      const startKey = selection.getStartKey();
+      const startOffset = selection.getStartOffset();
+      const block = content.getBlockForKey(startKey);
+      const linkKey = block.getEntityAt(startOffset);
+
+      let contentWithRemovedLink = content;
+      block.findEntityRanges(
+        (charData) => {
+          //You need to use block.findEntityRanges() API to get the whole range of link
+
+          const entityKey = charData.getEntity();
+          if (!entityKey) return false;
+          return entityKey === linkKey; //Need to return TRUE only for your specific link.
+        },
+        (start, end) => {
+          const entitySelection = new SelectionState({
+            anchorKey: block.getKey(), //You already have the block key
+            focusKey: block.getKey(),
+            anchorOffset: start, //Just use the start/end provided by the API
+            focusOffset: end,
+          });
+          contentWithRemovedLink = Modifier.applyEntity(content, entitySelection, null);
+
+          return;
+        }
+      );
+
+      //Remove link from entity
+      /*
+      const contentState = editorState.getCurrentContent();
+      const contentWithoutEntities = Modifier.applyEntity(contentState, editorState.getSelection(), null);
+      
+      */
+
+      const newEditorState = EditorState.set(editorState, { currentContent: contentWithRemovedLink });
+      setEditorState(newEditorState);
+    } else {
+      const currentSelection = editorState.getSelection(); //selectionState;
+      const contentState = editorState.getCurrentContent();
+      const currentUrlValue = fixUrl(urlValue);
+      if (currentSelection.isCollapsed()) {
+        const entityKey = getEntityKeyFromCursor(editorState, 'LINK');
+        if (entityKey) {
+          const newContentState = contentState.replaceEntityData(entityKey, { url: currentUrlValue });
+          const newEditorState = EditorState.set(editorState, { currentContent: newContentState });
+          setEditorState(newEditorState);
+        }
+      } else {
+        const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: currentUrlValue });
+        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+        const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+        setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
+        setLinkEntityKey(entityKey);
+      }
+    }
+    setLinkPopupOpened(false);
+  }, [editorState, urlValue, setEditorState]);
 
   const _onLinkInputKeyDown = (e, editorState) => {
     if (e.which === 13) {
-      _confirmLink(editorState);
+      _confirmLink();
     }
   };
 
@@ -170,20 +237,23 @@ function ContentEditor() {
     }
 
     const selection = editorState.getSelection();
-    const isCollapse = selection.isCollapsed();
-    if (isCollapse) {
-      setLinkInputActive('disabled');
+    const isCollapsed = selection.isCollapsed();
+    //console.log({ isCollapsed, urlValue });
+    if (isCollapsed) {
+      setLinkButtonState(!urlValue ? 'disabled' : 'active');
+    } else {
+      setLinkButtonState('inactive');
     }
 
-    if (!isCollapse && linkInputActive === 'disabled') {
-      setLinkInputActive('inactive');
-    }
-    if (newLinkEntityKey && linkInputActive === 'active') {
-      setLinkInputActive('inactive');
-      setUrlValue('');
-      setSelectionState(null);
-      setLinkEntityKey(null);
-    }
+    //if (!isCollapsed && linkInputActive === 'disabled') {
+    //setLinkButtonState('inactive');
+    //}
+    //if (newLinkEntityKey && linkInputActive === 'active') {
+    //setLinkInputActive('inactive');
+    //setUrlValue('');
+    //setSelectionState(null);
+    //setLinkEntityKey(null);
+    //}
 
     Promise.resolve(
       typeof window.IntersectionObserver !== 'undefined' ? window.IntersectionObserver : import('intersection-observer')
@@ -216,7 +286,7 @@ function ContentEditor() {
         setTopDistance(scrollElm.scrollTop);
       });
     };
-  }, [urlValue, editorState, linkInputActive, newLinkEntityKey, topDistance]);
+  }, [urlValue, editorState, newLinkEntityKey, topDistance]);
 
   const observerHandler = (entries, observer) => {
     entries.forEach((elm) => {
@@ -230,30 +300,89 @@ function ContentEditor() {
       }
     });
   };
-  const urlInput = (
-    <Popover isOpen={linkInputActive === 'active'}>
+
+  const onUrlInputBlur = () => {
+    setLinkPopupOpened(false);
+  };
+  const onUrlInputClear = () => {
+    setUrlValue('');
+  };
+  const urlInput = (inputRef) => (
+    <Popover isOpen={linkPopupOpened}>
       <div style={{ zIndex: 999 }}>
         <InsertLink
+          inputRef={urlInputRef}
           onKeyDown={_onLinkInputKeyDown}
           url={urlValue}
           onClickBtn={_confirmLink}
           editorState={editorState}
           onChangeInput={onURLChange}
-          onClear={() => {
-            setUrlValue('');
-          }}
-          setLinkInputActive={setLinkInputActive}
+          onClear={onUrlInputClear}
+          onBlur={onUrlInputBlur}
+          //setLinkInputActive={setLinkInputActive}
         />
       </div>
     </Popover>
   );
 
+  useEffect(() => {
+    if (step === 3) {
+      makeFocus();
+    }
+  }, [step]);
+
+  useEffect(() => {
+    if (linkPopupOpened) {
+      urlMakeFocus();
+    }
+  }, [linkPopupOpened]);
+
+  useEffect(() => {
+    const url = getURLFromCursor(editorState);
+    //if (url) {
+    setUrlValue(url);
+    //}
+  }, [editorState]);
+
+  useEffect(() => {
+    const entity = getEntityFromCursor(editorState, 'LINK');
+    if (entity) {
+      console.log(entity.toObject());
+    }
+  }, [editorState]);
+
+  const handleUserKeyPress = useCallback((event) => {
+    const { key, keyCode, ctrlKey, metaKey } = event;
+
+    console.log({ key, keyCode, ctrlKey, metaKey });
+    if (keyCode === 75 && (ctrlKey === true || metaKey === true)) {
+      event.preventDefault();
+      console.log('Detected CMD + K, Opening link input');
+      //const url = getURLFromCursor(editorState);
+      //if (url) {
+      //setUrlValue(url);
+      setLinkPopupOpened(true);
+
+      //}
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [handleUserKeyPress]);
+
+  const onLinkButtonClick = (event) => {
+    event.preventDefault();
+    setSelectionState(editorState.getSelection());
+    setLinkPopupOpened(true);
+    //promptLink();
+  };
   return (
-    <EditorLayout
-      ref={editorContainer}
-      className="editor-parent-container"
-      linkInputActive={linkInputActive === 'active' ? 1 : 0}
-    >
+    <EditorLayout ref={editorContainer} className="editor-parent-container" linkPopupOpened={linkPopupOpened ? 1 : 0}>
       <div
         style={{ width: '180px', opacity: isFocusEditor || embedActive ? 1 : 0 }}
         ref={styledToolbarRef}
@@ -264,34 +393,33 @@ function ContentEditor() {
           setEditorState={setEditorState}
           promptLink={_promptForLink}
           imageInputRef={imageInputRef}
-          linkInputActive={linkInputActive}
-          setLinkInputActive={setLinkInputActive}
+          linkButtonState={linkButtonState}
+          setLinkButtonState={setLinkButtonState}
           setSelectionState={setSelectionState}
+          onLinkButtonClick={onLinkButtonClick}
         />
       </div>
-      <div
+      <TextToolbarFixed
         className="fixed-styled-toolbar-container"
-        style={{
-          width: '180px',
-          position: editorOut && !styledToolbarOut ? 'fixed' : 'relative',
-          top: editorOut && !styledToolbarOut ? '2%' : '0',
-          left: editorOut && !styledToolbarOut ? '20%' : '0',
-          display: editorOut && !styledToolbarOut ? 'block' : 'none',
-          zIndex: 5,
-          opacity: isFocusEditor || embedActive ? 1 : 0,
-        }}
+        editorOut={editorOut}
+        styledToolbarOut={styledToolbarOut}
+        isFocusEditor={isFocusEditor}
+        embedActive={embedActive}
+        isMobile={isMobile}
       >
         <TextFormat
           editorState={editorState}
           setEditorState={setEditorState}
           promptLink={_promptForLink}
-          linkInputActive={linkInputActive}
-          setLinkInputActive={setLinkInputActive}
+          imageInputRef={imageInputRef}
+          linkButtonState={linkButtonState}
+          setLinkButtonState={setLinkButtonState}
           setSelectionState={setSelectionState}
+          onLinkButtonClick={onLinkButtonClick}
         />
-      </div>
+      </TextToolbarFixed>
       <div>
-        {urlInput}
+        {urlInput()}
         <div
           ref={editorRef}
           onClick={makeFocus}
@@ -306,24 +434,21 @@ function ContentEditor() {
             placeholder="Enter some text..."
             blockRendererFn={mediaBlockRenderer}
             handleKeyCommand={handleKeyCommand}
-            readOnly={linkInputActive === 'active'}
+            readOnly={false}
             onFocus={() => setFocusEditor(true)}
             onBlur={() => setFocusEditor(false)}
+            ref={editorDraftRef}
           />
         </div>
       </div>
       <FlexContainer justify="center">
-        <div
-          style={{
-            width: '250px',
-            position: editorOut && !mediaToolbarOut ? 'fixed' : 'relative',
-            top: editorOut && !mediaToolbarOut ? '70%' : '0',
-            left: editorOut && !mediaToolbarOut ? '40%' : '0',
-            display: editorOut && !mediaToolbarOut ? 'block' : 'none',
-            zIndex: 5,
-            opacity: isFocusEditor || embedActive ? 1 : 0,
-          }}
+        <MediaToolbarFixed
           className="fixed-media-toolbar-container"
+          editorOut={editorOut}
+          mediaToolbarOut={mediaToolbarOut}
+          isFocusEditor={isFocusEditor}
+          embedActive={embedActive}
+          isMobile={isMobile}
         >
           <MediaToolbar
             editorState={editorState}
@@ -332,7 +457,7 @@ function ContentEditor() {
             embedActive={embedActive}
             setEmbedActivation={setEmbedActivation}
           />
-        </div>
+        </MediaToolbarFixed>
         <div
           ref={mediaToolbarRef}
           className="media-toolbar-container"

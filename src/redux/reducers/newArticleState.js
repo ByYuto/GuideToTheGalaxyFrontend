@@ -1,8 +1,8 @@
 import uid from 'uid';
 import { uploadImage, createArticle } from '../../http/createArticleService';
 import { setAuthorization } from './authState';
-import {EditorState, CompositeDecorator} from 'draft-js';
-import {Link, findLinkEntities} from '../../components/CreateArticle/DanteEditor/ContentEditor';
+import { EditorState, CompositeDecorator } from 'draft-js';
+import { Link, findLinkEntities } from '../../components/CreateArticle/DanteEditor/ContentEditor';
 
 export const decorator = new CompositeDecorator([
   {
@@ -27,9 +27,9 @@ const initialState = {
     discontinued_law: false,
     date: new Date(),
     pdf: null,
-    contributions: false,
+    contributions: true,
     keywords: [],
-    content: EditorState.createEmpty(decorator)
+    content: EditorState.createEmpty(decorator),
   },
   articleValidations: {},
   currentValueEditor: [],
@@ -38,7 +38,7 @@ const initialState = {
   error: false,
   errorMessage: '',
   loading: false,
-  success: null,
+  savedArticle: null,
 };
 
 //Action Types
@@ -141,7 +141,7 @@ export const saveArticle = (article) => async (dispatch) => {
   const response = await createArticle(article);
   if (response.status === 200) {
     dispatch(loadingArticle(false));
-    dispatch(successSavedArticle(response.data._id));
+    dispatch(successSavedArticle(response.data));
   } else {
     if (response.status === 401) {
       dispatch(setAuthorization(false));
@@ -157,7 +157,7 @@ export const setArticleContent = (articleId) => ({ type: INSERT_EMBED_ARTICLE, p
 export const setKeyword = (value) => ({ type: INSERT_KEYWORD, payload: value });
 export const removeKeyword = (value) => ({ type: REMOVE_KEYWORD, payload: value });
 
-export const onChangeCustomSubcategory = (value) => ({ type: CUSTOM_SUBCATEGORY, payload: value })
+export const onChangeCustomSubcategory = (value) => ({ type: CUSTOM_SUBCATEGORY, payload: value });
 //Reducer
 export default (state = initialState, { type, payload }) => {
   switch (type) {
@@ -213,7 +213,6 @@ export default (state = initialState, { type, payload }) => {
         currentIndex: index,
       };
     case ON_CHANGE_CONTENT:
-     
       return {
         ...state,
         newArticle: {
@@ -379,7 +378,7 @@ export default (state = initialState, { type, payload }) => {
     case ARTICLE_SUCCESS:
       return {
         ...state,
-        success: payload,
+        savedArticle: payload,
       };
 
     case INSERT_EMBED_ARTICLE:

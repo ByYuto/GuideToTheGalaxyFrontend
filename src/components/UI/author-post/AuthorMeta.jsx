@@ -15,7 +15,7 @@ export default function AuthorMeta({ authorName, postDate, avatarUrl }) {
           <div>
             <strong>{authorName}</strong>
           </div>
-          <div>
+          <div className="date-metadata">
             <span>{postDate}</span>
           </div>
         </div>

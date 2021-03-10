@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
-import Button from '../UI/Button';
+import Button from '../../components/UI/Button';
 import HeaderBackground from '../../assets/images/home-bg.jpg';
+import { screen } from '../../utils/constants';
 
 export const customStyle = {
   indicatorsContainer: (provided, state) => ({ color: state.isFocused ? 'white' : '#BDBFDF' }),
@@ -51,6 +52,10 @@ export const Separator = styled.div`
   height: 56px;
   margin-left: 16px;
   margin-right: 16px;
+  @media (max-width: ${screen.SM}) {
+    margin-left: 8px;
+    margin-right: 8px;
+  }
 `;
 
 export const AddContentButton = styled(Button)`
@@ -59,10 +64,26 @@ export const AddContentButton = styled(Button)`
 
 export const MenuButton = styled(Button)`
   font-size: 34px;
+  margin-left: 16px;
+  & svg:hover rect {
+    fill: #cf92e5;
+  }
+
+  &.burger-btn {
+    @media (max-width: ${screen.SM}) {
+      display: block;
+      border-radius: 0;
+      padding-bottom: 1px;
+    }
+  }
 `;
 
 export const NotificationsButton = styled(Button)`
   font-size: 30px;
+  margin-right: 16px;
+  & svg:hover path {
+    fill: #cf92e5;
+  }
 `;
 
 export const LoginButton = styled.button`
@@ -79,10 +100,13 @@ export const LoginButton = styled.button`
   outline: 0;
   border: none;
   cursor: pointer;
+  @media (max-width: ${screen.SM}) {
+    padding: 0;
+  }
 `;
 
 export const StyledTopBar = styled.div`
-  background: ${(props) => (props.home === 'home' ? 'transparent' : props.theme.baseColors.dark)};
+  background: ${(props) => (props.home === 'home' && !props.isMobile ? 'transparent' : props.theme.baseColors.dark)};
   height: 88px;
   display: flex;
   flex-grow: 1;
@@ -90,13 +114,28 @@ export const StyledTopBar = styled.div`
   align-items: center;
   flex-direction: row;
   padding: 0 24px 0 24px;
-  box-shadow: 20px 0 #151531;
+  ${(props) => (props.home === 'home' && !props.isSticky ? '' : 'box-shadow: 0px 1px 10px 0px #14144f;')}
+  ${(props) => (props.home === 'home' && !props.isSticky ? 'position: fixed;' : '')}
+  width: 100%;
+  z-index: 20;
+  margin-bottom: 5px;
   border-bottom: solid 1px ${(props) => (props.home === 'home' ? 'transparent' : '#151531')};
+
+  @media (max-width: ${screen.SM}) {
+    height: 64px;
+  }
 
   .left {
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    .dontpanic-logo {
+      margin-left: 16px;
+      @media (max-width: ${screen.SM}) {
+        display: none;
+      }
+    }
 
     a {
       display: flex;
@@ -140,6 +179,13 @@ export const MaxWidthContainer = styled.div`
   background-color: ${(props) =>
     props.home ? (props.theme.isDark ? props.theme.baseColors.dark : props.theme.baseColors.white) : 'transparent'};
   color: ${(props) => (props.theme.isDark ? props.theme.baseColors.white : props.theme.baseColors.dark)};
+  @media (max-width: 600px) {
+    max-width: 100vw;
+    width: 100%;
+    padding: 16px;
+    padding-bottom: 0;
+    background-color: #1f1f3d;
+  }
 `;
 
 export const StyledView = styled(View)`
@@ -166,26 +212,41 @@ export const FullHeaderLayout = styled.div`
   background-image: ${(props) => (props.home === 'home' && !props.isSticky ? `url('${HeaderBackground}')` : 'none')};
   background-size: cover;
   background-repeat: no-repeat;
+
   position: ${(props) => (props.isSticky ? 'fixed' : 'relative')};
+  ${(props) =>
+    props.isSticky &&
+    css`
+      top: 0;
+    `};
   z-index: 15;
 
   ${(props) => {
     if (!props.noKeywords) {
       return props.home === 'home' && !props.isSticky
         ? css`
-            height: 460px;
+            height: auto;
           `
         : css`
-            height: 154px;
+            height: auto;
           `;
     } else {
-      return css`
-        height: 76px;
-      `;
+      return props.home === 'home' || props.isSticky
+        ? css`
+            height: auto;
+          `
+        : css`
+            height: ${(props) => (props.isMobile ? '64px' : '76px')};
+          `;
     }
   }}
 
   width: 100%;
+
+  @media (max-width: 600px) {
+    background-image: none;
+  }
+
   & .selected-keywords {
     padding-right: 30px;
   }
@@ -195,13 +256,29 @@ export const FullHeaderLayout = styled.div`
     cursor: pointer;
   }
   & .main-hero-content {
-    height: 296px;
     overflow: visible;
+
+    @media (max-width: 600px) {
+      height: auto;
+    }
+
+    & img {
+      @media (max-width: 600px) {
+        width: 100%;
+        height: auto;
+      }
+    }
   }
   & .searchbar-container-home {
     margin-top: 50px;
-    margin-bottom: 50px;
+    margin-bottom: 63px;
     overflow: visible;
+    @media (max-width: 864px) {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      width: 100%;
+      border-radius: 8px;
+    }
   }
 
   & .home-main-text {
@@ -215,8 +292,8 @@ export const FullHeaderLayout = styled.div`
     margin-top: 30px;
     width: 65%;
 
-    @media (max-width: 600px) {
-      width: 90%;
+    @media (max-width: 864px) {
+      width: 100%;
     }
   }
 
@@ -230,48 +307,13 @@ export const FullHeaderLayout = styled.div`
     width: 100%;
     position: relative;
 
-    & .keywords-container {
-      position: relative;
-      & > div:first-child {
-        padding-right: 15px;
-        margin-right: 15px;
-        border-right: solid 1px #151531;
-        width: 200px;
-      }
-      & .keywords-hidden {
-        width: 970px;
-        overflow: hidden;
-        overflow-x: auto;
-        align-items: center;
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-          display: none;
-        }
-      }
-      & .keywords {
-        width: auto;
-        white-space: nowrap;
-        overflow-y: hidden;
-        position: relative;
-        /* box-shadow: inset 0 20px 20px rgba(21, 21, 49, 0.7);*/
-        & > span {
-          cursor: pointer;
-        }
-
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none;
-
-        &::-webkit-scrollbar {
-          display: none;
-        }
-      }
+    @media (max-width: 600px) {
+      height: auto;
     }
   }
 
   & .css-1wa3eu0-placeholder {
-    color: ${(props) => (props.theme.isDark ? props.theme.baseColors.middleLight : props.theme.baseColors.middle)};
+    color: #bdbfdf;
   }
 
   & .category__option {
@@ -365,5 +407,12 @@ export const FullHeaderLayout = styled.div`
       border: none;
       cursor: pointer;
     }
+  }
+`;
+
+export const ActivateSearchBtn = styled(Button)`
+  background: #151531;
+  &:focus {
+    background: #151531;
   }
 `;

@@ -37,6 +37,15 @@ export const StyledView = styled(View)`
 
 export const ArticleDetailContainer = styled.div`
   padding-bottom: 80px;
+
+  & .DraftEditor-root {
+    @media (max-width: 864px) {
+      padding: 16px;
+      & figure[contenteditable='false'] {
+        margin: 0;
+      }
+    }
+  }
   & .discontinued-date-label {
     font-family: Lato;
     font-style: normal;
@@ -48,8 +57,30 @@ export const ArticleDetailContainer = styled.div`
   }
   & .footer-author-meta {
     margin-top: 24px;
+    @media (max-width: 864px) {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
   }
   & .contributions-bar {
+    padding-left: 42px;
+    padding-right: 10px;
+
+    @media (max-width: 864px) {
+      flex-direction: column;
+      padding: 0;
+    }
+
+    & .contributions-counter {
+      @media (max-width: 864px) {
+        border-bottom: 1px solid #f6f8ff;
+        margin-bottom: 3px;
+      }
+    }
+
+    & .contributions-number {
+      margin-right: 10px;
+    }
     & span {
       color: #1f1f3d;
       cursor: pointer;
@@ -60,6 +91,13 @@ export const ArticleDetailContainer = styled.div`
   }
   & .reactions-column {
     margin-top: 24px;
+    @media (max-width: 864px) {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    & > div {
+      align-items: flex-end;
+    }
   }
   & .edit-lock {
     & svg {
@@ -104,6 +142,10 @@ export const ArticleDetailContainer = styled.div`
   & .header-content {
     padding-top: 24px;
     min-height: 221px;
+    @media (max-width: 864px) {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
   }
 
   & h2 {
@@ -139,25 +181,47 @@ export const ArticleDetailContainer = styled.div`
     margin-top: 16px;
   }
 
-  & .button-buy > a {
-    color: white;
-    margin-top: 0;
-    font-family: Lato;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 14px;
-    padding-left: 20px;
-    padding-right: 20px;
+  & .button-buy {
+    margin-top: 16px;
+    & a {
+      color: white;
+      margin-top: 0;
+      font-family: Lato;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 14px;
+      padding-left: 20px;
+      padding-right: 20px;
+      text-decoration: none;
+    }
+  }
+
+  & .post-metadata-date {
+    color: #9695b7;
   }
 
   & .metadata-date {
     display: flex;
     align-items: center;
+    margin-top: 12px;
+    color: #9695b7;
   }
 
   & .metadata-container {
     margin-top: 16px;
+    @media (max-width: 864px) {
+      flex-direction: column;
+      & .metadata-url {
+        margin-bottom: 16px;
+      }
+      & .featured-img-container {
+        margin-top: 16px;
+        & figure {
+          margin: 0;
+        }
+      }
+    }
   }
 
   & .after-header-content {
@@ -167,6 +231,11 @@ export const ArticleDetailContainer = styled.div`
       background: #151531;
       display: flex;
       justify-content: space-between;
+    }
+
+    @media (max-width: 864px) {
+      padding-left: 16px;
+      padding-right: 16px;
     }
   }
 
