@@ -34,7 +34,7 @@ export default function InsertLink({
   };
 
   return (
-    <InputLinkLayout disabled={!validEmbed} onKeyDown={handleEnterSubmit} onBlur={onBlur}>
+    <InputLinkLayout disabled={!validEmbed} onBlur={onBlur}>
       <>
         <LinkIcon className="icon-search" />
       </>

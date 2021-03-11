@@ -5,8 +5,8 @@ import { EditorState, CompositeDecorator } from 'draft-js';
 import {
   Link,
   findLinkEntities,
-  findFakeLinkEntities,
-  FakeLink,
+  findFakeSelectionEntities,
+  FakeSelection,
 } from '../../components/CreateArticle/DanteEditor/ContentEditor';
 
 export const decorator = new CompositeDecorator([
@@ -15,8 +15,8 @@ export const decorator = new CompositeDecorator([
     component: Link,
   },
   {
-    strategy: findFakeLinkEntities,
-    component: FakeLink,
+    strategy: findFakeSelectionEntities,
+    component: FakeSelection,
   },
 ]);
 

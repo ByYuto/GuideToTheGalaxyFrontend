@@ -14,7 +14,7 @@ import Popover from 'react-text-selection-popover';
 import { useDispatch, useSelector } from 'react-redux';
 import { onChangeArticleContent } from '../../../redux/reducers/newArticleState';
 import { useCallback } from 'react';
-import { getEntityFromCursor, getEntityKeyFromCursor, getURLFromCursor } from './util';
+import { getEntityKeyFromCursor, getURLFromCursor } from './util';
 import { startsWith } from 'lodash';
 
 const EDITOR_VISIBLE_DISTANCE = 153;
@@ -49,9 +49,9 @@ const styles = {
     color: '#3b5998',
     textDecoration: 'underline',
   },
-  fakeLink: {
-    color: 'red',
-    textDecoration: 'underline',
+  fakeSelection: {
+    backgroundColor: 'yellow',
+    color: 'white',
   },
 };
 
@@ -64,10 +64,10 @@ export function findLinkEntities(contentBlock, callback, contentState) {
   }, callback);
 }
 
-export function findFakeLinkEntities(contentBlock, callback, contentState) {
+export function findFakeSelectionEntities(contentBlock, callback, contentState) {
   contentBlock.findEntityRanges((character) => {
     const entityKey = character.getEntity();
-    return entityKey !== null && contentState.getEntity(entityKey).getType() === 'FAKE_LINK';
+    return entityKey !== null && contentState.getEntity(entityKey).getType() === 'FAKE_SELECTION';
   }, callback);
 }
 
@@ -89,8 +89,8 @@ function ContentEditor() {
   const [currentBlockKey, setBlockKey] = useState(null);
   const [imagesGallery, setImagesGallery] = useState([]);
   const [urlValue, setUrlValue] = useState('');
-  const [selectionState, setSelectionState] = useState(null);
-  const editorRef = useRef(null);
+  //const [selectionState, setSelectionState] = useState(null);
+  //const editorRef = useRef(null);
   const editorDraftRef = useRef(null);
   const urlInputRef = useRef(null);
   const makeFocus = () => editorDraftRef.current.focus();
@@ -136,7 +136,9 @@ function ContentEditor() {
   const contentState = editorState.getCurrentContent();
   console.log('content state', convertToRaw(contentState));
   const _confirmLink = useCallback(() => {
+    console.log('Entro a confirmar link');
     if (urlValue === '') {
+      console.log('vacio');
       const selection = editorState.getSelection();
       const content = editorState.getCurrentContent();
       const startKey = selection.getStartKey();
@@ -176,24 +178,34 @@ function ContentEditor() {
       const newEditorState = EditorState.set(editorState, { currentContent: contentWithRemovedLink });
       setEditorState(newEditorState);
     } else {
+      console.log('Tiene valor', urlValue);
       const currentSelection = editorState.getSelection(); //selectionState;
       const contentState = editorState.getCurrentContent();
       const currentUrlValue = fixUrl(urlValue);
       if (currentSelection.isCollapsed()) {
-        const entityKey = getEntityKeyFromCursor(editorState, 'LINK');
+        console.log('isCollapsed');
+        let entityKey = getEntityKeyFromCursor(editorState, 'LINK');
+        if (!entityKey) {
+          entityKey = getEntityKeyFromCursor(editorState, 'FAKE_SELECTION');
+        }
+        console.log(entityKey);
         if (entityKey) {
           const newContentState = contentState.replaceEntityData(entityKey, { url: currentUrlValue });
           const newEditorState = EditorState.set(editorState, { currentContent: newContentState });
           setEditorState(newEditorState);
         }
       } else {
-        const contentStateWithEntity = contentState.createEntity('LINKED', 'MUTABLE', {
+        console.log('Is not collapsed, currentSelection', currentSelection);
+        const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {
           url: currentUrlValue,
           popo: 8,
         });
         const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-        const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
-        setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
+        let newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+        newEditorState = RichUtils.toggleLink(newEditorState, currentSelection, entityKey);
+        setEditorState(newEditorState);
+        console.log('new content state', convertToRaw(newEditorState.getCurrentContent()));
+
         //setLinkEntityKey(entityKey);
       }
     }
@@ -202,6 +214,7 @@ function ContentEditor() {
 
   const _onLinkInputKeyDown = (e, editorState) => {
     if (e.which === 13) {
+      console.log('ejecutó Esto');
       _confirmLink();
     }
   };
@@ -360,17 +373,19 @@ function ContentEditor() {
     //}
   }, [editorState]);
 
+  /*
   useEffect(() => {
     const entity = getEntityFromCursor(editorState, 'LINK');
     if (entity) {
       console.log(entity.toObject());
     }
   }, [editorState]);
+  */
 
   const handleUserKeyPress = useCallback((event) => {
     const { key, keyCode, ctrlKey, metaKey } = event;
 
-    console.log({ key, keyCode, ctrlKey, metaKey });
+    //console.log({ key, keyCode, ctrlKey, metaKey });
     if (keyCode === 75 && (ctrlKey === true || metaKey === true)) {
       event.preventDefault();
       console.log('Detected CMD + K, Opening link input');
@@ -393,12 +408,28 @@ function ContentEditor() {
 
   const onLinkButtonClick = (event) => {
     event.preventDefault();
-    setSelectionState(editorState.getSelection());
+    //setSelectionState(editorState.getSelection());
     setLinkPopupOpened(true);
     //promptLink();
   };
+
+  console.log('editorState', editorState);
   return (
-    <EditorLayout ref={editorContainer} className="editor-parent-container" linkPopupOpened={linkPopupOpened ? 1 : 0}>
+    <EditorLayout
+      ref={editorContainer}
+      className="editor-parent-container"
+      linkPopupOpened={linkPopupOpened ? 1 : 0}
+      onFocus={() => {
+        console.log('focus container');
+        //editorRef.current.focus();
+        setFocusEditor(true);
+      }}
+      onBlur={() => {
+        console.log('blur container');
+        setFocusEditor(false);
+      }}
+      tabindex={-1}
+    >
       <div
         style={{ width: '180px', opacity: isFocusEditor || embedActive ? 1 : 0 }}
         ref={styledToolbarRef}
@@ -411,7 +442,7 @@ function ContentEditor() {
           imageInputRef={imageInputRef}
           linkButtonState={linkButtonState}
           setLinkButtonState={setLinkButtonState}
-          setSelectionState={setSelectionState}
+          //setSelectionState={setSelectionState}
           onLinkButtonClick={onLinkButtonClick}
         />
       </div>
@@ -430,20 +461,13 @@ function ContentEditor() {
           imageInputRef={imageInputRef}
           linkButtonState={linkButtonState}
           setLinkButtonState={setLinkButtonState}
-          setSelectionState={setSelectionState}
+          //setSelectionState={setSelectionState}
           onLinkButtonClick={onLinkButtonClick}
         />
       </TextToolbarFixed>
       <div>
         {urlInput()}
-        <div
-          ref={editorRef}
-          onClick={makeFocus}
-          className="editor-container"
-          onBlur={() => {
-            setFocusEditor(false);
-          }}
-        >
+        <div onClick={makeFocus} className="editor-container">
           <Editor
             editorState={editorState}
             onChange={setEditorState}
@@ -451,34 +475,48 @@ function ContentEditor() {
             blockRendererFn={mediaBlockRenderer}
             handleKeyCommand={handleKeyCommand}
             readOnly={false}
-            onFocus={() => setFocusEditor(true)}
-            on
             onBlur={() => {
               const currentSelection = editorState.getSelection(); //selectionState;
-              console.log('Current selection', currentSelection.toObject());
               if (!currentSelection.isCollapsed()) {
-                console.log('Creando fake link');
-                /*
-                const contentState = editorState.getCurrentContent();
-                const contentStateWithEntity = contentState.createEntity('FAKE_LINK', 'MUTABLE', { url: 'caca.net' });
-                const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-                const contentNew = Modifier.applyEntity(contentStateWithEntity, currentSelection, entityKey);
-                const newEditorState = EditorState.set(editorState, { currentContent: contentNew });
-                setEditorState(newEditorState);
-                console.log('NewEditorState', contentStateWithEntity.toObject());
-                //setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
-                */
-                const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {
-                  url: 'https://caca.com',
-                  popo: 8,
-                });
-                const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-                const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
-                setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
+                setTimeout(() => {
+                  console.log('Creando fake selection');
+                  /*
+                  const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {
+                    url: 'https://caca.com',
+                    popo: 8,
+                  });
+                  const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+                  const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+                  setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
+                  */
+
+                  const contentState = editorState.getCurrentContent();
+                  const contentStateWithEntity = contentState.createEntity('FAKE_SELECTION', 'MUTABLE');
+                  const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+                  const contentNew = Modifier.applyEntity(contentStateWithEntity, currentSelection, entityKey);
+                  const selection = editorState.getSelection();
+                  const startKey = selection.getStartKey();
+                  const newEditorState = EditorState.set(editorState, {
+                    currentContent: contentNew,
+                  });
+
+                  setEditorState(newEditorState);
+                  /*
+                  const editorWithoutSelection = EditorState.forceSelection(
+                    newEditorState,
+                    SelectionState.createEmpty()
+                  );
+                  console.log('editorWithoutSelection', editorWithoutSelection);
+                  setEditorState(editorWithoutSelection);
+                  */
+
+                  //setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
+                }, 1);
+
                 //setLinkEntityKey(entityKey);
               }
 
-              setFocusEditor(false);
+              //setFocusEditor(false);
             }}
             ref={editorDraftRef}
           />
@@ -539,13 +577,8 @@ export const Link = (props) => {
   );
 };
 
-export const FakeLink = (props) => {
-  const { url } = props.contentState.getEntity(props.entityKey).getData();
-  return (
-    <a href={url} style={styles.fakeLink}>
-      {props.children}
-    </a>
-  );
+export const FakeSelection = (props) => {
+  return <span style={styles.fakeSelection}>{props.children}</span>;
 };
 
 const Media = (props) => {

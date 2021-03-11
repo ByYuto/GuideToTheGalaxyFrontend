@@ -33,6 +33,7 @@ export const getURLFromCursor = (editorState) => {
 export const getEntityKeyFromCursor = (editorState, type = null) => {
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
+  console.log('currentSelection', selection.toObject());
   const startKey = selection.getStartKey();
   const startOffset = selection.getStartOffset();
   const block = contentState.getBlockForKey(startKey);
