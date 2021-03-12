@@ -13,8 +13,6 @@ import {
   //getArticlesFiltered,
   getSearchSuggestion,
   getArticlesFiltered,
-  getArticles,
-  setSelectedKeyword,
   setSelectedKeywords,
   setSort,
   //getArticles,
@@ -72,8 +70,10 @@ export default function HeaderSearchBar() {
   const handleSearchSelection = (val) => {
     dispatch(onSearchValueChange(val));
   };
+  console.log({ keywordsSelectedValue });
   const updateSearchURL = useCallback(
     (forcedValues = {}) => {
+      console.log('Starting updateSearchURL callback');
       let params = new URLSearchParams();
       const search = forcedValues.searchValue !== undefined ? forcedValues.searchValue : searchValue;
       const location = forcedValues.locationValue !== undefined ? forcedValues.locationValue : locationValue;
@@ -86,7 +86,7 @@ export default function HeaderSearchBar() {
         searchParam,
         locationValue,
         categoryValue,
-        keywordsSelectedValue,
+        keywordsSelected,
         sort,
       });
       if (search) {
@@ -117,8 +117,12 @@ export default function HeaderSearchBar() {
 
       history.push(newURL);
     },
-    [searchValue, locationValue, categoryValue, keywordsSelectedValue, isHome, history, initialized, sortValue]
+    [locationValue, categoryValue, keywordsSelectedValue, isHome, history, initialized, sortValue]
   );
+
+  useEffect(() => {
+    updateSearchURL();
+  }, [keywordsSelectedValue, locationValue, categoryValue, sortValue, updateSearchURL]);
   /*
   useEffect(() => {
     if (initialized) {
@@ -146,12 +150,12 @@ export default function HeaderSearchBar() {
       //  keywordsSelectedValue,
       //  initialized,
       //});
-      //console.log('Actualizando Busqueda porque cambio un parametro');
+      console.log('Actualizando Busqueda porque cambio un parametro');
       dispatch(getArticlesFiltered(searchParam, locationValue, categoryValue, sortValue, keywordsSelectedValue));
     } else {
       console.log('Aun no está inicializado... esperando...');
     }
-  }, [locationValue, categoryValue, sortValue, keywordsSelectedValue, initialized, dispatch, getArticlesFiltered]);
+  }, [locationValue, categoryValue, sortValue, keywordsSelectedValue, initialized, dispatch]);
 
   useEffect(() => {
     /*console.log(

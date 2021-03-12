@@ -48,10 +48,10 @@ export const getCategories = () => async (dispatch) => {
 };
 export const setCategoryValue = (val) => ({ type: SET_CATEGORY_VALUE, payload: val });
 export const setPlaceId = (id, addr) => ({ type: SET_PLACE_ID, payload: { id, addr } });
-export const getArticlesFiltered = (text, location, category, keywords) => async (dispatch) => {
+export const getArticlesFiltered = (text, location, category, sort, keywords) => async (dispatch) => {
   try {
     //console.log('Consultando con estos valores', text, location, category, keywords);
-    const response = await getArticlesFilteredService(text, location, category, keywords);
+    const response = await getArticlesFilteredService(text, location, category, sort, keywords);
     dispatch(setArticlesHome(response.data));
   } catch (e) {
     // TO DO handle unauthorized
