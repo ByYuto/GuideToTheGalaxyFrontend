@@ -437,6 +437,7 @@ function ContentEditor() {
             onFocus={() => setFocusEditor(true)}
             onBlur={() => setFocusEditor(false)}
             ref={editorDraftRef}
+            stripPastedStyles={true}
           />
         </div>
       </div>
