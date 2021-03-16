@@ -1,4 +1,4 @@
-import { setArticlesHome } from './appState';
+import { addArticlesHome, setArticlesHome } from './appState';
 import { getArticlesFilteredService, getCategoriesList, getSuggestedSearches } from '../../http/articleService';
 import { getKeywordsSuggestions } from '../../http/keywordService';
 import { setAuthorization } from './authState';
@@ -17,6 +17,7 @@ const initialState = {
   keywordSuggestions: [],
   keywordsSelected: [],
   loading: false,
+  page: 1,
   error: false,
   errorMessage: '',
   sortValue: 'created_at',
@@ -33,6 +34,7 @@ const REMOVE_SELECTED_KEYWORD = 'REMOVE_SELECTED_KEYWORD';
 const SET_SELECTED_KEYWORD = 'SET_SELECTED_KEYWORD';
 const SET_SELECTED_KEYWORDS = 'SET_SELECTED_KEYWORDS';
 const SET_SORT = 'SET_SORT';
+const SET_PAGE = 'SET_PAGE';
 
 export const onSearchValueChange = (value) => ({ type: CHANGE_SEARCH_VALUE, payload: value });
 export const clearSearchValue = () => ({ type: CLEAR_SEARCH_VALUE, payload: '' });
@@ -50,19 +52,59 @@ export const setCategoryValue = (val) => ({ type: SET_CATEGORY_VALUE, payload: v
 export const setPlaceId = (id, addr) => ({ type: SET_PLACE_ID, payload: { id, addr } });
 export const getArticlesFiltered = (text, location, category, sort, keywords) => async (dispatch) => {
   try {
-    //console.log('Consultando con estos valores', text, location, category, keywords);
-    const response = await getArticlesFilteredService(text, location, category, sort, keywords);
+    const response = await getArticlesFilteredService(text, location, category, sort, keywords, 1);
     dispatch(setArticlesHome(response.data));
   } catch (e) {
     // TO DO handle unauthorized
     if (e.response?.status === 401) {
       window.localStorage.removeItem('_token');
       dispatch(setAuthorization(false));
-      getArticlesFiltered(text, location, category, keywords);
+      getArticlesFiltered(text, location, category, sort, keywords, 1);
     }
     console.log(e.response);
   }
 };
+
+export const getArticlesFilteredSpecificPage = (page) => async (dispatch, getState) => {
+  const {
+    searchValue,
+    locationValue,
+    locationName,
+    searchSuggestions,
+    categoryValue,
+    keywordsSelected,
+    sortValue,
+  } = getState().topbarSearch;
+  const keywordsSelectedValue = keywordsSelected ? keywordsSelected.join(',') : '';
+  try {
+    const response = await getArticlesFilteredService(
+      searchValue,
+      locationValue,
+      categoryValue,
+      sortValue,
+      keywordsSelectedValue,
+      page
+    );
+    dispatch(addArticlesHome(response.data));
+  } catch (e) {
+    // TO DO handle unauthorized
+    if (e.response?.status === 401) {
+      window.localStorage.removeItem('_token');
+      dispatch(setAuthorization(false));
+      const response2 = await getArticlesFilteredService(
+        searchValue,
+        locationValue,
+        categoryValue,
+        sortValue,
+        keywordsSelectedValue,
+        page
+      );
+      dispatch(addArticlesHome(response2.data));
+    }
+    console.log(e.response);
+  }
+};
+
 export const getArticles = () => async (dispatch, getState) => {
   const state = getState();
   const text = get(state, 'topbarSearch.searchValue');
@@ -115,6 +157,7 @@ export const setSelectedKeywords = (tags) => ({ type: SET_SELECTED_KEYWORDS, pay
 export const removeKeyword = (tag) => ({ type: REMOVE_SELECTED_KEYWORD, payload: tag });
 
 export const setSort = (value) => ({ type: SET_SORT, payload: value });
+export const setPage = (value) => ({ type: SET_PAGE, payload: value });
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
@@ -175,6 +218,12 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         sortValue: payload,
+      };
+    }
+    case SET_PAGE: {
+      return {
+        ...state,
+        page: payload,
       };
     }
     default:

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyledView, MaxWidthContainer, HomeLayout } from './styled-components';
 import { ThemeProvider } from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -7,18 +7,31 @@ import ArticleEmbedView from '../../components/CreateArticle/ShareArticle/Articl
 import FlexContainer from '../../components/UI/FlexContainer';
 import Loader from '../../components/UI/Loader';
 import { Helmet } from 'react-helmet';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { getArticlesFilteredSpecificPage, setPage } from '../../redux/reducers/topbarSearch';
 
 export default function Home() {
   const { articles } = useSelector((store) => store.app);
-  const { loading, error, keywordsSelected, keywordSuggestions } = useSelector((store) => store.topbarSearch);
+  const { loading, error, keywordsSelected, keywordSuggestions, page } = useSelector((store) => store.topbarSearch);
   const { authorization } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+  const fetchData = () => {
+    dispatch(setPage(page + 1));
+  };
+  useEffect(() => {
+    dispatch(getArticlesFilteredSpecificPage(page));
+  }, [dispatch, page]);
   return (
     <ThemeProvider theme={{ isDark: false }}>
       <HomeLayout>
         <StyledView>
           <MaxWidthContainer>
             {articles?.length > 0 ? (
-              articles.map((a) => <ArticleEmbedView className="articles-feed" key={a._id} {...a} />)
+              <InfiniteScroll dataLength={articles.length} next={fetchData} hasMore={true}>
+                {articles.map((a) => (
+                  <ArticleEmbedView className="articles-feed" key={a._id} {...a} />
+                ))}
+              </InfiniteScroll>
             ) : (
               <FlexContainer align="center" justify="center" className="no-posts-container">
                 <div>No posts related on your search...</div>
