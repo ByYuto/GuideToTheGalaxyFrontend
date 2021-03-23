@@ -19,7 +19,7 @@ import {
 } from '../../redux/reducers/topbarSearch';
 import { SearchIcon, GoIcon } from '../../assets/icons/svg-icons';
 import { useHistory, useLocation } from 'react-router-dom';
-import { startCase } from 'lodash';
+import { isEmpty, startCase } from 'lodash';
 import { useState } from 'react';
 
 export default function HeaderSearchBar() {
@@ -112,10 +112,12 @@ export default function HeaderSearchBar() {
       }
 
       const strParams = params.toString();
-      const newURL = (isHome ? '/' : '/search') + (strParams ? `?${strParams}` : '');
-      console.log('Changing URL to', newURL);
+      if (isHome || isSearch || !isEmpty(forcedValues)) {
+        const newURL = (isHome ? '/' : '/search') + (strParams ? `?${strParams}` : '');
+        console.log('Changing URL to', newURL);
 
-      history.push(newURL);
+        history.push(newURL);
+      }
     },
     [locationValue, categoryValue, keywordsSelectedValue, isHome, history, initialized, sortValue]
   );
