@@ -14,6 +14,7 @@ const SET_ERROR = 'SET_ERROR';
 const SET_LOADING = 'SET_LOADING';
 
 export const getArticleDetail = (id) => async (dispatch) => {
+  dispatch(setArticle(null));
   dispatch(setLoading(true));
   dispatch(setError({ error: false, errorMessage: '' }));
   try {

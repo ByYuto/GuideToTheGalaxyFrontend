@@ -10,7 +10,7 @@ import Tag from '../../components/UI/Tag';
 import AuthorMeta from '../../components/UI/author-post/AuthorMeta';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearArticleDetails, getArticleDetailBySlug } from '../../redux/reducers/articleDetail';
+import { getArticleDetailBySlug } from '../../redux/reducers/articleDetail';
 import Loader from '../../components/UI/Loader';
 import { getDateFormatted } from '../../utils/utils';
 import ArticleContentBody from './ArticleContentBody';
@@ -27,11 +27,7 @@ export default function ArticleDetail() {
   const { article, error, errorMessage, loading } = useSelector((store) => store.articleDetail);
   const { isMobile } = useSelector((store) => store.app);
   const history = useHistory();
-  useEffect(() => {
-    return () => {
-      dispatch(clearArticleDetails());
-    };
-  }, []);
+
   useEffect(() => {
     dispatch(getArticleDetailBySlug(slug));
   }, [categoryId, slug, dispatch]);
@@ -45,7 +41,6 @@ export default function ArticleDetail() {
 
   const handleTagClick = (tag) => {
     dispatch(setSelectedKeyword(tag));
-    history.push('/search');
   };
 
   return (

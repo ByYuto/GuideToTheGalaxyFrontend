@@ -5,7 +5,8 @@ import { setAuthorization } from './authState';
 import { get } from 'lodash';
 
 const initialState = {
-  searchValue: '',
+  textValue: '', //Used to show text on input
+  searchValue: '', //Used to search (sometimes equal to textValue)
   searchSuggestions: [
     /*{ active: false, description: 'A title' }*/
   ],
@@ -23,7 +24,9 @@ const initialState = {
   sortValue: 'created_at',
 };
 
-const CHANGE_SEARCH_VALUE = 'CHANGE_SEARCH_VALUE';
+const SET_TEXT_VALUE = 'SET_TEXT_VALUE';
+const CLEAR_TEXT_VALUE = 'CLEAR_TEXT_VALUE';
+const SET_SEARCH_VALUE = 'SET_SEARCH_VALUE';
 const CLEAR_SEARCH_VALUE = 'CLEAR_SEARCH_VALUE';
 const SET_CATEGORIES = 'SET_CATEGORIES';
 const SET_CATEGORY_VALUE = 'SET_CATEGORY_VALUE';
@@ -36,8 +39,11 @@ const SET_SELECTED_KEYWORDS = 'SET_SELECTED_KEYWORDS';
 const SET_SORT = 'SET_SORT';
 const SET_PAGE = 'SET_PAGE';
 
-export const onSearchValueChange = (value) => ({ type: CHANGE_SEARCH_VALUE, payload: value });
-export const clearSearchValue = () => ({ type: CLEAR_SEARCH_VALUE, payload: '' });
+export const setTextValue = (value) => ({ type: SET_TEXT_VALUE, payload: value });
+export const clearTextValue = () => ({ type: CLEAR_TEXT_VALUE });
+
+export const setSearchValue = (value) => ({ type: SET_SEARCH_VALUE, payload: value });
+export const clearSearchValue = () => ({ type: CLEAR_SEARCH_VALUE });
 export const setCategories = (categories) => ({ type: SET_CATEGORIES, payload: categories });
 export const getCategories = () => async (dispatch) => {
   try {
@@ -50,31 +56,33 @@ export const getCategories = () => async (dispatch) => {
 };
 export const setCategoryValue = (val) => ({ type: SET_CATEGORY_VALUE, payload: val });
 export const setPlaceId = (id, addr) => ({ type: SET_PLACE_ID, payload: { id, addr } });
-export const getArticlesFiltered = (text, location, category, sort, keywords) => async (dispatch) => {
+export const getArticlesFiltered = () => async (dispatch, getState) => {
+  const { searchValue, locationValue, categoryValue, keywordsSelected, sortValue } = getState().topbarSearch;
+
+  //const keywordsSelectedValue = keywordsSelected ? keywordsSelected.join(',') : '';
   try {
-    const response = await getArticlesFilteredService(text, location, category, sort, keywords, 1);
+    const response = await getArticlesFilteredService(
+      searchValue,
+      locationValue,
+      categoryValue,
+      sortValue,
+      keywordsSelected,
+      1
+    );
     dispatch(setArticlesHome(response.data));
   } catch (e) {
     // TO DO handle unauthorized
     if (e.response?.status === 401) {
       window.localStorage.removeItem('_token');
       dispatch(setAuthorization(false));
-      getArticlesFiltered(text, location, category, sort, keywords, 1);
+      getArticlesFiltered(searchValue, locationValue, categoryValue, sortValue, keywordsSelected, 1);
     }
     console.log(e.response);
   }
 };
 
 export const getArticlesFilteredSpecificPage = (page) => async (dispatch, getState) => {
-  const {
-    searchValue,
-    locationValue,
-    locationName,
-    searchSuggestions,
-    categoryValue,
-    keywordsSelected,
-    sortValue,
-  } = getState().topbarSearch;
+  const { searchValue, locationValue, categoryValue, keywordsSelected, sortValue } = getState().topbarSearch;
   const keywordsSelectedValue = keywordsSelected ? keywordsSelected.join(',') : '';
   try {
     const response = await getArticlesFilteredService(
@@ -128,9 +136,11 @@ export const getArticles = () => async (dispatch, getState) => {
   }
 };
 
-export const getSearchSuggestion = (value, location, category, keywords) => async (dispatch) => {
+export const getSearchSuggestion = () => async (dispatch, getState) => {
+  const { textValue, locationValue, categoryValue, keywordsSelected } = getState().topbarSearch;
+  const keywordsSelectedValue = keywordsSelected ? keywordsSelected.join(',') : '';
   try {
-    const response = await getSuggestedSearches(value, location, category, keywords);
+    const response = await getSuggestedSearches(textValue, locationValue, categoryValue, keywordsSelectedValue);
     const data = [...response.data.lastSearches, ...response.data.popularSearches];
     const dataTitles = data.map((elm) => ({ active: false, description: elm.text }));
     dispatch(setSearchSuggestion(dataTitles));
@@ -161,11 +171,23 @@ export const setPage = (value) => ({ type: SET_PAGE, payload: value });
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
-    case CHANGE_SEARCH_VALUE:
+    case SET_TEXT_VALUE:
+      return {
+        ...state,
+        textValue: payload,
+      };
+    case CLEAR_TEXT_VALUE:
+      return {
+        ...state,
+        textValue: '',
+      };
+
+    case SET_SEARCH_VALUE:
       //console.log('****Setting search value to', payload);
       return {
         ...state,
         searchValue: payload,
+        page: 1, //alwas search from page 1
       };
     case CLEAR_SEARCH_VALUE:
       return {
