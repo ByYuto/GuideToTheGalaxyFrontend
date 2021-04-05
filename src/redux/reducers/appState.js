@@ -85,7 +85,7 @@ export default (state = initialState, { type, payload }) => {
     case SET_ARTICLES_HOME:
       return {
         ...state,
-        articles: payload,
+        articles: [...payload],
       };
     case ADD_ARTICLES_HOME:
       return {

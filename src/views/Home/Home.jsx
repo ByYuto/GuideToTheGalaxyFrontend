@@ -9,6 +9,7 @@ import Loader from '../../components/UI/Loader';
 import { Helmet } from 'react-helmet';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getArticlesFilteredSpecificPage, setPage } from '../../redux/reducers/topbarSearch';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   const { articles } = useSelector((store) => store.app);
@@ -26,17 +27,17 @@ export default function Home() {
       <HomeLayout>
         <StyledView>
           <MaxWidthContainer>
-            {articles?.length > 0 ? (
-              <InfiniteScroll dataLength={articles.length} next={fetchData} hasMore={true}>
-                {articles.map((a) => (
-                  <ArticleEmbedView className="articles-feed" key={a._id} {...a} />
-                ))}
-              </InfiniteScroll>
-            ) : (
-              <FlexContainer align="center" justify="center" className="no-posts-container">
-                <div>No posts related on your search...</div>
-              </FlexContainer>
-            )}
+            <InfiniteScroll hasMore={true} next={fetchData} dataLength={articles.length}>
+              {articles?.length > 0 ? (
+                articles.map((a) => {
+                  return <ArticleEmbedView className="articles-feed" {...a} key={a._id} />;
+                })
+              ) : (
+                <FlexContainer align="center" justify="center" className="no-posts-container">
+                  <div>No posts related on your search...</div>
+                </FlexContainer>
+              )}
+            </InfiniteScroll>
           </MaxWidthContainer>
         </StyledView>
         {!error && loading && (

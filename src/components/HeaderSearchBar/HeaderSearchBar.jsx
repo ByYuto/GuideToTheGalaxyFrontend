@@ -90,7 +90,7 @@ export default function HeaderSearchBar() {
         dispatch(setSort(sortParam));
       }
     }
-  }, [dispatch, isHome, isSearch]);
+  }, [dispatch, isHome, isSearch, location.search]);
 
   //console.log('CurrentLocation is', location);
   //console.log('UrlParams', { searchParam, locationParam, categoryParam, keywordsParam });
@@ -107,53 +107,56 @@ export default function HeaderSearchBar() {
     dispatch(setSearchValue(val));
   };
 
-  const updateSearchURL = useCallback(
-    (forcedValues = {}) => {
-      console.log('Starting updateSearchURL callback');
-      let params = new URLSearchParams();
-      const search = forcedValues.searchValue !== undefined ? forcedValues.searchValue : searchValue;
-      const location = forcedValues.locationValue !== undefined ? forcedValues.locationValue : locationValue;
-      const category = forcedValues.categoryValue !== undefined ? forcedValues.categoryValue : categoryValue;
-      const sort = forcedValues.sortValue !== undefined ? forcedValues.sortValue : sortValue;
-      const keywordsSelected =
-        forcedValues.keywordsSelectedValue !== undefined ? forcedValues.keywordsSelectedValue : keywordsSelectedValue;
+  const updateSearchURL = (forcedValues = {}) => {
+    console.log('Starting updateSearchURL callback');
+    let params = new URLSearchParams();
+    const search = forcedValues.searchValue !== undefined ? forcedValues.searchValue : searchValue;
+    const location = forcedValues.locationValue !== undefined ? forcedValues.locationValue : locationValue;
+    const category = forcedValues.categoryValue !== undefined ? forcedValues.categoryValue : categoryValue;
+    const sort = forcedValues.sortValue !== undefined ? forcedValues.sortValue : sortValue;
+    const keywordsSelected =
+      forcedValues.keywordsSelectedValue !== undefined ? forcedValues.keywordsSelectedValue : keywordsSelectedValue;
 
-      if (search) {
-        params.set('search', search);
-      }
-      if (location) {
-        params.set('location', location);
-      }
-      if (category) {
-        params.set('category', category);
-      }
-      if (keywordsSelected) {
-        params.set('keywords', keywordsSelected);
-      }
-      if (sort) {
-        params.set('sort', sort);
-      }
+    if (search) {
+      params.set('search', search);
+    }
+    if (location) {
+      params.set('location', location);
+    }
+    if (category) {
+      params.set('category', category);
+    }
+    if (keywordsSelected) {
+      params.set('keywords', keywordsSelected);
+    }
+    if (sort) {
+      params.set('sort', sort);
+    }
 
-      console.log('initialized', initialized);
-      if (!initialized) {
-        console.log('No está inicializado, ignorando cambio de url');
-        return;
-      }
+    //console.log('initialized', initialized);
+    if (!initialized) {
+      console.log('No está inicializado, ignorando cambio de url');
+      return;
+    }
 
-      const strParams = params.toString();
-      //if (isHome || isSearch || !isEmpty(forcedValues)) {
-      const newURL = (isHome ? '/' : '/search') + (strParams ? `?${strParams}` : '');
-      console.log('Changing URL to', newURL);
+    const strParams = params.toString();
+    //if (isHome || isSearch || !isEmpty(forcedValues)) {
+    const newURL = (isHome ? '/' : '/search') + (strParams ? `?${strParams}` : '');
+    //console.log('Changing URL to', newURL);
 
-      history.push(newURL);
-    },
-    [searchValue, locationValue, categoryValue, keywordsSelectedValue, isHome, history, initialized, sortValue]
-  );
+    history.push(newURL);
+  };
 
   useEffect(() => {
-    console.log('Starting Effect - Update Search URL from state');
+    console.log('Starting Effect - Update Search URL from state', {
+      searchValue,
+      locationValue,
+      categoryValue,
+      sortValue,
+      keywordsSelectedValue,
+    });
     updateSearchURL();
-  }, [searchValue, locationValue, categoryValue, sortValue, keywordsSelectedValue, updateSearchURL]);
+  }, [searchValue, locationValue, categoryValue, sortValue, keywordsSelectedValue]);
   /*
   useEffect(() => {
     if (initialized) {
@@ -276,6 +279,7 @@ export default function HeaderSearchBar() {
     //dispatch(getArticlesFiltered(searchValue, locationValue, categoryValue, keywordsSelectedValue));
     dispatch(setSearchValue(textValue));
   };
+
   return (
     <ThemeProvider theme={{ isDark: true }}>
       <HeaderSearchBarLayout actionButton={textValue.length > 0 ? 1 : 0}>

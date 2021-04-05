@@ -57,6 +57,7 @@ export const getCategories = () => async (dispatch) => {
 export const setCategoryValue = (val) => ({ type: SET_CATEGORY_VALUE, payload: val });
 export const setPlaceId = (id, addr) => ({ type: SET_PLACE_ID, payload: { id, addr } });
 export const getArticlesFiltered = () => async (dispatch, getState) => {
+  //console.log('***Ejecutando getArticlesFiltered');
   const { searchValue, locationValue, categoryValue, keywordsSelected, sortValue } = getState().topbarSearch;
 
   //const keywordsSelectedValue = keywordsSelected ? keywordsSelected.join(',') : '';
@@ -82,6 +83,7 @@ export const getArticlesFiltered = () => async (dispatch, getState) => {
 };
 
 export const getArticlesFilteredSpecificPage = (page) => async (dispatch, getState) => {
+  //console.log('***Ejecutando getArticlesFilteredSpecificPage', page);
   const { searchValue, locationValue, categoryValue, keywordsSelected, sortValue } = getState().topbarSearch;
   const keywordsSelectedValue = keywordsSelected ? keywordsSelected.join(',') : '';
   try {
@@ -93,7 +95,11 @@ export const getArticlesFilteredSpecificPage = (page) => async (dispatch, getSta
       keywordsSelectedValue,
       page
     );
-    dispatch(addArticlesHome(response.data));
+    if (page > 1) {
+      dispatch(addArticlesHome(response.data));
+    } else {
+      dispatch(setArticlesHome(response.data));
+    }
   } catch (e) {
     // TO DO handle unauthorized
     if (e.response?.status === 401) {

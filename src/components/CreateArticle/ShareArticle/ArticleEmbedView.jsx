@@ -9,7 +9,7 @@ import AuthorMeta from '../../UI/author-post/AuthorMeta';
 import { getDateFormatted } from '../../../utils/utils';
 import { setSelectedKeyword } from '../../../redux/reducers/topbarSearch';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FlexboxGrid } from 'rsuite';
 import { screen } from '../../../utils/constants';
 import styled from 'styled-components';
@@ -33,6 +33,16 @@ export default function ArticleEmbedView({
   className,
   slug,
 }) {
+  const {
+    textValue,
+    searchValue,
+    locationValue,
+    locationName,
+    searchSuggestions,
+    categoryValue,
+    keywordsSelected,
+    sortValue,
+  } = useSelector((store) => store.topbarSearch);
   const dispatch = useDispatch();
   const history = useHistory();
   const isMobile = useMobile();
@@ -48,89 +58,115 @@ export default function ArticleEmbedView({
     }
   };
   const keyWordsCutted = getKeywordsPreview(keywords);
-  const cardContent = (
-    <ArticleCard className={className} fullWidth>
-      <FlexContainer column>
-        <div style={{ width: '100%' }}>
-          <ArticleMainContent>
-            <ArticleContentContainer colspan={(!image && !image?.content?.featured_sm) || isMobile ? 24 : 16}>
-              <FlexContainer justify="space-between" align="center">
-                <div className="breadcrumb">
-                  {categoryId} <Ellipse /> {contentTypeId} <Ellipse /> {location ? location : 'Worldwide'}
-                </div>
-              </FlexContainer>
-              <FlexContainer justify="space-between" align="stretch">
-                <FlexContainer className="post-content" column breakRow="wrap">
-                  <div style={{ flexGrow: 1 }}>
-                    <h4>{title}</h4>
-                    <p>{textContent}</p>
-                    <div></div>
-                  </div>
-                  <div style={{ flexGrow: 1 }}>
-                    <KeywordsContainer justify="space-around" inline className="keywords-container">
-                      {keyWordsCutted && keyWordsCutted.length > 0
-                        ? keyWordsCutted.map((k, index) => {
-                            const onClick = isPreview
-                              ? null
-                              : (e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  handleTagClick(k);
-                                };
-                            return (
-                              <Tag tagType="primary" sm key={index} className="tag-embed-post" onClick={onClick}>
-                                {k}
-                              </Tag>
-                            );
-                          })
-                        : null}
-                    </KeywordsContainer>
+  const cardContent = () => {
+    //console.log('Dentro de cardContent', title);
+    //return <h3>Aqui el titulo: {title}</h3>;
+
+    return (
+      <ArticleCard className={className} fullWidth>
+        <FlexContainer column>
+          <div style={{ width: '100%' }}>
+            <ArticleMainContent>
+              <ArticleContentContainer colspan={(!image && !image?.content?.featured_sm) || isMobile ? 24 : 16}>
+                <FlexContainer justify="space-between" align="center">
+                  <div className="breadcrumb">
+                    {categoryId} <Ellipse /> {contentTypeId} <Ellipse /> {location ? location : 'Worldwide'}
                   </div>
                 </FlexContainer>
-              </FlexContainer>
-            </ArticleContentContainer>
-            {image && image.content?.featured_sm ? (
-              <FlexboxGrid.Item colspan={isMobile ? 24 : 8}>
-                <FlexContainer justify="flex-end" elmWidth="100%" align="center">
-                  <FeaturedImageContainer>
-                    <img src={image.content.featured_m} alt={title} />
-                  </FeaturedImageContainer>
+                <FlexContainer justify="space-between" align="stretch">
+                  <FlexContainer className="post-content" column breakRow="wrap">
+                    <div style={{ flexGrow: 1 }}>
+                      <h4>{title}</h4>
+                      <p>{textContent}</p>
+                      <div></div>
+                    </div>
+                    <div style={{ flexGrow: 1 }}>
+                      <KeywordsContainer justify="space-around" inline className="keywords-container">
+                        {keyWordsCutted && keyWordsCutted.length > 0
+                          ? keyWordsCutted.map((k, index) => {
+                              const onClick = isPreview
+                                ? null
+                                : (e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    handleTagClick(k);
+                                  };
+                              return (
+                                <Tag tagType="primary" sm key={index} className="tag-embed-post" onClick={onClick}>
+                                  {k}
+                                </Tag>
+                              );
+                            })
+                          : null}
+                      </KeywordsContainer>
+                    </div>
+                  </FlexContainer>
+                </FlexContainer>
+              </ArticleContentContainer>
+              {image && image.content?.featured_sm ? (
+                <FlexboxGrid.Item colspan={isMobile ? 24 : 8}>
+                  <FlexContainer justify="flex-end" elmWidth="100%" align="center">
+                    <FeaturedImageContainer>
+                      <img src={image.content.featured_m} alt={title} />
+                    </FeaturedImageContainer>
+                  </FlexContainer>
+                </FlexboxGrid.Item>
+              ) : null}
+            </ArticleMainContent>
+          </div>
+          <div style={{ width: '100%' }}>
+            <FlexboxGrid justify="space-between">
+              <FlexboxGrid.Item>
+                {user && (
+                  <AuthorMeta
+                    authorName={user?.name}
+                    postDate={
+                      (updated_at && getDateFormatted(updated_at)) || (create_at && getDateFormatted(create_at))
+                    }
+                    avatarUrl={user?.avatar}
+                  />
+                )}
+              </FlexboxGrid.Item>
+              <FlexboxGrid.Item>
+                <FlexContainer justify="space-evenly" align="center" className="reactions-toolbar" elmWidth="100%">
+                  <ToolbarReactions articleId={_id} liked={liked} likes={likes} />
                 </FlexContainer>
               </FlexboxGrid.Item>
-            ) : null}
-          </ArticleMainContent>
-        </div>
-        <div style={{ width: '100%' }}>
-          <FlexboxGrid justify="space-between">
-            <FlexboxGrid.Item>
-              {user && (
-                <AuthorMeta
-                  authorName={user?.name}
-                  postDate={(updated_at && getDateFormatted(updated_at)) || (create_at && getDateFormatted(create_at))}
-                  avatarUrl={user?.avatar}
-                />
-              )}
-            </FlexboxGrid.Item>
-            <FlexboxGrid.Item>
-              <FlexContainer justify="space-evenly" align="center" className="reactions-toolbar" elmWidth="100%">
-                <ToolbarReactions articleId={_id} liked={liked} likes={likes} />
-              </FlexContainer>
-            </FlexboxGrid.Item>
-          </FlexboxGrid>
-        </div>
-      </FlexContainer>
-    </ArticleCard>
-  );
+            </FlexboxGrid>
+          </div>
+        </FlexContainer>
+      </ArticleCard>
+    );
+  };
   const handleTagClick = (tag) => {
     dispatch(setSelectedKeyword(tag));
     history.push('/search');
   };
+
   return (
     <div key={_id}>
       {!isPreview ? (
-        <ShareArticleCardView to={`/${categoryId.toLowerCase()}/${slug}`}>{cardContent}</ShareArticleCardView>
+        <ShareArticleCardView
+          to={`/${categoryId.toLowerCase()}/${slug}`}
+          /*
+          onClick={() => {
+            console.log('Antes De dar Click', {
+              textValue,
+              searchValue,
+              locationValue,
+              locationName,
+              searchSuggestions,
+              categoryValue,
+              keywordsSelected,
+              sortValue,
+            });
+          }}
+          */
+        >
+          {cardContent()}
+        </ShareArticleCardView>
       ) : (
-        <ShareArticleCardPreview>{cardContent}</ShareArticleCardPreview>
+        <ShareArticleCardPreview>{cardContent()}</ShareArticleCardPreview>
       )}
     </div>
   );
