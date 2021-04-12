@@ -31,11 +31,13 @@ export default function Dropdown({
   if (!selectedValue && options) {
     selectedValue = options[0];
   }
+  /*
   console.log({
     value,
     isPlainObject: isPlainObject(value),
     selectedValue,
   });
+  */
 
   return (
     <DropdownLayout

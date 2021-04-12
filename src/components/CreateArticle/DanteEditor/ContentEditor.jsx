@@ -138,7 +138,7 @@ function ContentEditor() {
   const _confirmLink = useCallback(() => {
     console.log('Entro a confirmar link');
     if (urlValue === '') {
-      console.log('vacio');
+      //console.log('Removiendo link');
       const selection = editorState.getSelection();
       const content = editorState.getCurrentContent();
       const startKey = selection.getStartKey();
@@ -336,7 +336,7 @@ function ContentEditor() {
   const onUrlInputClear = () => {
     setUrlValue('');
   };
-  const urlInput = (inputRef) => (
+  const urlInput = () => (
     <Popover isOpen={linkPopupOpened}>
       <div style={{ zIndex: 999 }}>
         <InsertLink
@@ -377,7 +377,7 @@ function ContentEditor() {
   useEffect(() => {
     const entity = getEntityFromCursor(editorState, 'LINK');
     if (entity) {
-      console.log(entity.toObject());
+      //console.log(entity.toObject());
     }
   }, [editorState]);
   */
@@ -411,9 +411,11 @@ function ContentEditor() {
     //setSelectionState(editorState.getSelection());
     setLinkPopupOpened(true);
     //promptLink();
+    console.log('paso por aqui');
   };
 
-  console.log('editorState', editorState);
+  //console.log('editorState', editorState);
+  console.log('link popup opened', linkPopupOpened);
   return (
     <EditorLayout
       ref={editorContainer}
@@ -421,7 +423,7 @@ function ContentEditor() {
       linkPopupOpened={linkPopupOpened ? 1 : 0}
       onFocus={() => {
         console.log('focus container');
-        //editorRef.current.focus();
+        editorDraftRef.current.focus();
         setFocusEditor(true);
       }}
       onBlur={() => {
@@ -431,7 +433,7 @@ function ContentEditor() {
       tabindex={-1}
     >
       <div
-        style={{ width: '180px', opacity: isFocusEditor || embedActive ? 1 : 0 }}
+        style={{ width: '180px', opacity: isFocusEditor || embedActive || linkPopupOpened ? 1 : 0 }}
         ref={styledToolbarRef}
         className="styled-toolbar-container"
       >
@@ -475,50 +477,8 @@ function ContentEditor() {
             blockRendererFn={mediaBlockRenderer}
             handleKeyCommand={handleKeyCommand}
             readOnly={false}
-            onBlur={() => {
-              const currentSelection = editorState.getSelection(); //selectionState;
-              if (!currentSelection.isCollapsed()) {
-                setTimeout(() => {
-                  console.log('Creando fake selection');
-                  /*
-                  const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', {
-                    url: 'https://caca.com',
-                    popo: 8,
-                  });
-                  const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-                  const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
-                  setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
-                  */
-
-                  const contentState = editorState.getCurrentContent();
-                  const contentStateWithEntity = contentState.createEntity('FAKE_SELECTION', 'MUTABLE');
-                  const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-                  const contentNew = Modifier.applyEntity(contentStateWithEntity, currentSelection, entityKey);
-                  const selection = editorState.getSelection();
-                  const startKey = selection.getStartKey();
-                  const newEditorState = EditorState.set(editorState, {
-                    currentContent: contentNew,
-                  });
-
-                  setEditorState(newEditorState);
-                  /*
-                  const editorWithoutSelection = EditorState.forceSelection(
-                    newEditorState,
-                    SelectionState.createEmpty()
-                  );
-                  console.log('editorWithoutSelection', editorWithoutSelection);
-                  setEditorState(editorWithoutSelection);
-                  */
-
-                  //setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
-                }, 1);
-
-                //setLinkEntityKey(entityKey);
-              }
-
-              //setFocusEditor(false);
-            }}
             ref={editorDraftRef}
+            stripPastedStyles={true}
           />
         </div>
       </div>
