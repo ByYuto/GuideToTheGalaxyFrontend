@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { MediaToolbarLayout } from './styled-components';
 import { BoldIcon, ItalicIcon, UnderlineIcon, LinkIcon } from '../../../../assets/icons/svg-icons';
 import { RichUtils } from 'draft-js';
@@ -6,12 +6,12 @@ import { RichUtils } from 'draft-js';
 export default function TextFormat({
   editorState,
   setEditorState,
-  promptLink,
-  activeLink = false,
+  //promptLink,
+  //activeLink = false,
   styledToolbarRef,
   linkButtonState,
   onLinkButtonClick,
-  setSelectionState,
+  //setSelectionState,
 }) {
   const _onBoldClick = (editorState) => {
     setEditorState(RichUtils.toggleInlineStyle(editorState, 'BOLD'));

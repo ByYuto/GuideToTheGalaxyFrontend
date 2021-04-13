@@ -17,7 +17,7 @@ export const getArticleService = async (keywords) => {
   }
 };
 
-export const getArticlesFilteredService = async (text, location, category, sort, keywords) => {
+export const getArticlesFilteredService = async (text, location, category, sort, keywords, page) => {
   const token = await localStorage.getItem('_token');
   const params = new URLSearchParams();
   if (text) {
@@ -38,6 +38,11 @@ export const getArticlesFilteredService = async (text, location, category, sort,
     params.set('keywords', keywords);
   }
 
+  if (page) {
+    const limit = 20;
+    params.set('limit', limit);
+    params.set('skip', (page - 1) * limit);
+  }
   //console.log('Consultando articulos', params.toString());
 
   if (token !== null) {

@@ -176,7 +176,7 @@ const CustomContentType = ({
       e.keyCode === 35 || // END
       e.keyCode === 36 // HOME
     ) {
-      console.log('Valido', 'KeyCode', e.keyCode, 'Key', e.key);
+      //console.log('Valido', 'KeyCode', e.keyCode, 'Key', e.key);
       //Valid
       if (previousLetter === 32 && e.keyCode === 32) {
         e.preventDefault();

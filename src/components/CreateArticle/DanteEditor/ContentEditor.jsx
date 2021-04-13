@@ -78,7 +78,7 @@ function ContentEditor() {
   const [currentBlockKey, setBlockKey] = useState(null);
   const [imagesGallery, setImagesGallery] = useState([]);
   const [urlValue, setUrlValue] = useState('');
-  const [selectionState, setSelectionState] = useState(null);
+  //const [selectionState, setSelectionState] = useState(null);
   const editorRef = useRef(null);
   const editorDraftRef = useRef(null);
   const urlInputRef = useRef(null);
@@ -88,7 +88,6 @@ function ContentEditor() {
   const mediaToolbarRef = useRef(null);
   const [topDistance, setTopDistance] = useState(0);
   const [embedActive, setEmbedActivation] = useState(false);
-  const [linkButtonActive, setLinkButtonActive] = useState(false);
 
   const mediaBlockRenderer = (block) => {
     if (block.getType() === 'atomic') {
@@ -123,7 +122,7 @@ function ContentEditor() {
   };
   const _confirmLink = useCallback(() => {
     if (urlValue === '') {
-      console.log('Removiendo link');
+      //console.log('Removiendo link');
       const selection = editorState.getSelection();
       const content = editorState.getCurrentContent();
       const startKey = selection.getStartKey();
@@ -347,17 +346,17 @@ function ContentEditor() {
   useEffect(() => {
     const entity = getEntityFromCursor(editorState, 'LINK');
     if (entity) {
-      console.log(entity.toObject());
+      //console.log(entity.toObject());
     }
   }, [editorState]);
 
   const handleUserKeyPress = useCallback((event) => {
     const { key, keyCode, ctrlKey, metaKey } = event;
 
-    console.log({ key, keyCode, ctrlKey, metaKey });
+    //console.log({ key, keyCode, ctrlKey, metaKey });
     if (keyCode === 75 && (ctrlKey === true || metaKey === true)) {
       event.preventDefault();
-      console.log('Detected CMD + K, Opening link input');
+      //console.log('Detected CMD + K, Opening link input');
       //const url = getURLFromCursor(editorState);
       //if (url) {
       //setUrlValue(url);
@@ -377,7 +376,7 @@ function ContentEditor() {
 
   const onLinkButtonClick = (event) => {
     event.preventDefault();
-    setSelectionState(editorState.getSelection());
+    //setSelectionState(editorState.getSelection());
     setLinkPopupOpened(true);
     //promptLink();
   };
@@ -395,7 +394,7 @@ function ContentEditor() {
           imageInputRef={imageInputRef}
           linkButtonState={linkButtonState}
           setLinkButtonState={setLinkButtonState}
-          setSelectionState={setSelectionState}
+          //setSelectionState={setSelectionState}
           onLinkButtonClick={onLinkButtonClick}
         />
       </div>
@@ -414,7 +413,7 @@ function ContentEditor() {
           imageInputRef={imageInputRef}
           linkButtonState={linkButtonState}
           setLinkButtonState={setLinkButtonState}
-          setSelectionState={setSelectionState}
+          //setSelectionState={setSelectionState}
           onLinkButtonClick={onLinkButtonClick}
         />
       </TextToolbarFixed>
@@ -438,6 +437,7 @@ function ContentEditor() {
             onFocus={() => setFocusEditor(true)}
             onBlur={() => setFocusEditor(false)}
             ref={editorDraftRef}
+            stripPastedStyles={true}
           />
         </div>
       </div>
