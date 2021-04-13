@@ -88,6 +88,7 @@ function ContentEditor() {
   const mediaToolbarRef = useRef(null);
   const [topDistance, setTopDistance] = useState(0);
   const [embedActive, setEmbedActivation] = useState(false);
+  const editorStateBackupRef = useRef(null);
 
   const mediaBlockRenderer = (block) => {
     if (block.getType() === 'atomic') {
@@ -107,12 +108,14 @@ function ContentEditor() {
     return null;
   };
 
+  /*
   const _promptForLink = () => {
     const selection = editorState.getSelection();
     if (!selection.isCollapsed()) {
       linkPopupOpened(false);
     }
   };
+  */
 
   const fixUrl = (url) => {
     if (!startsWith(url, 'https://') && !startsWith(url, 'http://')) {
@@ -120,76 +123,84 @@ function ContentEditor() {
     }
     return url;
   };
-  const _confirmLink = useCallback(() => {
-    if (urlValue === '') {
-      //console.log('Removiendo link');
-      const selection = editorState.getSelection();
-      const content = editorState.getCurrentContent();
-      const startKey = selection.getStartKey();
-      const startOffset = selection.getStartOffset();
-      const block = content.getBlockForKey(startKey);
-      const linkKey = block.getEntityAt(startOffset);
+  const _confirmLink = useCallback(
+    (urlValue) => {
+      if (urlValue === '') {
+        //console.log('Removiendo link');
+        const selection = editorState.getSelection();
+        const content = editorState.getCurrentContent();
+        const startKey = selection.getStartKey();
+        const startOffset = selection.getStartOffset();
+        const block = content.getBlockForKey(startKey);
+        const linkKey = block.getEntityAt(startOffset);
 
-      let contentWithRemovedLink = content;
-      block.findEntityRanges(
-        (charData) => {
-          //You need to use block.findEntityRanges() API to get the whole range of link
+        let contentWithRemovedLink = content;
+        block.findEntityRanges(
+          (charData) => {
+            //You need to use block.findEntityRanges() API to get the whole range of link
 
-          const entityKey = charData.getEntity();
-          if (!entityKey) return false;
-          return entityKey === linkKey; //Need to return TRUE only for your specific link.
-        },
-        (start, end) => {
-          const entitySelection = new SelectionState({
-            anchorKey: block.getKey(), //You already have the block key
-            focusKey: block.getKey(),
-            anchorOffset: start, //Just use the start/end provided by the API
-            focusOffset: end,
-          });
-          contentWithRemovedLink = Modifier.applyEntity(content, entitySelection, null);
+            const entityKey = charData.getEntity();
+            if (!entityKey) return false;
+            return entityKey === linkKey; //Need to return TRUE only for your specific link.
+          },
+          (start, end) => {
+            const entitySelection = new SelectionState({
+              anchorKey: block.getKey(), //You already have the block key
+              focusKey: block.getKey(),
+              anchorOffset: start, //Just use the start/end provided by the API
+              focusOffset: end,
+            });
+            contentWithRemovedLink = Modifier.applyEntity(content, entitySelection, null);
 
-          return;
-        }
-      );
+            return;
+          }
+        );
 
-      //Remove link from entity
-      /*
+        //Remove link from entity
+        /*
       const contentState = editorState.getCurrentContent();
       const contentWithoutEntities = Modifier.applyEntity(contentState, editorState.getSelection(), null);
       
       */
 
-      const newEditorState = EditorState.set(editorState, { currentContent: contentWithRemovedLink });
-      setEditorState(newEditorState);
-    } else {
-      const currentSelection = editorState.getSelection(); //selectionState;
-      const contentState = editorState.getCurrentContent();
-      const currentUrlValue = fixUrl(urlValue);
-      if (currentSelection.isCollapsed()) {
-        const entityKey = getEntityKeyFromCursor(editorState, 'LINK');
-        if (entityKey) {
-          const newContentState = contentState.replaceEntityData(entityKey, { url: currentUrlValue });
-          const newEditorState = EditorState.set(editorState, { currentContent: newContentState });
-          setEditorState(newEditorState);
-        }
+        const newEditorState = EditorState.set(editorState, { currentContent: contentWithRemovedLink });
+        setEditorState(newEditorState);
       } else {
-        const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: currentUrlValue });
-        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
-        const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
-        setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
-        setLinkEntityKey(entityKey);
+        const currentSelection = editorState.getSelection(); //selectionState;
+        const contentState = editorState.getCurrentContent();
+        const currentUrlValue = fixUrl(urlValue);
+        if (currentSelection.isCollapsed()) {
+          const entityKey = getEntityKeyFromCursor(editorState, 'LINK');
+          if (entityKey) {
+            const newContentState = contentState.replaceEntityData(entityKey, { url: currentUrlValue });
+            const newEditorState = EditorState.set(editorState, { currentContent: newContentState });
+            setEditorState(newEditorState);
+          }
+        } else {
+          const contentStateWithEntity = contentState.createEntity('LINK', 'MUTABLE', { url: currentUrlValue });
+          const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+          const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+          setEditorState(RichUtils.toggleLink(newEditorState, currentSelection, entityKey));
+          setLinkEntityKey(entityKey);
+        }
       }
-    }
-    setLinkPopupOpened(false);
-  }, [editorState, urlValue, setEditorState]);
+      //setUrlValue(urlValue);
+      setLinkPopupOpened(false);
+    },
+    [editorState, setEditorState]
+  );
 
+  /*
   const _onLinkInputKeyDown = (e, editorState) => {
     if (e.which === 13) {
       _confirmLink();
     }
   };
+  */
 
+  /*
   const onURLChange = (val) => setUrlValue(val);
+  */
 
   const handleKeyCommand = (command, editorState) => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
@@ -302,22 +313,29 @@ function ContentEditor() {
 
   const onUrlInputBlur = () => {
     setLinkPopupOpened(false);
+    //restore state
   };
   const onUrlInputClear = () => {
     setUrlValue('');
   };
-  const urlInput = (inputRef) => (
+  const onApplyLink = (url) => {
+    _confirmLink(url);
+  };
+  const onCancelLink = () => {};
+  const urlInput = (
     <Popover isOpen={linkPopupOpened}>
       <div style={{ zIndex: 999 }}>
         <InsertLink
           inputRef={urlInputRef}
-          onKeyDown={_onLinkInputKeyDown}
+          //onKeyDown={_onLinkInputKeyDown}
           url={urlValue}
           onClickBtn={_confirmLink}
-          editorState={editorState}
-          onChangeInput={onURLChange}
-          onClear={onUrlInputClear}
-          onBlur={onUrlInputBlur}
+          //editorState={editorState}
+          //onChangeInput={onURLChange}
+          //onClear={onUrlInputClear}
+          //onBlur={(applied) => onUrlInputBlur(applied)}
+          onApplyLink={onApplyLink}
+          onCancel={onCancelLink}
           //setLinkInputActive={setLinkInputActive}
         />
       </div>
@@ -333,6 +351,11 @@ function ContentEditor() {
   useEffect(() => {
     if (linkPopupOpened) {
       urlMakeFocus();
+    } else {
+      if (urlValue) {
+        //There is a
+      }
+      setUrlValue('');
     }
   }, [linkPopupOpened]);
 
@@ -377,20 +400,22 @@ function ContentEditor() {
   const onLinkButtonClick = (event) => {
     event.preventDefault();
     //setSelectionState(editorState.getSelection());
+    editorStateBackupRef.current = editorState; //Save current state before create fake selection
+    setEditorState(RichUtils.toggleInlineStyle(editorState, 'SELECTED'));
     setLinkPopupOpened(true);
     //promptLink();
   };
   return (
     <EditorLayout ref={editorContainer} className="editor-parent-container" linkPopupOpened={linkPopupOpened ? 1 : 0}>
       <div
-        style={{ width: '180px', opacity: isFocusEditor || embedActive ? 1 : 0 }}
+        style={{ width: '180px', opacity: isFocusEditor || embedActive || linkPopupOpened ? 1 : 0 }}
         ref={styledToolbarRef}
         className="styled-toolbar-container"
       >
         <TextFormat
           editorState={editorState}
           setEditorState={setEditorState}
-          promptLink={_promptForLink}
+          //promptLink={_promptForLink}
           imageInputRef={imageInputRef}
           linkButtonState={linkButtonState}
           setLinkButtonState={setLinkButtonState}
@@ -409,7 +434,7 @@ function ContentEditor() {
         <TextFormat
           editorState={editorState}
           setEditorState={setEditorState}
-          promptLink={_promptForLink}
+          //promptLink={_promptForLink}
           imageInputRef={imageInputRef}
           linkButtonState={linkButtonState}
           setLinkButtonState={setLinkButtonState}
@@ -418,7 +443,7 @@ function ContentEditor() {
         />
       </TextToolbarFixed>
       <div>
-        {urlInput()}
+        {urlInput}
         <div
           ref={editorRef}
           onClick={makeFocus}
@@ -438,6 +463,11 @@ function ContentEditor() {
             onBlur={() => setFocusEditor(false)}
             ref={editorDraftRef}
             stripPastedStyles={true}
+            customStyleMap={{
+              SELECTED: {
+                background: '#e2f2ff',
+              },
+            }}
           />
         </div>
       </div>
