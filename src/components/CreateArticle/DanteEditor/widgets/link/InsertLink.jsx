@@ -4,6 +4,8 @@ import { InputLinkLayout, ClearButton } from './styled-components';
 import { validateUrl } from '../../../../../utils/validations';
 import { IoIosClose } from 'react-icons/io';
 import FlexContainer from '../../../../UI/FlexContainer';
+import useOnClickOutside from 'react-cool-onclickoutside';
+
 export default function InsertLink({
   //onKeyDown,
   //url,
@@ -17,9 +19,12 @@ export default function InsertLink({
   onApplyLink = () => {},
   onCancel = () => {},
 }) {
-  const [focused, setFocused] = useState(false);
   const [validEmbed, setValidEmbed] = useState(false);
   const [url, setUrl] = useState(initialValue || '');
+  const ref = useOnClickOutside(() => {
+    console.log('Click outside');
+    onCancel();
+  });
 
   useEffect(() => {
     setUrl(initialValue || '');
@@ -27,7 +32,9 @@ export default function InsertLink({
   //const editorStateBackupRef = useRef(editorState);
   const _onChange = (e) => setUrl(e.target.value);
   const applyValueIfValid = () => {
+    console.log('applyValueIfValid', validEmbed);
     if (validEmbed) {
+      console.log('Calling onApplyLink');
       onApplyLink(url);
     }
   };
@@ -39,28 +46,26 @@ export default function InsertLink({
       onCancel();
     }
   };
-  const _onButtonClick = () => {
+  const _onButtonClick = (e) => {
+    e.preventDefault();
+    console.log('On button Click, calling applyValueIfValid');
     applyValueIfValid();
   };
-  const _onFocus = () => {
-    console.log('Focused');
-  };
 
-  const _onBlur = (e) => {
-    if (!e.currentTarget.contains(e.relatedTarget)) {
-      console.log('Blurred');
-      onCancel();
-    }
+  const _onClear = (e) => {
+    e.preventDefault();
+    console.log('Clearing value');
+    onApplyLink('');
   };
-  const _onClear = () => setUrl('');
 
   useEffect(() => {
     const isValid = validateUrl(url, true);
     setValidEmbed(isValid.valid || url === '');
   }, [url]);
 
+  //console.log({ validEmbed, url });
   return (
-    <InputLinkLayout disabled={!validEmbed} tabIndex={-1} onBlur={_onBlur} onFocus={_onFocus}>
+    <InputLinkLayout disabled={!validEmbed} ref={ref}>
       <>
         <LinkIcon className="icon-search" />
       </>
@@ -71,7 +76,7 @@ export default function InsertLink({
             <IoIosClose />
           </ClearButton>
         )}
-        <button className="action-button" disabled={!validEmbed} onClick={_onButtonClick}>
+        <button className="action-button" disabled={!validEmbed} onMouseDown={_onButtonClick}>
           <CheckIcon />
         </button>
       </FlexContainer>
