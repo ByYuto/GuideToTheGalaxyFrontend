@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CheckIcon, LinkIcon } from '../../../../../assets/icons/svg-icons';
 import { InputLinkLayout, ClearButton } from './styled-components';
 import { validateUrl } from '../../../../../utils/validations';

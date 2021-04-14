@@ -65,7 +65,7 @@ function ContentEditor() {
   const { newArticle, step } = useSelector((store) => store.newArticle);
   const { isMobile } = useSelector((store) => store.app);
   const editorState = newArticle.content;
-  const setEditorState = (editorData) => dispatch(onChangeArticleContent(editorData));
+  const setEditorState = useCallback((editorData) => dispatch(onChangeArticleContent(editorData)), [dispatch]);
   const [isFocusEditor, setFocusEditor] = useState(false);
   const [styledToolbarOut, setStyledToolbarOut] = useState(false);
   const [mediaToolbarOut, setMediaToolbarOut] = useState(false);
@@ -320,6 +320,7 @@ function ContentEditor() {
     });
   };
 
+  /*
   const onUrlInputBlur = () => {
     setLinkPopupOpened(false);
     //restore state
@@ -327,13 +328,14 @@ function ContentEditor() {
   const onUrlInputClear = () => {
     setUrlValue('');
   };
+  */
   const onApplyLink = (url) => {
     _confirmLink(url);
     setEditorStateBackup(null);
     setLinkPopupOpened(false);
     setTimeout(() => {
       makeFocus();
-    }, 0);
+    }, 10);
   };
   const onCancelLink = () => {
     restoreEditorStateBackup();
@@ -341,7 +343,7 @@ function ContentEditor() {
     setLinkPopupOpened(false);
     setTimeout(() => {
       makeFocus();
-    }, 0);
+    }, 10);
   };
   const urlInput = (
     <Popover isOpen={linkPopupOpened}>
@@ -373,9 +375,6 @@ function ContentEditor() {
     if (linkPopupOpened) {
       urlMakeFocus();
     } else {
-      if (urlValue) {
-        //There is a
-      }
       setUrlValue('');
     }
   }, [linkPopupOpened]);
@@ -402,7 +401,7 @@ function ContentEditor() {
 
   const handleUserKeyPress = useCallback(
     (event) => {
-      const { key, keyCode, ctrlKey, metaKey } = event;
+      const { keyCode, ctrlKey, metaKey } = event;
 
       //console.log({ key, keyCode, ctrlKey, metaKey });
       if (keyCode === 75 && (ctrlKey === true || metaKey === true) && linkButtonState !== 'disabled') {
@@ -414,7 +413,9 @@ function ContentEditor() {
         //setUrlValue(url);
         //setLinkPopupOpened(true);
         openLinkInput();
-
+        setTimeout(() => {
+          urlMakeFocus();
+        }, 10);
         //}
       }
     },

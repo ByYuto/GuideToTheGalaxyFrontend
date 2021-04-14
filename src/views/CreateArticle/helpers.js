@@ -1,4 +1,5 @@
-import {convertToRaw} from 'draft-js';
+import { convertToRaw } from 'draft-js';
+import { startsWith } from 'lodash';
 
 export const getContentType = (categories, categoryId, contentId) => {
   const { contentTypes } = categories.filter((cat) => cat.name === categoryId)[0];
@@ -20,7 +21,15 @@ export const setArticleContent = (articleContent, contentType, categories) => {
   }
 
   if (contentType?.URL && (contentType?.URL.required || articleContent.URL !== '')) {
-    article.URL = "http://" + articleContent.URL;
+    try {
+      new URL(articleContent.URL);
+      article.URL = articleContent.URL;
+    } catch (e) {
+      //Url could be valid, but it has no protocol
+      if (!startsWith(articleContent.URL, 'http://') && !startsWith(articleContent.URL, 'https://')) {
+        article.URL = 'http://' + articleContent.URL;
+      }
+    }
   }
 
   if (contentType?.image && (contentType?.image.required || articleContent.photo.url !== '')) {
@@ -72,6 +81,7 @@ export const setArticleContent = (articleContent, contentType, categories) => {
   return article;
 };
 
+/*
 const setContentFormat = (contents) => {
   const contentFormated = [];
   contents.forEach((content) => {
@@ -147,3 +157,4 @@ const setContentFormat = (contents) => {
   });
   return contentFormated;
 };
+*/
