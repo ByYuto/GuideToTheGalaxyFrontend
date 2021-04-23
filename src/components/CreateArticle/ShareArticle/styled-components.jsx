@@ -128,7 +128,7 @@ export const ShareArticleCardView = styled(Link)`
   color: inherit;
   cursor: pointer;
   color: inherit;
-  text-decoration: none;
+  text-decoration: none !important;
   outline: 0;
 
   & .keywords-container {
