@@ -60,6 +60,10 @@ export function findLinkEntities(contentBlock, callback, contentState) {
   }, callback);
 }
 
+let previousYStyledToolbar = 0;
+let previousYMediaToolbar = 0;
+let previousRatioStyledToolbar = 0;
+let previousRatioMediaToolbar = 0;
 function ContentEditor() {
   const dispatch = useDispatch();
   const { newArticle, step } = useSelector((store) => store.newArticle);
@@ -280,7 +284,7 @@ function ContentEditor() {
       const options = {
         root: document,
         rootMargin: '0px',
-        threshold: 0,
+        threshold: 1,
         trackVisibility: true,
         delay: 100,
       };
@@ -308,13 +312,37 @@ function ContentEditor() {
   }, [urlValue, editorState, newLinkEntityKey, topDistance]);
 
   const observerHandler = (entries, observer) => {
-    entries.forEach((elm) => {
-      if (elm.target.classList.contains('styled-toolbar-container')) {
-        const isIntersected = elm.isIntersecting;
+    entries.forEach((entry) => {
+      //console.log(entry);
+      //const currentY = entry.boundingClientRect.y;
+      //const currentRatio = entry.intersectionRatio;
+      //const isIntersecting = entry.isIntersecting;
+
+      if (entry.target.classList.contains('styled-toolbar-container')) {
+        // if (currentY < previousYStyledToolbar) {
+        //   if (currentRatio > previousRatioStyledToolbar && isIntersecting) {
+        //     console.log('Scrolling down enter');
+        //     setStyledToolbarOut(true);
+        //   } else {
+        //     console.log('Scrolling down leave');
+        //   }
+        // } else if (currentY > previousYStyledToolbar && isIntersecting) {
+        //   if (currentRatio < previousRatioStyledToolbar) {
+        //     console.log('Scrolling up leave');
+        //     setStyledToolbarOut(false);
+        //   } else {
+        //     console.log('Scrolling up enter');
+        //   }
+        // }
+
+        // previousYStyledToolbar = currentY;
+        // previousRatioStyledToolbar = currentRatio;
+
+        const isIntersected = entry.isIntersecting;
         setStyledToolbarOut(isIntersected);
       }
-      if (elm.target.classList.contains('media-toolbar-container')) {
-        const isIntersected = elm.isIntersecting;
+      if (entry.target.classList.contains('media-toolbar-container')) {
+        const isIntersected = entry.isIntersecting;
         setMediaToolbarOut(isIntersected);
       }
     });
@@ -439,20 +467,26 @@ function ContentEditor() {
   return (
     <EditorLayout ref={editorContainer} className="editor-parent-container" linkPopupOpened={linkPopupOpened ? 1 : 0}>
       <div
-        style={{ width: '180px', opacity: isFocusEditor || embedActive || linkPopupOpened ? 1 : 0 }}
+        style={{
+          width: '180px',
+          height: '44px',
+          display: 'block',
+        }}
         ref={styledToolbarRef}
         className="styled-toolbar-container"
       >
-        <TextFormat
-          editorState={editorState}
-          setEditorState={setEditorState}
-          //promptLink={_promptForLink}
-          imageInputRef={imageInputRef}
-          linkButtonState={linkButtonState}
-          setLinkButtonState={setLinkButtonState}
-          //setSelectionState={setSelectionState}
-          onLinkButtonClick={onLinkButtonClick}
-        />
+        {styledToolbarOut && (isFocusEditor || embedActive || linkPopupOpened) ? (
+          <TextFormat
+            editorState={editorState}
+            setEditorState={setEditorState}
+            //promptLink={_promptForLink}
+            imageInputRef={imageInputRef}
+            linkButtonState={linkButtonState}
+            setLinkButtonState={setLinkButtonState}
+            //setSelectionState={setSelectionState}
+            onLinkButtonClick={onLinkButtonClick}
+          />
+        ) : null}
       </div>
       <TextToolbarFixed
         className="fixed-styled-toolbar-container"

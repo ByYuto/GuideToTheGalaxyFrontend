@@ -34,10 +34,8 @@ export const TextToolbarFixed = styled.div`
   ${({ isMobile }) => {
     if (isMobile) {
       return css`
-        top: ${({ editorOut, styledToolbarOut }) => {
-          return editorOut && !styledToolbarOut ? '2vh' : '0';
-        }};
-        left: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? '3vw' : '0')};
+        top: 0;
+        left: 0;
       `;
     }
 
@@ -45,7 +43,6 @@ export const TextToolbarFixed = styled.div`
       top: ${({ editorOut, styledToolbarOut }) => {
         return editorOut && !styledToolbarOut ? '2vh' : '0';
       }};
-      left: ${({ editorOut, styledToolbarOut }) => (editorOut && !styledToolbarOut ? '16.5vw' : '0')};
     `;
   }}
 
