@@ -4,16 +4,21 @@ import { PDFIcon } from '../../../assets/icons/svg-icons';
 import PdfMountedImage from '../../../assets/icons/pdf-large.svg';
 import FlexContainer from '../FlexContainer';
 import { uploadFile } from '../../../http/createArticleService';
-import { insertPdf } from '../../../redux/reducers/newArticleState';
-import { useDispatch } from 'react-redux';
+import { insertPdf, uploadingArticlePDF } from '../../../redux/reducers/newArticleState';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 
+let source = null;
 export default function UploadPdf() {
+  const isUploadingPDF = useSelector((store) => store.newArticle.isUploadingPDF);
   const inputPdf = useRef(null);
   const [fileName, setFileName] = useState('');
   const [error, setError] = useState('');
   const dispatch = useDispatch();
   const handleCleanInputFile = () => {
     dispatch(insertPdf(null));
+    source.cancel('Request was cancelled by user');
+    dispatch(uploadingArticlePDF(false));
     setFileName('');
   };
   const handleOnChange = async (e) => {
@@ -21,15 +26,17 @@ export default function UploadPdf() {
     setError('');
     setFileName(e.target.files[0].name);
     const dataSrc = e.target.files[0];
-    console.log('subiendo archivo...');
     let fileData;
 
+    dispatch(uploadingArticlePDF(true));
+    source = axios.CancelToken.source();
     try {
-      fileData = await uploadFile(dataSrc);
+      fileData = await uploadFile(dataSrc, source.token);
+      dispatch(uploadingArticlePDF(false));
       await dispatch(insertPdf(fileData.fileId));
     } catch (e) {
-      console.log('paso por aqui', e.response.data);
-      setError(e.response.data?.message || e.message);
+      dispatch(uploadingArticlePDF(false));
+      setError(e?.response?.data?.message || e?.message || 'Unknown error');
       setFileName('');
       await dispatch(insertPdf(null));
     }
@@ -60,7 +67,7 @@ export default function UploadPdf() {
             <img src={PdfMountedImage} alt={fileName} />
           </figure>
           <FlexContainer column>
-            <h4>{fileName}</h4>
+            <h4>{isUploadingPDF ? 'Uploading file...' : fileName}</h4>
             <button className="delete-pdf" onClick={handleCleanInputFile}>
               <span>Delete</span>
             </button>

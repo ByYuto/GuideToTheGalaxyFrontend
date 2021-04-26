@@ -24,17 +24,18 @@ export const uploadImageRequest = async (formData) => {
   });
 };
 
-export const uploadFile = async (file) => {
+export const uploadFile = async (file, cancelToken = undefined) => {
   const formData = new FormData();
   formData.append('file', file);
-  const dataImage = await uploadFileRequest(formData);
+  const dataImage = await uploadFileRequest(formData, cancelToken);
   return { url: dataImage.data.url, fileId: dataImage.data._id };
 };
 
-export const uploadFileRequest = async (formData) => {
+export const uploadFileRequest = async (formData, cancelToken) => {
   const token = await localStorage.getItem('_token');
   return axios.post(ADD_FILE, formData, {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
+    cancelToken,
   });
 };
 

@@ -4,11 +4,11 @@ import styled from 'styled-components';
 const LoaderLayout = styled.div`
   display: inline-block;
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: ${(props) => (props.small ? '26px' : '80px')};
+  height: ${(props) => (props.small ? '16px' : '80px')};
   & div {
     position: absolute;
-    border: 4px solid ${(props) => (props.color ? props.color : '#fff')};
+    border: 2px solid ${(props) => (props.color ? props.color : '#fff')};
     opacity: 1;
     border-radius: 50%;
     animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
@@ -18,24 +18,24 @@ const LoaderLayout = styled.div`
   }
   @keyframes lds-ripple {
     0% {
-      top: 36px;
-      left: 36px;
+      top: ${(props) => (props.small ? '8px' : '36px')};
+      left: ${(props) => (props.small ? '13px' : '36px')};
       width: 0;
       height: 0;
       opacity: 1;
     }
     100% {
-      top: 0px;
+      top: -5px;
       left: 0px;
-      width: 72px;
-      height: 72px;
+      width: ${(props) => (props.small ? '26px' : '72px')};
+      height: ${(props) => (props.small ? '26px' : '72px')};
       opacity: 0;
     }
   }
 `;
 
-const Loader = ({ color }) => (
-  <LoaderLayout color={color}>
+const Loader = ({ color, small }) => (
+  <LoaderLayout color={color} small={small}>
     <div></div>
     <div></div>
   </LoaderLayout>

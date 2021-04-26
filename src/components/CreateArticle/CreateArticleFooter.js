@@ -1,4 +1,4 @@
-import React, {  useRef } from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import Button from '../UI/Button';
 import { useSelector } from 'react-redux';
@@ -30,10 +30,11 @@ const CreateArticleFooter = ({
   onPublish,
   nexDisabledStep2,
   showNextStep2,
-  showNextStep1
+  showNextStep1,
 }) => {
   const nextRef = useRef(null);
-  const { loading } = useSelector((store) => store.newArticle);
+  const { loading, isUploadingPDF } = useSelector((store) => store.newArticle);
+
   return (
     <StyledFooter>
       {!loading ? (
@@ -46,9 +47,9 @@ const CreateArticleFooter = ({
               NEXT
             </Button>
           )}
-          { showNextStep2 && (
-            <Button primary rounded onClick={onNextClick} disabled={nexDisabledStep2} ref={nextRef}>
-              NEXT
+          {showNextStep2 && (
+            <Button primary rounded onClick={onNextClick} disabled={nexDisabledStep2 || isUploadingPDF} ref={nextRef}>
+              NEXT{isUploadingPDF ? <Loader small={true} /> : null}
             </Button>
           )}
           {publish && (

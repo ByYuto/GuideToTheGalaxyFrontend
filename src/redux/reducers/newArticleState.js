@@ -38,6 +38,7 @@ const initialState = {
   error: false,
   errorMessage: '',
   loading: false,
+  isUploadingPDF: false,
   savedArticle: null,
 };
 
@@ -60,6 +61,7 @@ const CLEAR_DATA = 'CLEAR_DATA';
 const ON_CHANGE_CONTENT = 'ON_CHANGE_CONTENT';
 const LOADING = 'LOADING';
 const ARTICLE_ERROR = 'ARTICLE_ERROR';
+const PDF_UPLOADING = 'PDF_UPLOADING';
 const PDF_INSERT = 'PDF_INSERT';
 const ACTIVATE_CONTRIBUTIONS = 'ACTIVATE_CONTRIBUTIONS';
 const ARTICLE_SUCCESS = 'ARTICLE_SUCCESS';
@@ -134,6 +136,7 @@ export const deleteContent = (contentId) => ({ type: DELETE_CONTENT, payload: { 
 export const validateField = (field) => ({ type: VALIDATE_FIELD, payload: { ...field } });
 export const clearArticleData = () => ({ type: CLEAR_DATA });
 export const loadingArticle = (isLoading) => ({ type: LOADING, payload: isLoading });
+export const uploadingArticlePDF = (isUploading) => ({ type: PDF_UPLOADING, payload: isUploading });
 export const errorArticle = (error) => ({ type: ARTICLE_ERROR, payload: error });
 export const saveArticle = (article) => async (dispatch) => {
   dispatch(loadingArticle(true));
@@ -352,6 +355,11 @@ export default (state = initialState, { type, payload }) => {
       return {
         ...state,
         loading: payload,
+      };
+    case PDF_UPLOADING:
+      return {
+        ...state,
+        isUploadingPDF: payload,
       };
     case ARTICLE_ERROR:
       return {
