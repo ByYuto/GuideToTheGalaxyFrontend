@@ -48,13 +48,13 @@ const CreateArticleFooter = ({
             </Button>
           )}
           {showNextStep2 && (
-            <Button primary rounded onClick={onNextClick} disabled={nexDisabledStep2 || isUploadingPDF} ref={nextRef}>
-              NEXT{isUploadingPDF ? <Loader small={true} /> : null}
+            <Button primary rounded onClick={onNextClick} disabled={nexDisabledStep2} ref={nextRef}>
+              NEXT
             </Button>
           )}
           {publish && (
-            <Button primary rounded onClick={onPublish} disabled={publishDisabled} ref={nextRef}>
-              Publish
+            <Button primary rounded onClick={onPublish} disabled={publishDisabled || isUploadingPDF} ref={nextRef}>
+              Publish {isUploadingPDF ? <Loader small={true} /> : null}
             </Button>
           )}
         </>
