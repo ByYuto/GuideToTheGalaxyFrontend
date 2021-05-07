@@ -10,6 +10,7 @@ import ContentEditor from '../components/CreateArticle/DanteEditor/ContentEditor
 import history from './history';
 import { Helmet } from 'react-helmet';
 import { SITE_TITLE } from '../utils/constants';
+import Profile from '../views/Profile/Profile';
 //import ComponentsTestPage from '../views/ComponentsTestPage';
 
 const RouterApp = () => {
@@ -51,6 +52,11 @@ const RouterApp = () => {
         <Route path="/:categoryId/:slug" exact>
           <Layout home="search" noKeywords={true} view="detail">
             <ArticleDetail />
+          </Layout>
+        </Route>
+        <Route path="/profile" exact>
+          <Layout home="search" noKeywords={true} view="detail">
+            <Profile />
           </Layout>
         </Route>
         {/*<Route path="/test-components" exact>

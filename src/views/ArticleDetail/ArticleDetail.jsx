@@ -48,6 +48,38 @@ export default function ArticleDetail() {
     history.push('/search');
   };
 
+  const Employee = (props) => {
+    const { firstName, lastName } = props;
+
+    const [value, setValue] = useState(88);
+    useEffect(() => {
+      if (value === 88) {
+        setTimeout(() => setValue(99), 5000);
+      }
+    });
+
+    return <h5>{`this is an Employee: ${firstName} ${lastName} with value ${value}`}</h5>;
+  };
+
+  const employeeInfo = [{ firstName: 'Jack' }, { firstName: 'Amy', lastName: 'Noe' }, { firstName: 'Stepf' }];
+
+  function App() {
+    return (
+      <div className="App">
+        <Employee firstName="Pailas" />
+        <header className="App-header">
+          <h2>Company</h2>
+          {employeeInfo.map(Employee)}
+        </header>
+        <header className="App-header">
+          <h2>Company</h2>
+          {employeeInfo.map((employee) => (
+            <Employee {...employee} />
+          ))}
+        </header>
+      </div>
+    );
+  }
   return (
     <ArticleDetailContainer>
       <Helmet>
@@ -70,6 +102,7 @@ export default function ArticleDetail() {
             </Helmet>
             <StyledView className="header-content">
               <MaxWidthContainer>
+                <App />
                 <div className="breadcrumb">
                   {article?.categoryId}
                   <Ellipse /> {article?.contentTypeId} <Ellipse /> {article?.location?.locality || 'Worldwide'}
