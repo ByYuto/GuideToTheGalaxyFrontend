@@ -20,10 +20,14 @@ import {
   BuskProfileButton,
   JoinedCommunityContainer,
   JoinedCommunityValue,
+  ContributionsTitle,
 } from './styled-components';
 import { RiFlag2Line } from 'react-icons/ri';
 import { IoMdHand } from 'react-icons/io';
+import { range } from 'lodash';
+import Contribution from './Contribution';
 
+const testContribution = {};
 export default function Profile() {
   return (
     <MaxWidthContainer>
@@ -65,16 +69,10 @@ export default function Profile() {
           </OtherUserInfo>
         </ProfilePanel>
         <ContributionsPanel>
-          <div>50 Contributions</div>
-          <div>
-            <div>June 14, 2019</div>
-            <div>Category - Subcategory - Location</div>
-            <h3>An honest review of the 10+ Amps for busking</h3>
-            <p>
-              Choosing the right amp for your act can be intimidating for a new street performer and still pretty
-              confusing...
-            </p>
-          </div>
+          <ContributionsTitle>50 Contributions</ContributionsTitle>
+          {new Array(20).fill().map((i) => (
+            <Contribution key={i} contribution={{}} />
+          ))}
         </ContributionsPanel>
       </ProfileContainer>
     </MaxWidthContainer>

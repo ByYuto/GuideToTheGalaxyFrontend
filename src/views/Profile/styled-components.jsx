@@ -1,4 +1,6 @@
+import React from 'react';
 import styled from 'styled-components';
+import { Ellipse } from '../../assets/icons/svg-icons';
 import { screen } from '../../utils/constants';
 
 const View = styled.div`
@@ -9,7 +11,7 @@ const View = styled.div`
 `;
 
 export const MaxWidthContainer = styled.div`
-  max-width: 1000px;
+  max-width: 1224px;
   width: 100%;
   margin: auto;
   background-color: ${(props) => (props.theme.isDark ? props.theme.baseColors.dark : props.theme.baseColors.white)};
@@ -142,17 +144,18 @@ export const OtherUserInfo = styled.div`
   /* DS Dark Layering Y4 12-16% */
 
   box-shadow: 0px 4px 16px rgba(1, 1, 69, 0.24);
-  padding: 0 16px;
+  padding: 0px 16px 16px 16px;
   align-items: center;
 `;
 export const StatusContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
   width: 100%;
+  padding: 9px 0;
+  border-bottom: 1px solid #6670f0;
 `;
 export const Level = styled.div`
   color: #ffffff;
-  padding: 9px 0;
 `;
 export const KarmaContainer = styled.div`
   font-family: Open Sans;
@@ -165,9 +168,7 @@ export const KarmaContainer = styled.div`
   text-align: center;
 
   /* clear BG */
-
   color: #f6f8ff;
-  padding: 9px 0;
 `;
 export const KarmaValue = styled.span`
   font-family: Pragati Narrow;
@@ -185,6 +186,7 @@ export const KarmaValue = styled.span`
 `;
 export const Description = styled.div`
   text-align: center;
+  margin-top: 16px;
 `;
 export const BuskProfileButton = styled.button`
   font-family: Lato;
@@ -210,6 +212,14 @@ export const BuskProfileButton = styled.button`
 `;
 export const JoinedCommunityContainer = styled.div`
   display: flex;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  text-align: center;
+
+  color: #9695b7;
 `;
 export const JoinedCommunityValue = styled.div`
   /* Caption - Lato 12 Bold */
@@ -230,6 +240,62 @@ export const JoinedCommunityValue = styled.div`
 //Contributions Panel
 export const ContributionsPanel = styled.div`
   flex: 1;
+  padding: 40px 24px;
 `;
 
-export const ContributionsTitle = styled.h6``;
+export const ContributionContainer = styled.div`
+  padding: 16px 0 11px 0;
+  border-bottom: 1px solid #bdbfdf;
+`;
+
+export const ContributionsTitle = styled.h6`
+  border-bottom: 1px solid #bdbfdf;
+`;
+
+export const ContributionDate = styled.div`
+  /* Caption - Lato 12 Reg */
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+
+  /* dark gray */
+
+  color: #9695b7;
+  margin-bottom: 7px;
+`;
+
+export const ContributionArticleLocation = styled.div`
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 16px;
+  /* identical to box height, or 160% */
+
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+
+  color: #9695b7;
+  margin: 12px 0 9px 0;
+
+  & svg {
+    margin: 0 5px;
+  }
+`;
+
+export const ContributionArticleTitle = styled.h4`
+  color: #1f1f3d;
+  margin: 10px 0 8px 0;
+`;
+
+export const ContributionText = styled.h6`
+  color: #1f1f3d;
+  margin: 8px 0;
+  text-transform: none;
+`;
