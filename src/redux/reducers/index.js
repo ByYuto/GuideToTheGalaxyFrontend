@@ -6,6 +6,7 @@ import articles from './articles';
 import keywords from './keywords';
 import topbarSearch from './topbarSearch';
 import articleDetail from './articleDetail';
+import profile from './profileState';
 
 export default {
   app,
@@ -16,4 +17,5 @@ export default {
   keywords,
   topbarSearch,
   articleDetail,
+  profile,
 };

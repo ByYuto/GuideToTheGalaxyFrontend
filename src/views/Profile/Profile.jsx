@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ContributionsPanel,
   MaxWidthContainer,
@@ -26,9 +26,18 @@ import { RiFlag2Line } from 'react-icons/ri';
 import { IoMdHand } from 'react-icons/io';
 import { range } from 'lodash';
 import Contribution from './Contribution';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMeContributions } from '../../redux/reducers/profileState';
 
-const testContribution = {};
 export default function Profile() {
+  const totalContributions = useSelector((state) => state.profile.totalContributions);
+  const contributions = useSelector((state) => state.profile.contributions);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getMeContributions());
+  }, [dispatch]);
+
   return (
     <MaxWidthContainer>
       <ProfileContainer>
@@ -69,9 +78,11 @@ export default function Profile() {
           </OtherUserInfo>
         </ProfilePanel>
         <ContributionsPanel>
-          <ContributionsTitle>50 Contributions</ContributionsTitle>
-          {new Array(20).fill().map((i) => (
-            <Contribution key={i} contribution={{}} />
+          <ContributionsTitle>
+            {totalContributions === undefined ? 'Loading...' : `${totalContributions} Contributions`}
+          </ContributionsTitle>
+          {contributions.map((contribution) => (
+            <Contribution key={contribution._id} {...contribution} />
           ))}
         </ContributionsPanel>
       </ProfileContainer>

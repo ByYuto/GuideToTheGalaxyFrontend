@@ -1,4 +1,6 @@
+import moment from 'moment';
 import React from 'react';
+import { mockComponent } from 'react-dom/test-utils';
 import { Ellipse } from '../../assets/icons/svg-icons';
 import {
   ContributionDate,
@@ -7,17 +9,33 @@ import {
   ContributionText,
   ContributionContainer,
 } from './styled-components';
-const Contribution = (contribution) => {
+const Contribution = ({
+  type,
+  created_at,
+  article: { title, textContent, categoryId, contentTypeId, location },
+  comment,
+}) => {
+  created_at = moment(created_at);
   return (
     <ContributionContainer>
-      <ContributionDate>June 14, 2019</ContributionDate>
-      <ContributionArticleLocation>
-        Category <Ellipse /> Subcategory <Ellipse /> Location
-      </ContributionArticleLocation>
-      <ContributionArticleTitle>An honest review of the 10+ Amps for busking</ContributionArticleTitle>
-      <ContributionText>
-        Choosing the right amp for your act can be intimidating for a new street performer and still pretty confusing...
-      </ContributionText>
+      {created_at.isValid() ? <ContributionDate>{created_at.format('MMM DD, YYYY')}</ContributionDate> : null}
+      {type === 'CREATE_ARTICLE' ? (
+        <>
+          <ContributionArticleLocation>
+            {categoryId}
+            <Ellipse /> {contentTypeId} <Ellipse /> {location?.locality || 'Worldwide'}
+          </ContributionArticleLocation>
+
+          <ContributionArticleTitle>{title}</ContributionArticleTitle>
+          <ContributionText>{textContent}</ContributionText>
+        </>
+      ) : null}
+      {type === 'COMMENT_ARTICLE' ? (
+        <>
+          <ContributionText>Commented on {title}</ContributionText>
+          <ContributionText>{comment?.comment}</ContributionText>
+        </>
+      ) : null}
     </ContributionContainer>
   );
 };
