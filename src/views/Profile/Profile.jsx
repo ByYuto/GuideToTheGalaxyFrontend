@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ContributionsPanel,
   MaxWidthContainer,
@@ -28,15 +28,24 @@ import { range } from 'lodash';
 import Contribution from './Contribution';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMeContributions } from '../../redux/reducers/profileState';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default function Profile() {
-  const totalContributions = useSelector((state) => state.profile.totalContributions);
+  const totalItems = useSelector((state) => state.profile.totalItems);
   const contributions = useSelector((state) => state.profile.contributions);
+  const lastItem = useSelector((state) => state.profile.lastItem);
   const dispatch = useDispatch();
 
+  const loadMoreContributions = useCallback(
+    (forceFirst = false) => {
+      dispatch(getMeContributions(forceFirst));
+    },
+    [dispatch]
+  );
+
   useEffect(() => {
-    dispatch(getMeContributions());
-  }, [dispatch]);
+    loadMoreContributions(true);
+  }, [loadMoreContributions]);
 
   return (
     <MaxWidthContainer>
@@ -79,11 +88,13 @@ export default function Profile() {
         </ProfilePanel>
         <ContributionsPanel>
           <ContributionsTitle>
-            {totalContributions === undefined ? 'Loading...' : `${totalContributions} Contributions`}
+            {totalItems === undefined ? 'Loading...' : `${totalItems} Contributions`}
           </ContributionsTitle>
-          {contributions.map((contribution) => (
-            <Contribution key={contribution._id} {...contribution} />
-          ))}
+          <InfiniteScroll dataLength={contributions.length} next={loadMoreContributions} hasMore={lastItem !== null}>
+            {contributions.map((contribution) => (
+              <Contribution key={contribution._id} {...contribution} />
+            ))}
+          </InfiniteScroll>
         </ContributionsPanel>
       </ProfileContainer>
     </MaxWidthContainer>

@@ -1,6 +1,7 @@
 import moment from 'moment';
 import React from 'react';
 import { mockComponent } from 'react-dom/test-utils';
+import { Link } from 'react-router-dom';
 import { Ellipse } from '../../assets/icons/svg-icons';
 import {
   ContributionDate,
@@ -12,7 +13,7 @@ import {
 const Contribution = ({
   type,
   created_at,
-  article: { title, textContent, categoryId, contentTypeId, location },
+  article: { title, textContent, categoryId, contentTypeId, location, slug },
   comment,
 }) => {
   created_at = moment(created_at);
@@ -32,7 +33,9 @@ const Contribution = ({
       ) : null}
       {type === 'COMMENT_ARTICLE' ? (
         <>
-          <ContributionText>Commented on {title}</ContributionText>
+          <ContributionText>
+            Commented on <Link to={`/${categoryId.toLowerCase()}/${slug}`}>{title}</Link>
+          </ContributionText>
           <ContributionText>{comment?.comment}</ContributionText>
         </>
       ) : null}

@@ -20,13 +20,18 @@ const ERROR_CONTRIBUTION = 'ERROR_CONTRIBUTION';
 export const getMeContributions =
   (forceFirst = false) =>
   async (dispatch, getState) => {
-    //const lastContributionId = getState().profile.lastContributionId;
+    const lastItem = forceFirst ? undefined : getState().profile.lastItem;
     dispatch(loadingMeContributions(true));
     try {
-      const response = await getMeContributionsService();
-      //dispatch(setArticles(response.data));
+      const response = await getMeContributionsService(lastItem);
+      console.log(response.headers);
       dispatch(
-        addMeContributions({ contributions: response.data, totalItems: response.headers['x-pagination-total-items'] })
+        addMeContributions({
+          contributions: response.data,
+          totalItems: response.headers['x-pagination-total-items'],
+          lastItem: response.headers['x-pagination-last-item'],
+          forceFirst,
+        })
       );
     } catch (e) {
       /*
@@ -40,9 +45,9 @@ export const getMeContributions =
     }
   };
 
-export const addMeContributions = ({ contributions, totalItems }) => ({
+export const addMeContributions = ({ contributions, totalItems, lastItem, forceFirst }) => ({
   type: ADD_ME_CONTRIBUTIONS,
-  payload: { contributions, totalItems },
+  payload: { contributions, totalItems, lastItem, forceFirst },
 });
 
 export const loadingMeContributions = (isLoading) => ({ type: LOADING_ME_CONTRIBUTIONS, payload: isLoading });
@@ -56,8 +61,11 @@ export default (state = initialState, { type, payload }) => {
     case ADD_ME_CONTRIBUTIONS:
       return {
         ...state,
-        contributions: [...state.contributions, ...payload.contributions],
-        totalContributions: payload.totalItems !== 'null' ? payload.totalItems : undefined,
+        contributions: payload.forceFirst
+          ? [...payload.contributions]
+          : [...state.contributions, ...payload.contributions],
+        totalItems: payload.totalItems,
+        lastItem: payload.lastItem !== 'null' ? payload.lastItem : null,
       };
     case LOADING_ME_CONTRIBUTIONS:
       return {
