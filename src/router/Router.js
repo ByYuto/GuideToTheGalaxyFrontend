@@ -11,7 +11,7 @@ import history from './history';
 import { Helmet } from 'react-helmet';
 import { SITE_TITLE } from '../utils/constants';
 import Profile from '../views/Profile/Profile';
-//import ComponentsTestPage from '../views/ComponentsTestPage';
+import ComponentsTestPage from '../views/ComponentsTestPage';
 
 const RouterApp = () => {
   const { authorization } = useSelector((store) => store.auth);
@@ -59,9 +59,9 @@ const RouterApp = () => {
             <Profile />
           </Layout>
         </Route>
-        {/*<Route path="/test-components" exact>
+        <Route path="/test-components" exact>
           <ComponentsTestPage />
-          </Route>*/}
+        </Route>
         <Route path="**">
           <Layout>
             <NotFound />
