@@ -84,26 +84,24 @@ const ImageEditorComponent = (props) => {
         images: newImgArr,
       });
       const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
-      onChangeEditor(AtomicBlockUtils.insertAtomicBlock(newEditorState, imageEntity, ' '));
+      onChangeEditor(newEditorState);
     }
   };
-
+  console.log(props.images);
   return (
     <ImagesContainer aria-label="Photos" role="group">
       {props.images.map((item, imgIndex) => (
-        <>
-          <ImageWrapper position={imgIndex} length={props.images.length} key={imgIndex}>
-            <CloseButton
-              onMouseDown={(e) => {
-                e.preventDefault();
-                onDeleteImage(item.imageId);
-              }}
-            >
-              <RiCloseLine color="#FFFFFF" size={22} />
-            </CloseButton>
-            <ImageItem src={item.url} />
-          </ImageWrapper>
-        </>
+        <ImageWrapper position={imgIndex} length={props.images.length} key={item.imageId}>
+          <CloseButton
+            onMouseDown={(e) => {
+              e.preventDefault();
+              onDeleteImage(item.imageId);
+            }}
+          >
+            <RiCloseLine color="#FFFFFF" size={22} />
+          </CloseButton>
+          <ImageItem src={item.url} />
+        </ImageWrapper>
       ))}
       <>
         {props.images.length < 4 && fileInputRef ? (
