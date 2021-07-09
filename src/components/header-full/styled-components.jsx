@@ -236,7 +236,7 @@ export const FullHeaderLayout = styled.div`
             height: auto;
           `
         : css`
-            height: ${(props) => (props.isMobile ? '64px' : '76px')};
+            height: ${(props) => (props.isMobile ? '64px' : '88px')};
           `;
     }
   }}

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import TextArea from '../../components/UI/TextArea';
 
 const View = styled.div`
   display: flex;
@@ -36,7 +37,7 @@ export const StyledView = styled(View)`
 `;
 
 export const ArticleDetailContainer = styled.div`
-  padding-bottom: 80px;
+  padding-bottom: 40px;
 
   & .DraftEditor-root {
     @media (max-width: 864px) {
@@ -272,6 +273,12 @@ export const ArticleDetailContainer = styled.div`
     > p:first-child {
       margin-top: 50px;
     }
+  }
+
+  & .comments-section {
+    border-top: 1px solid #6670f0;
+    margin-top: 15px;
+    padding: 30px 0;
   }
 `;
 

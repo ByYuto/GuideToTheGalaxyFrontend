@@ -19,33 +19,44 @@ import { setSelectedKeyword } from '../../redux/reducers/topbarSearch';
 import { useHistory } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { SITE_TITLE } from '../../utils/constants';
-import { setArticles } from '../../redux/reducers/articles';
+import CommentBox from '../../components/ArticleDetails/Comments/CommentBox';
 
 export default function ArticleDetail() {
   const { categoryId, slug } = useParams();
   const dispatch = useDispatch();
   const { article, error, errorMessage, loading } = useSelector((store) => store.articleDetail);
   const { isMobile } = useSelector((store) => store.app);
+
   const history = useHistory();
   useEffect(() => {
     return () => {
       dispatch(clearArticleDetails());
     };
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     dispatch(getArticleDetailBySlug(slug));
   }, [categoryId, slug, dispatch]);
 
   useEffect(() => {
+    if (article) {
+      //TODO: Load article comments
+    }
+  }, [article, dispatch]);
+
+  useEffect(() => {
     if (article && article.categoryId.toLowerCase() !== categoryId) {
-      console.log(`Reemplazando url por /${article.categoryId.toLowerCase()}/${slug}`);
+      //console.log(`Reemplazando url por /${article.categoryId.toLowerCase()}/${slug}`);
       history.replace(`/${article.categoryId.toLowerCase()}/${slug}`);
     }
-  }, [article, categoryId, history]);
+  }, [article, categoryId, history, slug]);
 
   const handleTagClick = (tag) => {
     dispatch(setSelectedKeyword(tag));
     history.push('/search');
+  };
+
+  const onPostComment = (comment) => {
+    console.log('Posteando el comentario: ', comment);
   };
 
   return (
@@ -222,6 +233,12 @@ export default function ArticleDetail() {
                     />
                   </FlexContainer>
                 </FlexContainer>
+              </MaxWidthContainer>
+            </StyledView>
+            <StyledView className="comments-section">
+              <MaxWidthContainer>
+                <CommentBox onPostComment={onPostComment} onClose={() => console.log('Closed')} />
+                {/*<CommentsK comments={comments} />*/}
               </MaxWidthContainer>
             </StyledView>
           </ThemeProvider>

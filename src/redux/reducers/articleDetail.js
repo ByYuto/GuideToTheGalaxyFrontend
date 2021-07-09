@@ -3,9 +3,12 @@ import { setAuthorization } from './authState';
 
 const initialState = {
   article: null,
+  articleComments: [],
   error: false,
   loading: false,
   errorMessage: '',
+  lastItem: undefined,
+  totalItems: undefined,
 };
 
 const SET_ARTICLE = 'SET_ARTICLE';
