@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { makeFormDraft, updateValidationTemplate } from '../../redux/reducers/newArticleState';
 import PlaceholderImg from '../../assets/images/Rectangle.png';
 import { generalTemplate } from '../../utils/constants';
-import {screen} from '../../utils/constants'
+import { screen } from '../../utils/constants';
 const StyledArticleImage = styled.div`
   padding: 0 10px;
   display: flex;
@@ -79,6 +79,14 @@ const getContentType = (categories, categoryId, contentTypeId) => {
   }
 };
 
+function getFeaturedImage(formData) {
+  if (formData?.photo?.url?.medium) {
+    return formData?.photo?.url?.medium;
+  }
+
+  return PlaceholderImg;
+}
+
 const ArticleData = ({ article, showImage, onChange, readOnly }) => {
   const categories = useSelector(categoriesSelector);
   const { draftForm, articleValidations } = useSelector((store) => store.newArticle);
@@ -93,26 +101,25 @@ const ArticleData = ({ article, showImage, onChange, readOnly }) => {
   };
 
   useEffect(() => {
-      const validationTemplate = {};
-      for (const key in contentType) {
-        if (key !== 'name' && key !== 'template') {
-          if (contentType[key].required) {
-            if (key === 'date') {
-              validationTemplate[key] = { valid: true, errorType: '' };
-            } else {
-              validationTemplate[key] = { valid: false, errorType: '' };
-            }
+    const validationTemplate = {};
+    for (const key in contentType) {
+      if (key !== 'name' && key !== 'template') {
+        if (contentType[key].required) {
+          if (key === 'date') {
+            validationTemplate[key] = { valid: true, errorType: '' };
+          } else {
+            validationTemplate[key] = { valid: false, errorType: '' };
           }
         }
       }
-      const fieldsAlreadyValidated = {};
-      for(const key in articleValidations) {
-        if (articleValidations[key].valid) {
-          fieldsAlreadyValidated[key] = articleValidations[key];
-        }
+    }
+    const fieldsAlreadyValidated = {};
+    for (const key in articleValidations) {
+      if (articleValidations[key].valid) {
+        fieldsAlreadyValidated[key] = articleValidations[key];
       }
-      dispatch(updateValidationTemplate({ ...validationTemplate, ...fieldsAlreadyValidated }));
-    
+    }
+    dispatch(updateValidationTemplate({ ...validationTemplate, ...fieldsAlreadyValidated }));
   }, [article.contentTypeId]);
 
   return (
@@ -130,7 +137,7 @@ const ArticleData = ({ article, showImage, onChange, readOnly }) => {
             <UploadInput
               contentType={contentType}
               onChange={changeWithDraft}
-              srcImg={formData.photo?.url || PlaceholderImg}
+              srcImg={getFeaturedImage(article)}
               readOnly={readOnly}
             />
           </React.Fragment>

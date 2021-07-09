@@ -142,9 +142,9 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
     const dataSrc = e.target.files[0];
     if (dataSrc) {
       setLoading(true);
-      try{
+      try {
         const imageData = await uploadImage(dataSrc);
-        if (imageData.url) {
+        if (imageData) {
           const newArticle = {
             photo: imageData,
           };
@@ -153,8 +153,7 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
         } else {
           return;
         }
-      }
-      catch(e){
+      } catch (e) {
         setServerError(e?.response?.data?.message || e.message);
       }
       setLoading(false);
@@ -162,7 +161,7 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
       return;
     }
   };
-  const imgToPlace = srcImg !== null && srcImg !== '' ? srcImg : PlaceholderImg;
+
   useEffect(() => {
     if (inputRef && inputRef.current) {
       handleImageValidation(inputRef.current.files);
@@ -173,7 +172,7 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
       <UploadInputLayout onClick={handleImgSelect} isRequired={contentType.image.required}>
         <img
           alt={'featured img'}
-          src={imgToPlace}
+          src={srcImg}
           onFocus={() => setTooltipVisible(true)}
           onBlur={() => setTooltipVisible(false)}
         />
@@ -184,9 +183,8 @@ export default function UploadInput({ contentType, onChange, readOnly, srcImg = 
         <input type="file" onChange={handleFileChange} ref={inputRef} />
         {tooltipVisible && tooltip && <StyledFieldTooltip className="upload-tooltip">{tooltip}</StyledFieldTooltip>}
       </UploadInputLayout>
-      {((contentType.image.required && !imageValidation?.valid && imageValidation?.errorType !== '') || serverError) && (
-        <TextValidation>{serverError || imageValidation?.errorType}</TextValidation>
-      )}
+      {((contentType.image.required && !imageValidation?.valid && imageValidation?.errorType !== '') ||
+        serverError) && <TextValidation>{serverError || imageValidation?.errorType}</TextValidation>}
     </>
   ) : (
     <LoaderContainer className="laoder-container">
