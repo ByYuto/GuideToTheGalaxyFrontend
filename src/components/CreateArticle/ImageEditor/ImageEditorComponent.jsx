@@ -100,7 +100,7 @@ const ImageEditorComponent = (props) => {
           >
             <RiCloseLine color="#FFFFFF" size={22} />
           </CloseButton>
-          <ImageItem src={item.url} />
+          <ImageItem src={item.url.medium || item.url.content} />
         </ImageWrapper>
       ))}
       <>

@@ -10,7 +10,7 @@ export const uploadImage = async (file) => {
   formData.append('file', file);
   try {
     const dataImage = await uploadImageRequest(formData);
-    return { url: dataImage.data.content.content, imageId: dataImage.data._id };
+    return { url: dataImage.data.content, imageId: dataImage.data._id };
   } catch (e) {
     console.log(e.response || e.message);
     throw e;
