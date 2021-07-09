@@ -10,7 +10,8 @@ import ContentEditor from '../components/CreateArticle/DanteEditor/ContentEditor
 import history from './history';
 import { Helmet } from 'react-helmet';
 import { SITE_TITLE } from '../utils/constants';
-//import ComponentsTestPage from '../views/ComponentsTestPage';
+import Profile from '../views/Profile/Profile';
+import ComponentsTestPage from '../views/ComponentsTestPage';
 
 const RouterApp = () => {
   const { authorization } = useSelector((store) => store.auth);
@@ -53,9 +54,14 @@ const RouterApp = () => {
             <ArticleDetail />
           </Layout>
         </Route>
-        {/*<Route path="/test-components" exact>
+        <Route path="/profile" exact>
+          <Layout home="search" noKeywords={true} view="detail">
+            <Profile />
+          </Layout>
+        </Route>
+        <Route path="/test-components" exact>
           <ComponentsTestPage />
-          </Route>*/}
+        </Route>
         <Route path="**">
           <Layout>
             <NotFound />
