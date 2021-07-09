@@ -98,9 +98,12 @@ export default function ArticleDetail() {
                     )}
                     {isMobile && (
                       <FlexContainer align="center" className="featured-img-container">
-                        {article?.image?.content?.featured_m && (
+                        {(article?.image?.content?.featured_m || article.image?.content?.large) && (
                           <figure className="featured-img">
-                            <img src={article.image.content.featured_m} alt={article?.title || ''} />
+                            <img
+                              src={article.image.content.featured_m || article.image.content.large}
+                              alt={article?.title || ''}
+                            />
                           </figure>
                         )}
                       </FlexContainer>
@@ -123,9 +126,12 @@ export default function ArticleDetail() {
                   </FlexContainer>
                   {!isMobile && (
                     <FlexContainer elmWidth="20%" align="center" className="featured-img-container">
-                      {article?.image?.content?.featured_m && (
+                      {(article?.image?.content?.featured_m || article?.image?.content?.large) && (
                         <figure className="featured-img">
-                          <img src={article.image.content.featured_m} alt={article?.title || ''} />
+                          <img
+                            src={article.image.content.featured_m || article?.image?.content?.large}
+                            alt={article?.title || ''}
+                          />
                         </figure>
                       )}
                     </FlexContainer>

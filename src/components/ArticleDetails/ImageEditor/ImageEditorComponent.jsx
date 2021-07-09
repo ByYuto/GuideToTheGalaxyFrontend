@@ -19,16 +19,34 @@ ImageEditorComponent.defaultProps = {
 
 function GalleryImage({ item, imgIndex, length }) {
   const [show, setShow] = useState(false);
+  const img = item.url.medium || item.url;
+  const imgRef = React.useRef(null);
+  const [proportionTo, setProportionTo] = useState('width');
 
+  React.useLayoutEffect(() => {
+    console.log(proportionTo);
+    if (imgRef && imgRef.current) {
+      const width = imgRef.current.width;
+      const height = imgRef.current.height;
+      const proportion = width / height;
+      if (proportion < 0.99) {
+        setProportionTo('width');
+      } else {
+        setProportionTo('height');
+      }
+    }
+  }, [show]);
   return (
     <>
       <ImageWrapper position={imgIndex} length={length}>
-        <ImageItem onClick={() => setShow(true)} src={item.url.medium || item.url} />
+        <ImageItem ref={imgRef} onClick={() => setShow(true)} src={img} />
       </ImageWrapper>
       {show && (
         <Portal>
-          <FullImage onClick={() => setShow(false)}>
-            <img onClick={() => setShow(false)} src={item.url.large || item.url} />
+          <FullImage proportion={proportionTo} onClick={() => setShow(false)}>
+            <div>
+              <img onClick={() => setShow(false)} src={img} />
+            </div>
           </FullImage>
         </Portal>
       )}
@@ -47,9 +65,19 @@ const FullImage = styled.figure`
   z-index: 30;
   top: 0;
   margin: 0;
-  & img {
-    width: 400px;
-    height: auto;
+  & div {
+    width: 70vw;
+    height: 70vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & img {
+      object-fit: scale-down;
+      width: ${(props) => (props.proportion === 'width' ? '70vw' : 'auto')};
+      height: ${(props) => (props.proportion === 'height' ? '70vh' : 'auto')};
+    }
   }
 `;
 

@@ -89,11 +89,11 @@ export default function ArticleEmbedView({
                 </FlexContainer>
               </FlexContainer>
             </ArticleContentContainer>
-            {image && image.content?.featured_sm ? (
+            {image && (image.content?.featured_sm || image.content?.medium) ? (
               <FlexboxGrid.Item colspan={isMobile ? 24 : 8}>
                 <FlexContainer justify="flex-end" elmWidth="100%" align="center">
                   <FeaturedImageContainer>
-                    <img src={image.content.featured_m} alt={title} />
+                    <img src={image.content.featured_sm || image.content?.medium} alt={title} />
                   </FeaturedImageContainer>
                 </FlexContainer>
               </FlexboxGrid.Item>
@@ -125,6 +125,7 @@ export default function ArticleEmbedView({
     dispatch(setSelectedKeyword(tag));
     history.push('/search');
   };
+
   return (
     <div key={_id}>
       {!isPreview ? (

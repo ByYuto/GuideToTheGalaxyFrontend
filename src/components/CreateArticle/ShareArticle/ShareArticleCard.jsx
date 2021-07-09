@@ -61,9 +61,9 @@ export default function ShareArticleCard({
             </div>
             <p>{textContent}</p>
           </div>
-          {image && image.content?.featured_sm ? (
+          {image && (image.content?.featured_sm || image.content?.medium) ? (
             <figure>
-              <img src={image.content.featured_sm} alt={title} />
+              <img src={image.content.featured_sm || image.content?.medium} alt={title} />
             </figure>
           ) : null}
         </FlexContainer>
